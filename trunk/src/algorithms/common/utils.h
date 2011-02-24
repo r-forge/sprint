@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright Â© 2010 The University of Edinburgh                          *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -18,22 +18,21 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef _COMMANDS_H
-#define _COMMANDS_H
+#ifndef _UTILS_H
+#define _UTILS_H
 
-/**
- * Lists all the functions available, ensure that TERMINATE is first and
- * LAST is last. If you add a command code you must add a command function
- * in sprint/functions.c
- **/
+#define DIST_INDEX(i,j,n) (i*n + j)
+#define MASTER_PROCESS 0
 
-enum commandCodes {TERMINATE = 0, PCOR, PMAXT, PPAM, PTEST, LAST};
-
-/**
- * Stereotype for interface functions. You almost certainly don't need to
- * mess with this.
- **/
-
-typedef int (*commandFunction)(int n,...);
+void getMedoidIDs(int *nrepr, int *medoid_ids, int n_rows, int n_clusters);
+void mMPI_AllgatherDOUBLE(double* send_buf, int world_size, int my_rank, int my_start,
+                    int my_end, int n_rows, MPI_Comm comm);
+void mMPI_AllgatherINT(int* send_buf, int world_size, int my_rank, int my_start,
+                       int my_end, int n_rows, MPI_Comm comm);
+int getMaximum(int *nmax, double *ammax, int world_size);
+int getMinimumIndx(double *array, int array_length);
+double getMaxDistance(double *dys, int my_start, int my_end, int nn);
+void loopDistribute(int myid, int num_of_proc, int N, int *my_start, int *my_end);
+void initMedoids(int *nrepr, int *med, Rboolean med_given, int nn, int n_clusters);
 
 #endif

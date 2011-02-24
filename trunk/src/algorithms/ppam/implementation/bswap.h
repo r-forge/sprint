@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright Â© 2010 The University of Edinburgh                          *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -18,22 +18,14 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef _COMMANDS_H
-#define _COMMANDS_H
+#ifndef _BSWAP_H
+#define _BSWAP_H
 
-/**
- * Lists all the functions available, ensure that TERMINATE is first and
- * LAST is last. If you add a command code you must add a command function
- * in sprint/functions.c
- **/
-
-enum commandCodes {TERMINATE = 0, PCOR, PMAXT, PPAM, PTEST, LAST};
-
-/**
- * Stereotype for interface functions. You almost certainly don't need to
- * mess with this.
- **/
-
-typedef int (*commandFunction)(int n,...);
+void bswap(int my_rank, int world_size, int my_start, int my_end, int n_clusters,
+           int n_rows, int *nrepr,
+           Rboolean med_given, Rboolean do_swap, int trace_lev,
+           /* nrepr[]: here is boolean (0/1): 1 = "is representative object"  */
+           double *dysma, double *dysmb, double *beter,
+           double *dys, double *sky, double s, double *obj);
 
 #endif

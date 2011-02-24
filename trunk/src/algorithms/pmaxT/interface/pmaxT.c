@@ -44,7 +44,7 @@ void pmaxT(double *d, int *pnrow, int *pncol, int*L, double *pna, double *T, dou
     
     // Broadcast command to other processors
     commandCode = PMAXT;
-    MPI_Bcast(&commandCode, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Call the permutation function
     response = permutation(13, d, pnrow, pncol, L, pna, T, P, adjP, pB, index,

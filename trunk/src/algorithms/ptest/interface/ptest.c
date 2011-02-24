@@ -54,7 +54,7 @@ SEXP ptest()
 
     // broadcast command to other processors
     commandCode = PTEST;
-    MPI_Bcast(&commandCode, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     response = test(1, func_results);
 

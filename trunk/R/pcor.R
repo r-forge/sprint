@@ -21,8 +21,17 @@
 # The R stub for the pcor function. This does some rudimentary
 # argument type checking and then hands off to the C stub.
 
+## consistent error / warning messages; could use for internationalization
+..msg <- list(error =
+              c(non.double = "x must be of type double",
+                non.numeric = "PCOR only accepts numeric matrices",
+                no.dims = "Dimensios of x and y matrices do not match"
+                ), warn = c()
+              )
+
 pcor <- function(
-  data                         # input numerical matrix
+  data_x                       # input numerical matrix
+, data_y = NULL                # matrix with compatible dimensions to data_x.
 , distance   = FALSE           # Return the distance matrix instead of the correlation coefficients
 , caching_   = "mmeachflush"   # getOption("ffcaching")
 , filename_  = NULL            # tempfile(pattern = pattern, tmpdir = getOption("fftempdir"))
@@ -55,14 +64,21 @@ pcor <- function(
       filename_<- tempfile(pattern =  "ff" , tmpdir = getwd())
     }
 
-    # determine length of the result correlation matrix
-  
-    height = dim(data)[2]
+     # determine length of the result correlation matrix
     
-    if (is.matrix(data) && is.numeric(data))
+    if (is.matrix(data_x) && is.numeric(data_x)) {
+      height = dim(data_x)[2]
       length_ <- height * height
+    }
     else
-      stop("PCOR only accepts numeric matrices")
+      stop(..msg$error["non.numeric"])
+
+    if(!is.null(data_y)) {
+      if (!is.matrix(data_y) && !is.numeric(data_y))
+        stop(..msg$error["non.numeric"])
+      if (dim(data_x)[0] != dim(data_y)[0] && dim(data_x)[1] != dim(data_y)[1])
+        stop(..msg$error["no.dims"])
+    }
 
     if (is.null(caching_))
       caching_<- getOption("ffcaching")
@@ -76,7 +92,7 @@ pcor <- function(
     }
 
     # Call C interface
-    return_val <- .Call("pcor", data, filename_, distance)
+    return_val <- .Call("pcor", data_x, data_y, filename_, distance)
 
     # Return values from the interface have meaning.
     #  0    -->     success

@@ -34,6 +34,7 @@
 extern int test(int n,...);
 extern int correlation(int n,...);
 extern int permutation(int n,...);
+extern int pamedoids(int n,...);
 
 /**
  * This is a dummy operation which can be used where a command code exists
@@ -55,6 +56,7 @@ int voidCommand(int n,...)
 commandFunction commandLUT[] = {voidCommand, \
                 correlation, \
                 permutation, \
+				pamedoids, \	
                 test, \
                 voidCommand};
 

@@ -6,3 +6,9 @@ export(ptest)
 export(pcor)
 export(pmaxT)
 export(pterminate)
+export(ppam)
+
+## PPAM generics
+S3method(print, pam)
+S3method(print, summary.pam)
+S3method(summary, pam)

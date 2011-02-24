@@ -21,7 +21,7 @@
 #ifndef _CORRELATION_KERNEL_H
 #define _CORRELATION_KERNEL_H
 
-int correlationKernel(int rank, int size, double *matrix, int width,
-                      int height, char *out_filename, int distance_flag);
+int correlationKernel(int rank, int size, double *matrix, double* dataMatrixY,
+                      int width, int height, char *out_filename, int distance_flag);
 
 #endif

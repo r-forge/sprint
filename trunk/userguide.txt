@@ -4,8 +4,8 @@
 =                                                                            =
 ==============================================================================
 
-Latest release SPRINT Beta 0.2.0 - 22.06.2010
-Previous release SPRINT Beta 0.1.0 - 15.01.2010
+Latest release SPRINT Beta 0.3.0 -
+Previous release SPRINT Beta 0.2.0 - 22.06.2010
 
 -------
 Content
@@ -17,9 +17,10 @@ Content
 	    a. Notes
 	    b. Testing the Installation
 	4. 	Using SPRINT
-		a. pcor()
-        b. pmaxT()
-	 	c. Performances
+	    a. pcor()
+	    b. pmaxT()
+	    c. ppam()
+	    d. Performances
 	5. 	Troubleshooting 	
 	6.	Configuration of systems used for testing SPRINT
 		a. Internal Cluster
@@ -139,7 +140,7 @@ quit() command. This calls MPI_FINALIZE and shuts down SPRINT.
 For example, a simple R script which calls one single function called ptest()
 will look like this:
 
-	library("sprint")
+    library("sprint")
     ptest()
     pterminate()
     quit()
@@ -163,35 +164,41 @@ a. pcor()
 ---------
 
 Pcor() carried out a parallel Pearson's correlation. It takes a 2D array as 
-input and correlates each row with every other row. The output can either be
+input and correlates each row with every other row. If both data_x and
+data_y matrices are passed on input the correlations between the
+columns of data_x and data_y are computed. The output can either be
 the matrix of corelation coefficient or the distance matrix.
 
 To use pcor():
 
-	pcor(data, distance = FALSE, caching_ = "mmeachflush", filename_ = NULL)
+    pcor(data_x, data_y = NULL, distance = FALSE, caching_ =
+    "mmeachflush", filename_ = NULL)
 
 where:
 
-	- 'data' is the input matrix data,
+    - 'data_x' is the input matrix data,
+    - 'data_y' is the second input matrix with compatible dimensions
+       to data_x.
     - 'distance' is a boolean indicating whether the output is to be a 
       distance matrix rather than the correlation coefficient matrix,
-	- 'caching_' caching scheme for the backend, currently "mmnoflush" or
-	  "mmeachflush" (flush mmpages at each swap) if no name is specified
+    - 'caching_' caching scheme for the backend, currently "mmnoflush" or
+      "mmeachflush" (flush mmpages at each swap) if no name is specified
       the default value is "mmeachflush",
-	- 'filename' is a string and is optional. It specifies the name of
-	  a file where the results will be saved. By default, the results are
-	  saved to a temporary file that is delete after exiting from SPRINT.
+    - 'filename' is a string and is optional. It specifies the name of
+      a file where the results will be saved. By default, the results are
+      saved to a temporary file that is delete after exiting from SPRINT.
 
 Examples of valid calls to pcor are:
 
-	- ff_obj <- pcor(t(inData))
-	- ff_obj <- pcor(t(inData), filename_="output.dat") 
-	- ff_obj <- pcor(data, caching_="mmeachflush", filename_="output.dat")
+    - ff_obj <- pcor(t(inData))
+    - ff_obj <- pcor(t(inData_X), t(inData_Y))
+    - ff_obj <- pcor(t(inData), filename_="output.dat") 
+    - ff_obj <- pcor(data, caching_="mmeachflush", filename_="output.dat")
     - ff_obj <- pcor(t(inData), distance=TRUE, filename_="output.dat")
     
 The first three are parallel equivalent to the call the sequential cor():
 
-	results <- cor(t(inData))
+    results <- cor(t(inData))
 	
 The last one also implements a parallel equivalent to cor() but return a 
 different output that is the distance matrix.	
@@ -243,14 +250,67 @@ for the sequential mt.maxt():
     mt.maxT(X, classlabel, test = "t", side = "abs", B = 10000, 
             na = .mt.naNUM, fixed.seed.sampling = "y", nonpara = "n") 
 
+c. ppam()
+----------
 
-c. Performances
+Parallel partitioning of the data into k clusters "around
+medoids". The original pam function accepts both a distance matrix and
+a raw data on input. By the raw data we mean a table of coordinates of all
+the observations. The parallel version of the function limits this
+choice only to a pre-computed distance matrix. The optional distances
+calculation was excluded from ppam. The distance matrix can be
+calculated using SPRINT's pcor() function with the 'distance'
+parameter set to TRUE.
+
+To use ppam():
+
+       ppam (x, k, medoids = NULL, is_dist = inherits(x, "dist"),
+         cluster.only = FALSE, do.swap = TRUE, trace.lev = 0)
+
+where:
+
+       - x: data matrix or ff object (symmetric) or dissimilarity
+         matrix, depending on the value of the diss argument.
+       - k: positive integer specifying the number of clusters, less
+         that the number of observations. 
+       - medoids: NULL (default) or length-k vector of integer indices
+         specifying initial medoids instead of using the build
+         algorithm. 
+       - is_dist: logical flag: if TRUE (default for dist or
+         dissimilarity objects), then x will be considered as a
+         dissimilarity matrix. If FALSE, then x will be considered as
+         a symmetric matrix. 
+       - cluster.only: logical; if true, only the clustering will be
+         computed and returned 
+       - do.swap: logical indicating if the *swap* phase should
+         happen. The default, TRUE, correspond to the original
+         algorithm.  On the other hand, the *swap* phase is much more
+         computer intensive than the *build* one for large n, so can
+         be skipped by do.swap = FALSE. 
+       - trace.lev: integer specifying a trace level for printing
+         diagnostics during the build and swap phase of the
+         algorithm. Default 0 does not print anything; higher values
+         print  
+
+Examples:
+
+	# pcor returns ff object as a result
+	mcor <- pcor(matrix(rnorm(1:10000), ncol=100), distance = TRUE)
+	p1m <- ppam(mcor, 4)
+	p2m <- ppam(mcor, 4, medoids = c(1,16))
+	p3m <- ppam(mcor, 3, trace = 2)
+
+	p4m <- ppam(dist(x), 12)
+
+
+d. Performances
 ---------------
-SPRINT parallel functions, Pcor() and PmaxT(), run on multiple processors 
-reducing the time taken for the calculation to complete. Note, that the 
-speed-up depends heavily on the size of the data set being analyzed. A small 
-data set will show no speed-up on 3 or more processors. However, tests on 
-larger data sets have shown an almost perfect scaling for up to 512 cores.
+SPRINT parallel functions, run on multiple processors reducing the
+time taken for the calculation to complete. Note, that the speed-up
+depends heavily on the size of the data set being analyzed. A small
+data set will show no speed-up on 3 or more processors. However, tests
+on larger data sets have shown an almost perfect scaling for up to 512
+cores. 
 
 ------------------------------------------------
  5. Troubleshooting
@@ -267,7 +327,7 @@ data shifted towards the right, especially the expected diagonal line of one
  6. Configuration of Systems used to test SPRINT
 ------------------------------------------------
 
-SPRINT beta 0.2.0 has been developed and tested on an internal cluster, Ness
+SPRINT beta 0.3.0 has been developed and tested on an internal cluster, Ness
 (http://www.epcc.ed.ac.uk/facilities/ness/), a local cluster, ECDF
 (http://www.ecdf.ed.ac.uk/) and on the UK national supercomputing service, 
 HECToR (http://www.hector.ac.uk/).

@@ -28,14 +28,14 @@ extern int correlation(int n,...);
  *  Accepts information from R, signals the need for a corelation,  *
  *  gets response and returns it.                                   *
  * **************************************************************** */
-SEXP pcor(SEXP data, SEXP out_file, SEXP distance)
+SEXP pcor(SEXP data_x, SEXP data_y, SEXP out_file, SEXP distance)
 {
     SEXP result = NULL;
     SEXP dataSize;
 
     int width, height, worldSize=-1;
     enum commandCodes commandCode;
-    int response = 0;
+    int response = 0, _distance = 0;
     char *file_out;
 
     // Check that MPI is initialized
@@ -63,23 +63,39 @@ SEXP pcor(SEXP data, SEXP out_file, SEXP distance)
     }
 
     // Perform checks on the input data
-    if (!IS_VECTOR(data)) {
+    if (!IS_VECTOR(data_x)) {
         ERR("\npcor.c accepts only matrices\n");
         result = NEW_INTEGER(1);
         INTEGER(result)[0] = -1;
         return result;
     }
 
-    if (!IS_NUMERIC(data) && !IS_INTEGER(data)) {
+    if (!IS_NUMERIC(data_x) && !IS_INTEGER(data_x)) {
         ERR("\npcor.c accepts only numeric matrices\n");
         result = NEW_INTEGER(1);
         INTEGER(result)[0] = -1;
         return result;
     }
 
+    if(!isNull(data_y)) {
+      // Perform checks on the input data
+      if (!IS_VECTOR(data_y)) {
+        ERR("\npcor.c accepts only matrices (data_y)\n");
+        result = NEW_INTEGER(1);
+        INTEGER(result)[0] = -1;
+        return result;
+      }
+      if (!IS_NUMERIC(data_y) && !IS_INTEGER(data_y)) {
+        ERR("\npcor.c accepts only numeric matrices (data_y)\n");
+        result = NEW_INTEGER(1);
+        INTEGER(result)[0] = -1;
+        return result;
+      }
+    }
+    
     // Get number of genes and samples
     // Also get the name of the input and output files
-    dataSize = GET_DIM(data);
+    dataSize = GET_DIM(data_x);
     width = INTEGER_POINTER(dataSize)[0];
     height = INTEGER_POINTER(dataSize)[1];
     file_out = (char *)CHAR(STRING_ELT( out_file, 0 ));
@@ -88,11 +104,15 @@ SEXP pcor(SEXP data, SEXP out_file, SEXP distance)
     commandCode = PCOR;
     MPI_Bcast(&commandCode, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
 
+    if ( LOGICAL_POINTER(distance)[0] == TRUE ) _distance = 1;    
+
     // Call the correlation function
-    if ( LOGICAL_POINTER(distance)[0] == TRUE )
-        response = correlation(5, NUMERIC_POINTER(AS_NUMERIC(data)), width, height, file_out, 1);
-    else
-        response = correlation(5, NUMERIC_POINTER(AS_NUMERIC(data)), width, height, file_out, 0);
+    if ( isNull(data_y) ) {
+      response = correlation(5, NUMERIC_POINTER(AS_NUMERIC(data_x)), width, height, file_out, _distance);
+    }  else {
+      response = correlation(6, NUMERIC_POINTER(AS_NUMERIC(data_x)), NUMERIC_POINTER(AS_NUMERIC(data_y)),
+                             width, height, file_out, 0);
+    }
 
     PROTECT(result = NEW_INTEGER(1));
     INTEGER(result)[0] = response;

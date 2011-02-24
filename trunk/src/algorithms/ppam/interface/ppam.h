@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright Â© 2010 The University of Edinburgh                          *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -17,23 +17,18 @@
  *  along with this program. If not, see <http://www.gnu.or/licenses/>.   *
  *                                                                        *
  **************************************************************************/
+#ifndef _PPAM_H
+#define _PPAM_H
 
-#ifndef _COMMANDS_H
-#define _COMMANDS_H
+void ppam(int *_do_swap, double *x, int *nrows, int *kk, char **filename, 
+	 int *nsend, /*logical*/ int *nrepr, int *nelem,
+	 double *radus, double *damer, double *avsyl, double *separ,
+	 double *ttsyl, double *obj, int *med, int *ncluv,
+          double *clusinf, double *sylinf, int *nisol);
 
-/**
- * Lists all the functions available, ensure that TERMINATE is first and
- * LAST is last. If you add a command code you must add a command function
- * in sprint/functions.c
- **/
-
-enum commandCodes {TERMINATE = 0, PCOR, PMAXT, PPAM, PTEST, LAST};
-
-/**
- * Stereotype for interface functions. You almost certainly don't need to
- * mess with this.
- **/
-
-typedef int (*commandFunction)(int n,...);
+void bswap(int kk, int nsam, int *nrepr,
+	   Rboolean med_given, Rboolean do_swap, int trace_lev,
+	   double *dysma, double *dysmb, double *beter,
+	   double *dys, double *sky, double s, double *obj);
 
 #endif

@@ -36,39 +36,68 @@ double *cor = NULL;
 // Vectors for storing Pearson correlation parameters in order not to re-compute
 // them every time
 double *Sxx_vector = NULL;
-double *mean_value_vector = NULL;
+double *mean_value_vectorX = NULL;
+double *Syy_vector = NULL;
+double *mean_value_vectorY = NULL;
 
 /* *************************************** *
  *  Free all dynamically allocated memory  *
  * *************************************** */
-void free_all(double *cor, int *blocklens, int *indices, double *mean_value_vector, double *Sxx_vector);
+void free_all(double *cor,
+              int *blocklens,
+              int *indices,
+              double *mean_value_vectorX,
+              double *Sxx_vector,
+              double *mean_value_vectorY,
+              double *Syy_vector);
 
 /* ************************************************************* *
  *  Compute parameters used by Pearson method                    *
  *  It will transform the input array to more meaningful values  *
  *  and also create vectors for the mean values and variances    *
  * ************************************************************* */
-void compute_parameters(double *data, int rows, int columns) {
+void compute_parameters(double *dataMatrixX, double *dataMatrixY, int rows, int columns) {
 
     int i, j;
-
-    // Compute the mean values of each row
-    for(i=0; i < rows; i++) {
-        mean_value_vector[i] = 0.0;
+    
+      // Compute the X mean values of each row
+      for(i=0; i < rows; i++) {
+        mean_value_vectorX[i] = 0.0;
         for(j=0; j < columns; j++) {
-            mean_value_vector[i] += data[(i*columns)+j];
+          mean_value_vectorX[i] += dataMatrixX[(i*columns)+j];
         }
-        mean_value_vector[i] /= columns;
-    }
-
-    // Transform the data array
-    for(i=0; i < rows; i++) {
+        mean_value_vectorX[i] /= columns;
+      }
+      
+      // Transform the data_X array
+      for(i=0; i < rows; i++) {
         Sxx_vector[i] = 0.0;
         for(j=0; j < columns; j++) {
-            data[(i*columns)+j] -= mean_value_vector[i];
-            Sxx_vector[i] += (data[(i*columns)+j] * data[(i*columns)+j]);
+          dataMatrixX[(i*columns)+j] -= mean_value_vectorX[i];
+          Sxx_vector[i] += (dataMatrixX[(i*columns)+j] * dataMatrixX[(i*columns)+j]);
         }
         Sxx_vector[i] /= (columns-1);
+      }
+      
+    if (dataMatrixY != NULL) {
+      // Compute the Y mean values of each row
+      for(i=0; i < rows; i++) {
+        mean_value_vectorY[i] = 0.0;
+        for(j=0; j < columns; j++) {
+          mean_value_vectorY[i] += dataMatrixY[(i*columns)+j];
+        }
+        mean_value_vectorY[i] /= columns;
+      }
+      
+      // Transform the data_Y array
+      for(i=0; i < rows; i++) {
+        Syy_vector[i] = 0.0;
+        for(j=0; j < columns; j++) {
+          dataMatrixY[(i*columns)+j] -= mean_value_vectorY[i];
+          Syy_vector[i] += (dataMatrixY[(i*columns)+j] * dataMatrixY[(i*columns)+j]);
+        }
+        Syy_vector[i] /= (columns-1);
+      }
     }
 }
 
@@ -99,10 +128,44 @@ double pearson(double *data, int row_x, int row_y, int size) {
     return r;
 }
 
+/* **************************************************** *
+ *  Pearson correlation function for two input matrices *
+ * **************************************************** */
+double pearson_XY(double *dataMatrixX, double *dataMatrixY, int row_x, int row_y, int size) {
+
+    int i;
+    double sxy = 0.0;
+    double r;
+    double *x, *y;
+
+    x = &dataMatrixX[row_x*size];
+    y = &dataMatrixY[row_y*size];
+
+    // correlation
+    for (i=0; i<size; i++) {
+        sxy += x[i] * y[i];
+    }
+
+    sxy /= (size-1);
+
+    // This *should* set r=NAN if sxx*syy = 0 *and*
+    // sxy = 0 - this replicates R's behaviour
+    r = sxy / sqrt(Sxx_vector[row_x]*Syy_vector[row_y]);
+
+    return r;
+}
+
 /* *************************** *
  *  Main computational kernel  *
  * *************************** */
-int correlationKernel(int rank, int size, double* data, int columns, int rows, char *out_filename, int distance_flag) {
+int correlationKernel(int rank,
+                      int size,
+                      double* dataMatrixX,
+                      double* dataMatrixY,
+                      int columns,
+                      int rows,
+                      char *out_filename,
+                      int distance_flag) {
 
     int local_check = 0, global_check = 0;
     int i = 0, j, taskNo;
@@ -246,16 +309,19 @@ int correlationKernel(int rank, int size, double* data, int columns, int rows, c
         blocklens = (int *)malloc(sizeof(int) * rows);
         indices = (int *)malloc(sizeof(int) * rows);
 
-        mean_value_vector = (double *)malloc(sizeof(double) * rows);
+        mean_value_vectorX = (double *)malloc(sizeof(double) * rows);
         Sxx_vector = (double *)malloc(sizeof(double) * rows);
+        mean_value_vectorY = (double *)malloc(sizeof(double) * rows);
+        Syy_vector = (double *)malloc(sizeof(double) * rows);
 
         // Check that all memory is successfully allocated
         if ( ( cor == NULL ) || ( blocklens == NULL ) || ( indices == NULL ) || 
-               ( mean_value_vector == NULL ) || ( Sxx_vector == NULL ) ) {
+             ( mean_value_vectorX == NULL ) || ( Sxx_vector == NULL ) ||
+             ( mean_value_vectorY == NULL ) || ( Syy_vector == NULL ) ) {
             ERR("**ERROR** : Memory allocation failed on worker process %d. Aborting.\n", rank);
 
             // Free allocated memory
-            free_all(cor, blocklens, indices, mean_value_vector, Sxx_vector);
+            free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
 
             // Let the master process know its aborting in order to terminate
             // the rest of the working workers
@@ -275,7 +341,7 @@ int correlationKernel(int rank, int size, double* data, int columns, int rows, c
         // Compute necessary parameters for Pearson method
         // (this will transform the values of the input array to more meaningful data
         //  and save us from a lot of redundant computations)
-        compute_parameters(data, rows, columns);
+        compute_parameters(dataMatrixX, dataMatrixY, rows, columns);
 
         // Main loop for workers. They get work from master, compute coefficients,
         // save them to their *local* vector and ask for more work
@@ -313,22 +379,30 @@ int correlationKernel(int rank, int size, double* data, int columns, int rows, c
                     MPI_Allreduce(&local_check, &global_check, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
                     // Free all allocated memory
-                    free_all(cor, blocklens, indices, mean_value_vector, Sxx_vector);
+                    free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
 
                     return -1;
                 }
             }
 
             // Compute the correlation coefficients
-            for (j=0; j < rows; j++) {
+            if(dataMatrixY != NULL) {
+              for (j=0; j < rows; j++) {
+                cor[coeff_count] = pearson_XY(dataMatrixX, dataMatrixY, j, taskNo, columns);
+                coeff_count++;
+              }
+
+            } else {
+              for (j=0; j < rows; j++) {
                 // Set main diagonal to 1
                 if ( j == taskNo ) {
-                    cor[coeff_count] = 1.0;
-                    coeff_count++;
-                    continue;
+                  cor[coeff_count] = 1.0;
+                  coeff_count++;
+                  continue;
                 }
-                cor[coeff_count] = pearson(data, taskNo, j, columns);
+                cor[coeff_count] = pearson(dataMatrixX, taskNo, j, columns);
                 coeff_count++;
+              }
             }
 
             // The value of blocklens[] represents the number of coefficients on each
@@ -355,7 +429,7 @@ int correlationKernel(int rank, int size, double* data, int columns, int rows, c
         // Check failed
         if ( global_check != 0 ) {
             // Free all allocated memory
-            free_all(cor, blocklens, indices, mean_value_vector, Sxx_vector);
+          free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
             return -1;
         }
 
@@ -395,7 +469,7 @@ int correlationKernel(int rank, int size, double* data, int columns, int rows, c
             MPI_Type_free(&coeff_index_dt);
 
         // Free all allocated memory
-        free_all(cor, blocklens, indices, mean_value_vector, Sxx_vector);
+        free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
     }
 
     return 0;
@@ -404,11 +478,19 @@ int correlationKernel(int rank, int size, double* data, int columns, int rows, c
 /* *************************************** *
  *  Free all dynamically allocated memory  *
  * *************************************** */
-void free_all(double *cor, int *blocklens, int *indices, double *mean_value_vector, double *Sxx_vector) {
+void free_all(double *cor,
+              int *blocklens,
+              int *indices,
+              double *mean_value_vectorX,
+              double *Sxx_vector,
+              double *mean_value_vectorY,
+              double *Syy_vector) {
     if ( cor != NULL ) free(cor);
     if ( blocklens != NULL ) free(blocklens);
     if ( indices != NULL ) free(indices);
-    if ( mean_value_vector != NULL ) free(mean_value_vector);
+    if ( mean_value_vectorX != NULL ) free(mean_value_vectorX);
     if ( Sxx_vector != NULL ) free(Sxx_vector);
+    if ( mean_value_vectorY != NULL ) free(mean_value_vectorY);
+    if ( Syy_vector != NULL ) free(Syy_vector);
 }
 

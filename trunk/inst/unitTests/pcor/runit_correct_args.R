@@ -30,16 +30,6 @@ test.correct_args <- function() {
     size_of_rows <- 1000
     size_of_columns <- 50
 
-    pcor_distance <- c(FALSE, TRUE)
-
-    temp_output_sink <- tempfile(pattern =  "_sink_" , tmpdir = getwd())
-
-    # Suspend quiting on stop
-    options(error = expression(NULL))
-
-    # Sink all output
-    sink(file=temp_output_sink, append=FALSE)
-
     # ----------------------------------------------------------------------------
     #  For loop to check the result of the pcor (normal correlation coefficients)
     #  Executes the same test with 5 different random arrays
@@ -55,6 +45,31 @@ test.correct_args <- function() {
 
         # Execute serial version
         res_from_cor <- cor(t(input_dataset))
+
+        invisible(checkEqualsNumeric(res_from_cor, res_from_pcor[,]))
+
+        # CLoses (and deletes) the ff object
+        close(res_from_pcor)
+
+    }
+
+    for(i in 1:5 ) {
+
+        # Create a random array for input
+        input_dataset_X<- rnorm(size_of_rows * size_of_columns)
+        dim(input_dataset_X) <- c(size_of_columns, size_of_rows)
+
+        # Create a random array for input
+        input_dataset_Y<- rnorm(size_of_rows * size_of_columns)
+        dim(input_dataset_Y) <- c(size_of_columns, size_of_rows)
+
+        # Execute parallel version
+        res_from_pcor <- pcor(t(input_dataset_X),
+                              t(input_dataset_Y))
+
+        # Execute serial version
+        res_from_cor <- cor(t(input_dataset_X),
+                            t(input_dataset_Y))
 
         invisible(checkEqualsNumeric(res_from_cor, res_from_pcor[,]))
 
@@ -85,15 +100,6 @@ test.correct_args <- function() {
         close(res_from_pcor)
 
     }
-
-    # Remove sink
-    sink(file=NULL)
-
-    # Delete sink file
-    unlink(temp_output_sink)
-
-    # Enable stop functionality
-    options(error = NULL)
 
 }
 

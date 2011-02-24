@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright Â© 2010 The University of Edinburgh                          *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -17,23 +17,80 @@
  *  along with this program. If not, see <http://www.gnu.or/licenses/>.   *
  *                                                                        *
  **************************************************************************/
+#include <sys/mman.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include "mmap.h"
 
-#ifndef _COMMANDS_H
-#define _COMMANDS_H
+double* map_file(char* filename, int* filesize) {
 
-/**
- * Lists all the functions available, ensure that TERMINATE is first and
- * LAST is last. If you add a command code you must add a command function
- * in sprint/functions.c
- **/
+  struct stat sb;
+  double *p;
+  int fd;
 
-enum commandCodes {TERMINATE = 0, PCOR, PMAXT, PPAM, PTEST, LAST};
+  /* Opens the file to be mapped, reads metadata, maps the file to
+     memory and closes the file */
+  
+  fd = open (filename, O_RDONLY);
+  if (fd == -1) {
+    perror ("open");
+    return NULL;
+  }
+  
+  if (fstat (fd, &sb) == -1) {
+    perror("fstat");
+    return NULL;
+  }
 
-/**
- * Stereotype for interface functions. You almost certainly don't need to
- * mess with this.
- **/
+  if (!S_ISREG (sb.st_mode)) {
+    fprintf (stderr, "%s is not a file \n", *filename);
+    return NULL;
+  }
 
-typedef int (*commandFunction)(int n,...);
+  p = mmap (0, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+  *filesize = sb.st_size;
 
-#endif
+  if (p == MAP_FAILED) {
+    perror("mmap");
+    return NULL;
+  }
+
+  if(close(fd) == -1) {
+    perror("close");
+    return NULL;
+  }
+  
+  return p;
+}
+
+void unmap_file (double* p, char* filename) {
+
+  struct stat sb;
+  int fd;
+
+  fd = open (filename, O_RDONLY);
+  if (fd == -1) {
+    perror ("open");
+    return;
+  }
+
+  if (fstat (fd, &sb) == -1) {
+    perror("fstat");
+    return;
+  }
+                   
+  if (munmap (p, sb.st_size) == -1) {
+    perror ("munmap");
+    return;
+  }
+
+  if(close(fd) == -1) {
+    perror("close");
+    return;
+  }
+
+  return;
+}

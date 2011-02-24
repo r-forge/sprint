@@ -18,6 +18,39 @@
 #                                                                        #
 ##########################################################################
 
+sprint.test_ppam <- function() {
+
+   if( !require("RUnit", quietly=TRUE) ) { 
+        warning("Unit tests not run for ppam - failed to load package RUnit")
+        return()
+    }
+
+    if( !require("sprint", quietly=TRUE) ) {
+        warning("Unit tests not run for ppam - failed to load package sprint")
+        return()
+    }
+
+   if( !require("cluster", quietly=TRUE) ) {
+     warning("Unit tests not run for ppam - failed to load package cluster")
+     return()
+   }
+
+   if( !require("ff", quietly=TRUE) ) {
+     warning("Unit tests not run for ppam - failed to load package ff")
+     return()
+   }
+
+   # Find path for test scripts
+   path <- system.file(package="sprint", "unitTests", "ppam")
+
+   # Create test suite and execute it
+   testSuite <- defineTestSuite(name="ppam", dirs=path)
+   testData  <- runTestSuite(testSuite)
+  
+   # Print out the results
+   printTextProtocol(testData, showDetails=TRUE)
+
+}
 
 sprint.test_pmaxT <- function() {
 

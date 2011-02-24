@@ -50,6 +50,9 @@ void R_init_sprint(DllInfo *Dllinfo) {
     char *fake_argv[1];
     char *fake_argv0 = "R";
     int response;
+#ifdef OPEN_MPI
+    void *dlhandle;
+#endif
 
     MPI_Initialized(&flag);
     if (flag) {
@@ -58,8 +61,12 @@ void R_init_sprint(DllInfo *Dllinfo) {
     }
     else {
 
-#ifdef OPENMPI
-        dlopen("libmpi.so.0", RTLD_GLOBAL);
+#ifdef OPEN_MPI
+        dlhandle = dlopen("libmpi.so.0", RTLD_GLOBAL | RTLD_LAZY);
+        if ( NULL == dlhandle ) {
+            ERR("%s\n", dlerror());
+            return;
+        }
 #endif
 
         fake_argv[0] = (char *)&fake_argv0;
@@ -85,15 +92,16 @@ void R_init_sprint(DllInfo *Dllinfo) {
  *  Called only by the master thread when pterminate() function is called  *
  * *********************************************************************** */
 SEXP sprint_shutdown() {
-
+    int worldRank;
     enum commandCodes commandCode;
 
+    MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
     if (mpi_init_flag == 1) {
 
         // Send terminate command
         commandCode = TERMINATE;
         DEBUG("%i: Shutting down %i\n", worldRank, commandCode);
-        MPI_Bcast(&commandCode, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
         // Sprint should now do the finalize
         MPI_Finalize();
@@ -136,7 +144,7 @@ void worker(int worldRank, int worldSize) {
 
         // this matches the broadcast in interface/algorithm.c which is executed on rank 0
         // via R. All the rest of the processors should wait here
-        MPI_Bcast(&commandCode, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
         DEBUG("%i: Receiving command %i\n", worldRank, commandCode);
         /* Process the command */
