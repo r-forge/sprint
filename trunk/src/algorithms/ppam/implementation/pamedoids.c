@@ -51,6 +51,7 @@ int pamedoids(int n,...) {
 
   char *name; int resultlen;
   name = (char *) R_alloc(256, sizeof(char));
+  filesize = (int *) R_alloc(1, sizeof(int));
 
   /* Transient storage allocation. R will reclaim the memory
      at the end of the call to .C Note that this memory will
