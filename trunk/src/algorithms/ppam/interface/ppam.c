@@ -49,16 +49,7 @@ void ppam(
   int response;
   int worldSize, worldRank;
 
-  double starttime, endtime; 
-  
   enum commandCodes commandCode;
-
-    /* Local variables */
-  Rboolean all_stats = (obj[0] == 0.),/* if false, only return 'ncluv[]' */
-    med_given = (med[0] != 0),        /* if true, med[] contain initial medoids */
-    do_swap = (nisol[0] != 0);        
-  int k, i, j, len, nhalf, jhalt, trace_lev = (int) obj[1];
-  double s, sky;
 
   // Check that MPI is initialized
   MPI_Initialized(&response);
@@ -74,7 +65,7 @@ void ppam(
 
   // Broadcast command to other processors
   commandCode = PPAM;
-  MPI_Bcast(&commandCode, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   // Call the partitioning around medoids function
   response = pamedoids(19, *_map_file, *n_rows, *n_clusters,

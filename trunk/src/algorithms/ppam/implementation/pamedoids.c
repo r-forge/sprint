@@ -32,8 +32,6 @@
 int pamedoids(int n,...) {
 
   va_list ap;
-  int result = 0;
-
   Rboolean all_stats, med_given, do_swap;
 
   int worldSize, worldRank, trace_lev, clusinf_dim1,
@@ -49,9 +47,8 @@ int pamedoids(int n,...) {
     *ttsyl,  *obj, *clusinf, *sylinf;
   char *filename;
 
-  char *name; int resultlen;
+  char *name;
   name = (char *) R_alloc(256, sizeof(char));
-  filesize = (int *) R_alloc(1, sizeof(int));
 
   /* Transient storage allocation. R will reclaim the memory
      at the end of the call to .C Note that this memory will
@@ -59,6 +56,7 @@ int pamedoids(int n,...) {
      See Section 6.1.1 "Writing R Extensions" 
   */
   filename = (char *) R_alloc(256, sizeof(char));
+  filesize = (int *) R_alloc(1, sizeof(int));
         
   // Get size and rank from communicator
   MPI_Comm_size(MPI_COMM_WORLD, &worldSize);

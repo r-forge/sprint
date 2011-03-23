@@ -32,7 +32,7 @@ void cstat(int my_rank, int world_size, int my_start, int my_end, int n_clusters
            double *radus, double *damer, double *avsyl, double *separ, double *s,
            double *distance_matrix, int *ncluv, int *nelem, int *med, int *nisol)
 {
-  int i, j, k, ja, jk, nplac, ksmal = -1/* -Wall */;
+  int j, k, ja, jk, nplac, ksmal = -1/* -Wall */;
     double ss = *s * 1.1 + 1.;
 
      int my_kk_start, my_kk_end;
@@ -153,6 +153,7 @@ void cstat(int my_rank, int world_size, int my_start, int my_end, int n_clusters
           }
         }
         
+        if(ntt == 0) REprintf("bug in C cstat(): ntt=0 !!!\n");
         avsyl[k] = ttt / (ntt+1);
         med[k] = m;
       }     

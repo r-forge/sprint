@@ -45,7 +45,7 @@ void bswap(int my_rank, int world_size, int my_start, int my_end, int n_clusters
            double *distance_matrix, double *sky, double s, double *obj)
 {
 
-  int i, j, ij, k,h;
+  int i, j, k,h;
   double sky_local;
 
   int *medoid_ids;
@@ -57,7 +57,7 @@ void bswap(int my_rank, int world_size, int my_start, int my_end, int n_clusters
   --nrepr;
   --beter;
     
-  --dysma; --dysmb;
+  --dysma; --dysmb; */
 
   /* Zeros the memory allocated */
   medoid_ids = (int *) S_alloc(n_clusters, sizeof(int));
@@ -93,7 +93,7 @@ void bswap(int my_rank, int world_size, int my_start, int my_end, int n_clusters
     
   } else {
       
-    /* ======== BUILD MEDOIDS ============= /*
+    /* ======== BUILD MEDOIDS ============= */
        
     /* find kk representatives aka medoids :  */
 
