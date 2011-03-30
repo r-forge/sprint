@@ -20,6 +20,6 @@
 
 pterminate<-function()
 {
-    .Call("sprint_shutdown")
+    invisible(.Call("sprint_shutdown"))
 }
 

@@ -27,7 +27,7 @@
  * in sprint/functions.c
  **/
 
-enum commandCodes {TERMINATE = 0, PCOR, PMAXT, PPAM, PTEST, LAST};
+enum commandCodes {TERMINATE = 0, PCOR, PMAXT, PPAM, PAPPLY, PRANDOMFOREST, PBOOT, PTEST, INIT_RNG, RESET_RNG, PBOOTRP, PBOOTRPMULTI, LAST};
 
 /**
  * Stereotype for interface functions. You almost certainly don't need to

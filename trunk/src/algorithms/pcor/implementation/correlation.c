@@ -74,21 +74,21 @@ int correlation(int n,...) {
         }
         
         // Sent the dimensions to the slave processes
-        MPI_Bcast(dimensions, 2, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        MPI_Bcast(dimensions, 2, MPI_INT, 0, MPI_COMM_WORLD);
 
         // Sent the number of arguments
-        MPI_Bcast(&n, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
         // Master is always OK
         local_check = 0;
     } else {
 
         // Get the dimensions from the master
-        MPI_Bcast(dimensions, 2, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        MPI_Bcast(dimensions, 2, MPI_INT, 0, MPI_COMM_WORLD);
         DEBUG("Broadcasting dims on %i. Got %i, %i\n", worldRank, dimensions[WIDTH], dimensions[HEIGHT]);
 
         // Get the number of arguments
-        MPI_Bcast(&n, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
         DEBUG("Broadcasting number of arguments on %i. Got %i\n", worldRank, n);
 
         // Allocate space for output filename
@@ -130,7 +130,7 @@ int correlation(int n,...) {
     DEBUG("Broadcasting output filename on %i. Got %s\n", worldRank, out_filename);
 
     DEBUG("Broadcasting distance flag on %i.\n", worldRank);
-    MPI_Bcast(&distance_flag, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&distance_flag, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     DEBUG("Broadcasting data X on %i.\n", worldRank);
     MPI_Bcast(dataMatrixX, dimensions[WIDTH] * dimensions[HEIGHT], MPI_DOUBLE, 0, MPI_COMM_WORLD);

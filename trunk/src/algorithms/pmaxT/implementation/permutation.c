@@ -261,7 +261,7 @@ int permutation(int n,...) {
 
         // A single reduce will sum up *all* 4 vectors because they are
         // contiguous in memory
-        MPI_Reduce(MPI_IN_PLACE, total1, (*pnrow) * 4, MPI_INTEGER, MPI_SUM, 0, MPI_COMM_WORLD);
+        MPI_Reduce(MPI_IN_PLACE, total1, (*pnrow) * 4, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
         // Compute raw p-values
         for(i=0; i < *pnrow; i++) {
@@ -294,7 +294,7 @@ int permutation(int n,...) {
 
         // A single reduce will sum up *all* 4 vectors because they are
         // contiguous in memory
-        MPI_Reduce(total1, NULL, (*pnrow) * 4, MPI_INTEGER, MPI_SUM, 0, MPI_COMM_WORLD);
+        MPI_Reduce(total1, NULL, (*pnrow) * 4, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
         // Free all allocated memory
         perm_free(options, pnrow, pncol, pB, extra, L, pna, d, T, index, generator_flag, total1);

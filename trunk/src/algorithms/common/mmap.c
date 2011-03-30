@@ -46,7 +46,7 @@ double* map_file(char* filename, int* filesize) {
   }
 
   if (!S_ISREG (sb.st_mode)) {
-    fprintf (stderr, "%s is not a file \n", *filename);
+    fprintf (stderr, "%s is not a file \n", filename);
     return NULL;
   }
 

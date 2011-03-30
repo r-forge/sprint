@@ -102,7 +102,7 @@ SEXP pcor(SEXP data_x, SEXP data_y, SEXP out_file, SEXP distance)
 
     // Broadcast command to other processors
     commandCode = PCOR;
-    MPI_Bcast(&commandCode, 1, MPI_INTEGER, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     if ( LOGICAL_POINTER(distance)[0] == TRUE ) _distance = 1;    
 

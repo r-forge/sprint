@@ -35,7 +35,13 @@ extern int test(int n,...);
 extern int correlation(int n,...);
 extern int permutation(int n,...);
 extern int pamedoids(int n,...);
-
+extern int apply(int n,...);
+extern int random_forest_driver(int,...);
+extern int boot(int,...);
+extern int init_rng_worker(int n, ...);
+extern int reset_rng_worker(int n, ...);
+extern int boot_rank_product(int n, ...);
+extern int boot_rank_product_multi(int n, ...);
 /**
  * This is a dummy operation which can be used where a command code exists
  * but does not represent a useful function.
@@ -53,10 +59,17 @@ int voidCommand(int n,...)
  * found in src/functions.h
  **/
 
-commandFunction commandLUT[] = {voidCommand, \
-                correlation, \
-                permutation, \
-				pamedoids, \	
-                test, \
-                voidCommand};
+commandFunction commandLUT[] = {voidCommand,
+                                correlation,
+                                permutation,
+                                pamedoids,
+                                apply,
+                                random_forest_driver,
+                                boot,
+                                test,
+                                init_rng_worker,
+                                reset_rng_worker,
+                                boot_rank_product,
+                                boot_rank_product_multi,
+                                voidCommand};
 

@@ -34,5 +34,5 @@ int getMinimumIndx(double *array, int array_length);
 double getMaxDistance(double *dys, int my_start, int my_end, int nn);
 void loopDistribute(int myid, int num_of_proc, int N, int *my_start, int *my_end);
 void initMedoids(int *nrepr, int *med, Rboolean med_given, int nn, int n_clusters);
-
+SEXP parseExpression(SEXP expressionSexp);
 #endif

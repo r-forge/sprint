@@ -65,6 +65,10 @@ a. Notes
    one or more processes when using pcor() on more than one node. The SPRINT 
    team therefore strongly recommends NOT to use open MPI.  
 
+ * On some systems (in particular the UK national supercomputing
+   service HECToR), the temporary directories created by the slave R
+   processes are not cleaned up correctly.  To work around this, one
+   must periodically clean out the temporary directories by hand.
 
 --------------------
 3. Installing SPRINT

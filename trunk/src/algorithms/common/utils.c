@@ -17,6 +17,9 @@
  *  along with this program. If not, see <http://www.gnu.or/licenses/>.   *
  *                                                                        *
  **************************************************************************/
+#include <R.h>
+#include <Rinternals.h>
+#include <R_ext/Parse.h>
 
 #include "../../sprint.h"
 #include "utils.h"
@@ -64,6 +67,9 @@ void getMedoidIDs(int *nrepr, int *medoid_ids, int n_rows, int n_clusters) {
     }
   }
 }
+
+// TODO: Replace with MPI_Gatherv, add a type parameter and implement using
+// switch statement
 
 void mMPI_AllgatherINT(int* send_buf, int world_size, int my_rank,
                     int my_start, int my_end, int n_rows, MPI_Comm comm) {
@@ -116,13 +122,11 @@ void mMPI_AllgatherDOUBLE(double* send_buf, int world_size, int my_rank,
     recbuf_indx = buf_size[MASTER_PROCESS];
     
     for (i=1; i<world_size; i++) {
-      //DEBUG("receiving a message from process: %d ...\n", i);
       MPI_Recv(&send_buf[recbuf_indx], buf_size[i], MPI_DOUBLE, i, 0, comm, &status);
       recbuf_indx += buf_size[i];
     }
     
   } else {
-    //DEBUG("process: %d is sending a message!\n", my_rank);
     MPI_Send(&send_buf[my_start], my_buf_size, MPI_DOUBLE, MASTER_PROCESS, 0, comm);
   }
     
@@ -143,8 +147,6 @@ double getMaxDistance(double *distance_matrix, int my_start, int my_end, int nn)
   /* s := max( dys[.] ), the largest distance */
   for (i = my_start, maxD = 0.; i < my_end; i++) {
     for(j = i; j < nn; j++) {
-      
-      //DEBUG("Element %d eq. %1.8f\n", DIST_INDEX(i,j,nn), distance_matrix[DIST_INDEX(i,j,nn)]);
       
       //read only upper triangular of the distance matrix
       if (maxD < distance_matrix[DIST_INDEX(i,j,nn)]) {
@@ -179,7 +181,7 @@ void initMedoids(int *nrepr, int *med, Rboolean med_given, int nn, int n_cluster
   
 
 /*
-  Distributes shared distance array (matrix) among processes
+  Distributes array (matrix) among processes
 */ 
 
 void loopDistribute(int myid, int num_of_proc, int N,
@@ -213,3 +215,20 @@ void loopDistribute(int myid, int num_of_proc, int N,
     }
   }
 }
+
+/* R_ParseVector is essentially the code used to implement parse(text=) at R level. */
+SEXP parseExpression(SEXP expressionSexp) {
+
+  SEXP  parsedCmd = R_NilValue;
+  ParseStatus status; 
+   
+  parsedCmd = PROTECT(R_ParseVector(expressionSexp, -1, &status, R_NilValue));
+	if (status != PARSE_OK) {
+    UNPROTECT(1);
+    error("invalid expression in parseExpression!");
+  }
+
+  UNPROTECT(1);
+  return parsedCmd;
+}
+

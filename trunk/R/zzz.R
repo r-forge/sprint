@@ -23,20 +23,21 @@
 # system. They perform some R-side initialisation, then call
 # down to the library initialisation.
 
-# Called when the extension is first included by an R script using
-# the 'library("sprint")' command.
-
-.First.lib <- function (lib, pkg) {
-    library.dynam("sprint", pkg, lib)
-    ver <- read.dcf(file.path(lib, pkg, "DESCRIPTION"), "Version")
-    ver <- as.character(ver)	
-    cat("SPRINT", ver, "loaded\n") 
+## Called after the library has finished loading, and all NAMESPACE
+## exports have been processed
+.onAttach <- function(lib, pkg) {
+  ## We start the worker after attaching the library so that
+  ## lazy-loaded R code in SPRINT is available to the slave processes
+  invisible(.C("worker"))
+  ver <- read.dcf(file.path(lib, pkg, "DESCRIPTION"), "Version")
+  ver <- as.character(ver)
+  cat("SPRINT", ver, "loaded\n")
 }
 
-# Called when the extension is unloaded. This is expected to happen
-# when the script terminates and R shuts down.
-
-.Last.lib <- function(libpath){
-    .Call("sprint_shutdown");
-    library.dynam.unload("sprint", libpath)
+## Called when the extension is unloaded. This is expected to happen
+## when the script terminates and R shuts down.
+.Last.lib <- function(libpath) {
+  .Call("sprint_shutdown")
+  library.dynam.unload("sprint", libpath)
 }
+
