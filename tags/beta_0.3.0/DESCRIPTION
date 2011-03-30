@@ -1,0 +1,13 @@
+Package: sprint
+Version: 0.3.0
+Date: 2010-06-15
+Title: Simple Parallel R INTerface
+Author: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
+Maintainer: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
+Depends: R (>= 2.9.2)
+Suggests: ff (>= 2.1-1)
+SystemRequirements: MPI2, Unix
+Description: A simple framework for performing computation in parallel of
+             R scripts and a library of parallelized R functions.
+License: GPL version 3 or newer
+
