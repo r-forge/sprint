@@ -19,10 +19,11 @@
  **************************************************************************/
 
 #include <math.h>
-#include "kernel.h"
+#include "kernel.h"b
 #include "../../../sprint.h"
 
 // Percent of extra memory to be allocated for the correlation coefficients vector.
+
 // This extra memory is added to the approximate memory needed by a fair division of
 // all work assignments accross the workers. Small work imbalancing is expexted to
 // and this extra space is going to cover for it.

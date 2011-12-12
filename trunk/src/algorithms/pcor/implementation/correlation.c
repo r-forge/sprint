@@ -139,13 +139,13 @@ int correlation(int n,...) {
       DEBUG("Broadcasting data Y on %i.\n", worldRank);
       MPI_Bcast(dataMatrixY, dimensions[WIDTH] * dimensions[HEIGHT], MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
-    
+                                   
     // Stop timer
     end_time = MPI_Wtime();
 
     PROF(worldRank, "\nPROF_bcast (slaves=%d) : Time taken for bcast (filename, dims, data) : %g\n",
          worldSize-1, end_time - start_time);
-
+    
     DEBUG("Running correlation kernel on %i\n", worldRank);
 
     result = correlationKernel(worldRank, worldSize, dataMatrixX, dataMatrixY, dimensions[WIDTH], dimensions[HEIGHT], out_filename, distance_flag);
