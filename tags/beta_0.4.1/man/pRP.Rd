@@ -6,8 +6,8 @@ Parallel rank product function helps identifying differentially
 regulated genes in replicated microarray experiments.
 }
 \usage{
-pRP(data, cl, num.perm, logged=TRUE, na.rm=FALSE, gene.names=NULL, 
-     plot=FALSE, rand=NULL, sum = FALSE)
+pRP(data, cl, num.perm, logged = TRUE, na.rm = FALSE, gene.names = NULL, 
+    plot = FALSE, rand = NULL, sum = FALSE)
 }
 \arguments{
     \item{data}{array, input data}
@@ -28,6 +28,8 @@ pRP(data, cl, num.perm, logged=TRUE, na.rm=FALSE, gene.names=NULL,
                 default value is FALSE.}
     \item{rand}{number, the seed for the random number generator if specified.
                 The default value is NULL.}
+    \item{sum}{boolean, whether to perform a rank sum analysis. The default 
+               value is NULL.}            
 }
 \examples{
 rp <- pRP(data, cl=classes, num.perm=100, logged=FALSE)
