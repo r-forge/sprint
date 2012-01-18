@@ -10,21 +10,33 @@ equivalent to the serial randomForest() function from the randomForest
 package. 
 } 
 \usage{
-prandomForest(x, y=NULL, xtest=NULL, ytest=NULL, ntree=500, 
-              mtry = if (!is.null(y) && !is.factor(y))
+prandomForest(x, ...)
+}
+\details{
+Typical usage
+\preformatted{
+  prandomForest(x, y=NULL, xtest=NULL, ytest=NULL, ntree=500, 
+                mtry = if (!is.null(y) && !is.factor(y))
                          max(floor(ncol(x)/3), 1) 
                      else floor(sqrt(ncol(x))),
-              replace=TRUE, classwt=NULL, cutoff, strata,
-              sampsize = if (replace) nrow(x) 
+                replace=TRUE, classwt=NULL, cutoff, strata,
+                sampsize = if (replace) nrow(x) 
                          else ceiling(.632*nrow(x)),
-              nodesize = if (!is.null(y) && !is.factor(y)) 5 else 1,
-              maxnodes=NULL, importance=FALSE, localImp=FALSE, nPerm=1, 
-              proximity, oob.prox=proximity, norm.votes=TRUE, do.trace=FALSE,
-              keep.forest = !is.null(y) && is.null(xtest), corr.bias=FALSE, 
-              keep.inbag=FALSE, ...)
-}
+                nodesize = if (!is.null(y) && !is.factor(y)) 5 else 1,
+                maxnodes=NULL, importance=FALSE, localImp=FALSE, nPerm=1, 
+                proximity, oob.prox=proximity, norm.votes=TRUE, do.trace=FALSE,
+                keep.forest = !is.null(y) && is.null(xtest), corr.bias=FALSE, 
+                keep.inbag=FALSE, ...)
+	    }
+	    }
 \arguments{
-\item{x}{array of data}
+  \item{x}{array of data}
+  \item{...}{optional parameters to be passed to the low level function
+               randomForest.default.}
+  }
+  \details{
+    Typical arguments
+    \preformatted{
 \item{y}{vector, if a factor, classification is assumed, otherwise regression
          is assumed. If omitted, prandomForest() will run in unsupervised 
          mode.}
@@ -39,7 +51,7 @@ prandomForest(x, y=NULL, xtest=NULL, ytest=NULL, ntree=500,
                replacement. The default value is TRUE.}
 \item{classwt}{vector if priors of the classes. The default value is NULL.}
 \item{cutoff}{vector of k elements where k is the number of classes. The 
-              ‘winning’ class for an observation is the one with the maximum
+              winning class for an observation is the one with the maximum
               ratio of proportion of votes to cutoff. The default value is 
               1/k.}
 \item{strata}{variable used for stratified sampling}
@@ -78,7 +90,7 @@ prandomForest(x, y=NULL, xtest=NULL, ytest=NULL, ntree=500,
                   default value is FALSE.}
 \item{...}{optional parameters to be passed to the low level function 
            randomForest.default.}
-}
+}}
 \examples{
 rf <- prandomForest(x=data, y=classes, ntree=5000, ...)
 }

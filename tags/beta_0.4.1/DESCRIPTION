@@ -5,7 +5,8 @@ Date: 2011-09-15
 Author: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
 Maintainer: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
 Depends: R (>= 2.9.2), rlecuyer
-Suggests: ff (>= 2.1-1), randomForest, RankProd, cluster
+Suggests: ff (>= 2.1-1), randomForest, RankProd, cluster, RUnit, multtest
+Imports: boot
 SystemRequirements: MPI2, Unix
 Description: SPRINT (Simple Parallel R INTerface) is a parallel framework for 
              R. It provides a High Performance Computing (HPC) harness which 
