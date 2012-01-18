@@ -7,14 +7,14 @@ implements a parallel version of the bootstrapping method boot() from the boot
 R package.
 }
 \usage{
-pboot(data, statistic, R, sim = “ordinary”, stype = “i”, 
+pboot(data, statistic, R, sim = "ordinary", stype = "i", 
       strata = rep(1, n), L = NULL, m = 0, weights = NULL, 
       ran.gen = function(d, p) d, mle = NULL, simple = FALSE, ...)
 }
 \arguments{
     \item{data}{array of data, if a 2D array then each row is considered as 
                 one multivariate observation}
-    \item{statistic}{function, when sim is set to “parametric”, 
+    \item{statistic}{function, when sim is set to "parametric", 
                      the first argument to statistic must be the data. For 
                      each replicate a simulated dataset returned by ran.gen 
                      will be passed. In all other cases, statistic must take 
@@ -24,28 +24,28 @@ pboot(data, statistic, R, sim = “ordinary”, stype = “i”,
                      bootstrap sample.}
     \item{R}{number of bootstrap replicates}
     \item{sim}{string, indicates the type of simulation. The default value is 
-               "ordinary". Other possible values are “parametric”, “balanced”,
-               “permutation”, and “antithetic”. Importance resampling is 
+               "ordinary". Other possible values are "parametric", "balanced",
+               "permutation", and "antithetic". Importance resampling is 
                specified by including importance weights; the type of 
                importance resampling must still be specified but may only be 
-               “ordinary” or “balanced” in this case.}
+               "ordinary" or "balanced" in this case.}
     \item{stype}{string, indicates what the second argument of statistic 
-                 represents. The default value is “i” for indices. Other 
-                 possible values are “f” for frequencies and “w” for weights.
-                 It is not used when sim is set to “parametric”.}
+                 represents. The default value is "i" for indices. Other 
+                 possible values are "f" for frequencies and "w" for weights.
+                 It is not used when sim is set to "parametric".}
     \item{strata}{vector of integer, specifies the strata for multi-sample 
                   problems. This may be specified for any simulation, but is 
-                  ignored when sim is set to “parametric”. When strata is 
+                  ignored when sim is set to "parametric". When strata is 
                   supplied for a nonparametric bootstrap, the simulations are 
                   done within the specified strata.}
     \item{L}{vector of influence values evaluated at the observations. This is
-             used only when sim is set to “antithetic”. If not supplied, they
+             used only when sim is set to "antithetic". If not supplied, they
              are calculated through a call to empinf.  This will use the 
-             infinitesimal jackknife provided that stype is set to “w” 
+             infinitesimal jackknife provided that stype is set to "w" 
              otherwise the usual jackknife is used.}
     \item{m}{the number of predictions which are to be made at each bootstrap
              replicate. This is most useful for (generalized) linear models. 
-             This can only be used when sim is “ordinary”. m will usually be 
+             This can only be used when sim is "ordinary". m will usually be 
              a single integer but, if there are strata, it may be a vector 
              with length equal to the number of strata, specifying how many 
              of the errors for prediction should come from each strata. The
@@ -60,8 +60,8 @@ pboot(data, statistic, R, sim = “ordinary”, stype = “i”,
                    row of the matrix is one set of importance weights. If 
                    weights is a matrix then the number of bootstrap replicates
                    R must be a vector of length nrow(weights). This parameter
-                   is ignored if sim is not set to “ordinary” or “balanced”.}
-    \item{ran.gen}{function, used only when sim is set to “parametric”. It 
+                   is ignored if sim is not set to "ordinary" or "balanced".}
+    \item{ran.gen}{function, used only when sim is set to "parametric". It 
                    describes how random values are to be generated. It should
                    be a function of two arguments. The first argument should 
                    be the observed data and the second argument consists of 
@@ -83,7 +83,7 @@ pboot(data, statistic, R, sim = “ordinary”, stype = “i”,
                often a list containing all of the objects needed by ran.gen 
                which can be calculated using the original data set only.}
     \item{simple}{boolean, can only be set to TRUE if sim is set to 
-                  “ordinary”, stype is set to “I” and n is set to 0. Otherwise
+                  "ordinary", stype is set to "I" and n is set to 0. Otherwise
                   it is ignored and generates a warning. By default a n by R 
                   index array is created which can be large. If simple is set
                   to TRUE, this is avoided by sampling separately for each 
@@ -98,7 +98,7 @@ parallel functions from the SPRINT library. It is therefore recommended to use
 it only as a standalone function. 
 }
 \examples{
-b <- pboot(city, ratio, R=999, stype=”w”)
+b <- pboot(city, ratio, R=999, stype="w")
 b <- pboot(discoveries, trimmedmean, R=1000, trim=5)
 }
 \seealso{
