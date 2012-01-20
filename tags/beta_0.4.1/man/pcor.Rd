@@ -21,13 +21,6 @@ pcor(data_x, data_y = NULL, distance = FALSE, caching_ = "mmeachflush",
                     back-end caching scheme}
     \item{filename_}{string, name of the result file}
 }
-\examples{
-ff_obj <- pcor(t(inData))
-ff_obj <- pcor(t(inData_x), t(inData_y))
-ff_obj <- pcor(t(inData), filename_="output.dat") 
-ff_obj <- pcor(data, caching_="mmeachflush", filename_="output.dat")
-ff_obj <- pcor(t(inData), distance=TRUE, filename_="output.dat")
-}
 \seealso{
    \code{\link{cor}}
    \code{\link{SPRINT}}

@@ -22,10 +22,6 @@ pmaxT(X, classlabel, test = "t", side = "abs", fixed.seed.sampling = "y",
     \item{na}{missing value tag}
     \item{nonpara}{whether non-parametric test statistics or not}
 }
-\examples{
-pmaxT(X, classlabel, test = "t", side = "abs", B = 10000, 
-     na = .mt.naNUM, fixed.seed.sampling = "y", nonpara = "n") 
-}
 \seealso{
     \code{\link[multtest]{mt.maxT}}
     \code{\link{SPRINT}}

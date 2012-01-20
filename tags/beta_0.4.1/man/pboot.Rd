@@ -97,10 +97,6 @@ compatible with other SPRINT functions, i.e. you cannot bootstrap other
 parallel functions from the SPRINT library. It is therefore recommended to use
 it only as a standalone function. 
 }
-\examples{
-b <- pboot(city, ratio, R=999, stype=w)
-b <- pboot(discoveries, trimmedmean, R=1000, trim=5)
-}
 \seealso{
     \code{\link{boot}}
     \code{\link{SPRINT}}

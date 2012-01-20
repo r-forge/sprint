@@ -35,11 +35,6 @@ the processes involved in the computation.
     \code{\link[ff]{ff}}
     \code{\link{SPRINT}}
 }
-\examples{
-papply(data, mean, margin = 1)
-papply(list, mean)
-papply(ff_object, mean, margin = 1, out_filename = results)
-}
 \author{
 University of Edinburgh SPRINT Team
     \email{sprint@ed.ac.uk}

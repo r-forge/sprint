@@ -30,16 +30,6 @@ input parameters. Although, ppam() does not include the option to calculate
 the distance matrix, this can easily be done using SPRINT pcor() function with
 the 'distance' parameter set to TRUE. 
 }
-\examples{
-# Pre-processing step using pcor() to return an ff object containing a
-# distance matrix. 
-mcor <- pcor(matrix(rnorm(1:10000), ncol=100), distance = TRUE)
-    
-p1m <- ppam(mcor, 4)
-p2m <- ppam(mcor, 4, medoids = c(1,16))
-p3m <- ppam(mcor, 3, trace = 2)
-p4m <- ppam(dist(x), 12)     
-}
 \seealso{
     \code{\link[cluster]{pam}}
     \code{\link[ff]{ff}}
