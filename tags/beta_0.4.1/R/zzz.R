@@ -31,7 +31,7 @@
   invisible(.C("worker"))
   ver <- read.dcf(file.path(lib, pkg, "DESCRIPTION"), "Version")
   ver <- as.character(ver)
-  cat("SPRINT", ver, "loaded\n")
+  packageStartupMessage("SPRINT ", ver, " loaded\n")
 }
 
 ## Called when the extension is unloaded. This is expected to happen
