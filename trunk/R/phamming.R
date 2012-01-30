@@ -16,17 +16,20 @@
 #                                                                        #
 ##########################################################################
 
-## consistent error / warning messages; could use for internationalization
+## consistent error / warning messages;
 ..msg <- list(error =
               c(non.dna = "Function only accepts ShortReadQ or DNAStringSet objects",
-                empty = "data object is empty"
+                empty = "Data object is empty",
+                no_file = "Output filename is missing"
                 ), warn = c()
               )
 
-phamming.distance <- function (data) {
+phamming.distance <- function (data, output_filename) {
 
   objectType <- class(data)
   if(!length(data)) stop(..msg$error["empty"])
+
+  if (is.null(output_filename)) stop(..msg$error["empty"])
   
   if (objectType=='ShortReadQ') {  
     data <- sread(data)
@@ -34,14 +37,21 @@ phamming.distance <- function (data) {
     stop(..msg$error["non.dna"])
   }
 
-  w <- width(data[1])
-  l <- length(data)
+  sample_width <- width(data[1])
+  number_of_samples <- length(data)
+
+  if(sample_width<1 || number_of_samples<2) stop(..msg$error["empty"])
 
   return_val <- .C("phamming",
                    as.character(IRanges::unlist(data)),
-                   as.integer(w),
-                   as.integer(l)                   
+                   as.character(output_filename),
+                   as.integer(sample_width),
+                   as.integer(number_of_samples)                   
                    )
 
+  # Return values from the interface have meaning.
+  #  0    -->     success
+  # -1    -->     MPI is not initialized
+  
   return(return_val)
 }

@@ -29,20 +29,13 @@ extern int hamming(int n,...);
  *  Accepts information from R gets response and returns it.        *
  *                                                                  *
  * **************************************************************** */
-int phamming(char **x, int *width, int *length)
+int phamming(char **x,
+             char **out_filename,
+             int *sample_width,
+             int *number_of_samples)
 {
 
-// ========================================================
-  
-  int i=0;
-
-  printf("width: %d, length: %d \n", *width, *length);
-
-
-// =========================================================
-
-
-  int *response;
+  int response;
   int worldSize, worldRank;
   
   enum commandCodes commandCode;
@@ -53,6 +46,7 @@ int phamming(char **x, int *width, int *length)
     DEBUG("\nMPI is init'ed in phamming\n");
   } else {
     DEBUG("\nMPI is NOT init'ed in phamming\n");
+    return(-1);
   }
   
   // Get size and rank from communicatorx
@@ -64,7 +58,7 @@ int phamming(char **x, int *width, int *length)
   MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
   
   // Call the partitioning around medoids function
-  response = hamming(3, *x, *width, *length);
+  response = hamming(4, *x, *sample_width, *number_of_samples, *out_filename);
   
   return response;
 
