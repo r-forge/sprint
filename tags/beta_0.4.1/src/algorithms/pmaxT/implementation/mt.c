@@ -252,12 +252,9 @@ void get_all_samples_P(double *V, int n, double *P, double na,
     }
 
     if(B!=b){
-        fprintf(stderr,"Error we have b(%d)!=B(%d)\n",b,B);
-        return;
+      error("Error we have b(%d)!=B(%d)\n",b,B);
+      return;
     }
-
-    if(myDEBUG)
-        print_farray(stderr,T,B);
 
     // Order the test_stat
     order_data(T,R,B,func_cmp);
@@ -313,12 +310,9 @@ void get_all_samples_T(double* V, int n,double* T,double na,
     }
 
     if(B!=b){
-        fprintf(stderr,"Error we have b(%d)!=B(%d)\n",b,B);
-        return;/*exit(1)*/;
+      error("Error we have b(%d)!=B(%d)\n",b,B);
+        return;
     }
-
-    if(myDEBUG)
-        print_farray(stderr,T,B);
 
 
 } 
@@ -344,11 +338,6 @@ void adj_pvalue_quick(GENE_DATA *pdata, double *T, double *P,
     // Get the original unadjusted p-values first
     // we'll use the normalized t-statistics
     get1pvalue(pdata,pdata->L,T,P,func_stat_T,func_first_sample,func_next_sample,func_cmp,extra);
-    if(myDEBUG)
-    {
-        print_farray(stderr,T,pdata->nrow);
-        print_farray(stderr,P,pdata->nrow);
-    }
 
     // Sort the test_stat
     order_mult_data(R, nrow, 2, P, cmp_low, T, func_cmp);
@@ -367,8 +356,6 @@ void adj_pvalue_quick(GENE_DATA *pdata, double *T, double *P,
     for(i=nrow-1;i>=0;i--){
         get_all_samples_P(pdata->d[i], ncol, all_P,pdata->na,
                 func_stat, func_first_sample, func_next_sample, func_cmp, extra);
-        if(myDEBUG)
-            print_farray(stderr, all_P, B);
 
         // Update all_Q
         count=0;
@@ -389,12 +376,6 @@ void adj_pvalue_quick(GENE_DATA *pdata, double *T, double *P,
             } else if (all_Q[b] <= P[i]+EPSILON)
                 neq++;
             B_new++;
-        }
-
-        if(myDEBUG)
-        {
-            print_farray(stderr, all_Q, B);
-            fprintf(stderr, "P[%d]=%5.3f,count=%5.2f,neq=%d\n", i, P[i], count, neq);
         }
 
         // Assign the Adj_P and Adj_Lower for gene i

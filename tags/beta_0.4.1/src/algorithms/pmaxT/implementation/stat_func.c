@@ -382,7 +382,7 @@ double Block_Fstat_num_denum(const double *Y, const int *L, const int n, const d
     B = n/m;
 
     if(B*m != n){
-        fprintf(stderr,"The design is not balanced as B(%d)xm(%d)!=n(%d)\n",B,m,n);
+      error("The design is not balanced as B(%d)xm(%d)!=n(%d)\n",B,m,n);
         return NA_FLOAT;
     }
 
@@ -550,7 +550,7 @@ int next_lex(int *A, int n, int k)
     if(l<0) {
         if (myDEBUG)
         {
-            fprintf(stderr,"%s%s","We've achieved the maximum permutation already\n",
+          error("%s%s","We've achieved the maximum permutation already\n",
                     "We can not find the next one in next_lex\n");
         }
         // Note we can not generate the next permutations
@@ -842,7 +842,7 @@ int next_permu(int *V, int n)
 
     if(i<0) {
         if (myDEBUG) {
-            fprintf(stderr,"%s%s", "We've achieved the maximum permutation already\n",
+          error("%s%s", "We've achieved the maximum permutation already\n",
                     "We can not find the next one-in next_permu\n");
         }
         return 0;/*note we can not generate the next permutations*/
@@ -955,10 +955,10 @@ void print_gene_data(GENE_DATA *pdata)
     int i, j;
 
     for (i=0; i<pdata->nrow; i++){
-        fprintf(stderr,"%20s", pdata->id[i]);
+      error("%20s", pdata->id[i]);
         for (j=0; j<pdata->ncol; j++) 
-            fprintf(stderr," %5.3f", pdata->d[i][j]);
-        fprintf(stderr,"\n");
+          error(" %5.3f", pdata->d[i][j]);
+        error("\n");
     }
 }
 
@@ -984,17 +984,7 @@ void write_outfile(FILE *fh, GENE_DATA *pdata, double *T, double *P, double *Adj
     // The length of the array T,P,etc.
     nrow=pdata->nrow;
 
-    if(myDEBUG)
-    {
-        fprintf(stderr, "\nThe results of T,P Adj_P and Adj_Lower");
-        print_farray(stderr, T, nrow);      
-        print_farray(stderr, P, nrow);
-        print_farray(stderr, Adj_P, nrow);
-        if(Adj_Lower)
-            print_farray(stderr, Adj_Lower, nrow);
-    }
-
-    fprintf(stderr, "\nWe're writing the output\n");
+    // error( "\nWe're writing the output\n");
     fprintf(fh, "%20s %10s %10s %10s", "gene_id", "test-stat", "unadj-p", "adjusted-p");
 
     if(Adj_Lower)

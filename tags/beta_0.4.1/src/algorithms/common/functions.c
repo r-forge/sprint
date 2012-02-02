@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "../../functions.h"
+#include "../../sprint.h"
 
 /*
  * Declare the various command functions as external
@@ -49,7 +50,7 @@ extern int boot_rank_product_multi(int n, ...);
 
 int voidCommand(int n,...)
 {
-  printf("Void command called, I would not expect this to be called.\n");
+  Rprintf("Void command called, I would not expect this to be called.\n");
 
   return 1;
 }
