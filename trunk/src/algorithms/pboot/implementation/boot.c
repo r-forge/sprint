@@ -35,6 +35,8 @@ SEXP boot(int n, ...)
   SEXP  list, fn, tmp, ret;
   va_list ap;
 
+  int objects_counter = 0;
+
   MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
   MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
 
@@ -51,38 +53,33 @@ SEXP boot(int n, ...)
   
   if(worldRank == 0) {
 
-    PROTECT(tmp = serialize_form(list));
+    PROTECT(tmp = serialize_form(list)); objects_counter++;
     nbytes = length(tmp);
     
     MPI_Bcast(&nbytes, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(RAW(tmp), nbytes, MPI_BYTE, 0, MPI_COMM_WORLD);
 
-    tmp = serialize_form(fn);
+    PROTECT(tmp = serialize_form(fn)); objects_counter++;
     nbytes = length(tmp);
     MPI_Bcast(&nbytes, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(RAW(tmp), nbytes, MPI_BYTE, 0, MPI_COMM_WORLD);
-    
-    UNPROTECT(1);
     
   } else {
 
     MPI_Bcast(&nbytes, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    PROTECT(tmp = allocVector(RAWSXP, nbytes));
+    PROTECT(tmp = allocVector(RAWSXP, nbytes)); objects_counter++;
     MPI_Bcast(RAW(tmp), nbytes, MPI_BYTE, 0, MPI_COMM_WORLD);
-    PROTECT(list = unserialize_form(tmp));
-
-    //UNPROTECT(2);
+    PROTECT(list = unserialize_form(tmp)); objects_counter++;
 
     MPI_Bcast(&nbytes, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    PROTECT(tmp = allocVector(RAWSXP, nbytes));
+    tmp = allocVector(RAWSXP, nbytes);
     MPI_Bcast(RAW(tmp), nbytes, MPI_BYTE, 0, MPI_COMM_WORLD);
-    PROTECT(fn = unserialize_form(tmp));
+    PROTECT(fn = unserialize_form(tmp)); objects_counter++;
 
-    //UNPROTECT(2);
-    
   }
 
   PROTECT(ret = runBootstrapCall(list, fn, worldRank, worldSize));
+  objects_counter++;
 
   MPI_Status status;
   SEXP chunk;
@@ -92,20 +89,14 @@ SEXP boot(int n, ...)
     for(int i=1; i<worldSize; i++) {
 
       MPI_Recv(&nbytes, 1, MPI_INT, i, 1, MPI_COMM_WORLD, &status);
-      tmp = allocVector(RAWSXP, nbytes);
+      PROTECT(tmp = allocVector(RAWSXP, nbytes)); objects_counter++;
       MPI_Recv(RAW(tmp), nbytes, MPI_BYTE, i, 1, MPI_COMM_WORLD, &status);
-      PROTECT(chunk = unserialize_form(tmp));
-      
-      REprintf("Length of ret 1:%d is %d\n", i, length(ret));
+      PROTECT(chunk = unserialize_form(tmp)); objects_counter++;
 
-      ret = combine(ret, chunk);
-
-      REprintf("Length of ret 2:%d is %d\n", i, length(ret));
-      
-      UNPROTECT(1);
+      PROTECT(ret = combine(ret, chunk)); objects_counter++;
 
     }
-
+    
   } else {
 
     tmp = serialize_form(ret);
@@ -113,11 +104,13 @@ SEXP boot(int n, ...)
     MPI_Send(&nbytes, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
     MPI_Send(RAW(tmp), nbytes, MPI_BYTE, 0, 1, MPI_COMM_WORLD);
 
-    UNPROTECT(3);
-    
-    }
+  }
 
-  UNPROTECT(1);
+  if(worldRank == 0) {
+    UNPROTECT(objects_counter);
+  } else {
+    UNPROTECT(objects_counter);
+  }
   
   if(worldRank != 0) return 0;
   if(worldRank == 0) return ret;
@@ -138,8 +131,6 @@ SEXP runBootstrapCall(SEXP list, SEXP fn, int worldRank, int worldSize) {
   loopDistribute(worldRank, worldSize, length(list), &my_start, &my_end);
   n = my_end - my_start;
 
-  REprintf("mID: %d mStart: %d mEnd: %d\n", worldRank, my_start, my_end);
-  
   PROTECT(R_fcall = lang2(fn, R_NilValue));
   PROTECT(ans = allocVector(VECSXP, n));
   
