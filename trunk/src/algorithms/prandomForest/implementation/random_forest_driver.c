@@ -20,6 +20,7 @@
 
 #include <stdarg.h>
 #include "../../../sprint.h"
+#include "../../common/serialize.h"
 #include <R_ext/Parse.h>
 
 /* These match up with the R interface.  So that nthcdr(args,
@@ -49,63 +50,6 @@ typedef enum _arguments_t {
     COR_BIAS,
     KEEP_INBAG
 } arguments_t;
-
-/* When the serialize.c interface is made available to third party
- * packages this could be pulled entirely into the C layer.  As it is
- * we have to go through the interpreter. */
-SEXP serialize_form(SEXP form)
-{
-    SEXP thunk;
-    SEXP ret;
-    PROTECT(thunk = allocVector(LANGSXP, 3));
-    SETCAR(thunk, install("serialize"));
-    SETCADR(thunk, form);
-    SETCADDR(thunk, R_NilValue);
-
-    ret = eval(thunk, R_GlobalEnv);
-    UNPROTECT(1);
-    return ret;
-}
-
-/* As above. */
-SEXP unserialize_form(SEXP form)
-{
-    SEXP thunk;
-    SEXP ret;
-    PROTECT(thunk = allocVector(LANGSXP, 2));
-    SETCAR(thunk, install("unserialize"));
-    SETCADR(thunk, form);
-
-    ret = eval(thunk, R_GlobalEnv);
-    UNPROTECT(1);
-    return ret;
-}
-
-SEXP getListElement(SEXP list, char *str)
-{
-  SEXP elmt = R_NilValue;
-  SEXP names = getAttrib(list, R_NamesSymbol);
-  int i;
-
-  for (i = 0; i < length(list); i++)
-    if(strcmp(CHAR(STRING_ELT(names, i)), str) == 0) {
-      elmt = VECTOR_ELT(list, i);
-      break;
-    }
-  return elmt;
-}
-
-void setListElement(SEXP list, char *str, SEXP value)
-{
-  SEXP names = getAttrib(list, R_NamesSymbol);
-  int i;
-
-  for (i = 0; i < length(list); i++)
-    if(strcmp(CHAR(STRING_ELT(names, i)), str) == 0) {
-      SET_VECTOR_ELT(list, i, value);
-      break;
-    }
-}
 
 /* Call the serial randomForest call with the args we were passed in
  * parallel.  We use the size and rank arguments to calculate the

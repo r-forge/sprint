@@ -29,8 +29,8 @@
 #include "functions.h"
 #include <R.h>
 #include <R_ext/Rdynload.h>
-#include <Rembedded.h>
 #include <Rinterface.h>
+#include <Rembedded.h>
 
 extern commandFunction commandLUT[];
 static int mpi_init_flag = -1;
@@ -175,7 +175,8 @@ void worker() {
     DEBUG("%i: End logging\n", worldRank);
 
     R_CleanTempDir();
-    R_CleanUp (SA_DEFAULT, 0, 0);
+//    R_CleanUp(SA_DEFAULT, 0, 0);
+    exit(0);
 
 }
 

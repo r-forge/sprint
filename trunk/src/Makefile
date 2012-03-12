@@ -1,5 +1,5 @@
 # Ensure the following line is uncommented for debug logging
-#_DEBUG = -D_DEBUG
+_DEBUG = -D_DEBUG
 #_PROF = -D_PROF
 
 # Pull in the system specifics which the configuration script cooked up
