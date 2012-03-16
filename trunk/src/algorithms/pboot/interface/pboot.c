@@ -21,7 +21,7 @@
 #include "../../../sprint.h"
 #include "../../../functions.h"
 
-extern SEXP boot(int n, ...);
+extern int boot(int n, ...);
   
 SEXP pboot(SEXP list, SEXP fn)
 {
@@ -51,11 +51,8 @@ SEXP pboot(SEXP list, SEXP fn)
   commandCode = PBOOT;
   MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-  PROTECT(result = allocVector(VECSXP, 1));
-  
-  result =  boot(3, list, fn);
+  response = boot(3, list, fn, &result);
 
-  UNPROTECT(1);
   return result;
   
 }

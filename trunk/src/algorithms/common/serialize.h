@@ -28,5 +28,8 @@ SEXP serialize_form(SEXP form);
 SEXP unserialize_form(SEXP form);
 SEXP getListElement(SEXP list, char *str);
 void setListElement(SEXP list, char *str, SEXP value);
+void reduce_combine(SEXP in, SEXP *out, SEXP (*combine_fn)(SEXP, SEXP),
+                    int root, MPI_Comm comm);
 
 #endif
+

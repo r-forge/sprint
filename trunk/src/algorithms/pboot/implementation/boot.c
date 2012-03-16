@@ -24,15 +24,15 @@
 #include "../../common/utils.h"
 
 SEXP runBootstrapCall(SEXP list, SEXP fn, int worldRank, int worldSize);
-void gathersssData(SEXP gathered_result, SEXP ans, int N, int my_start, int my_end, int worldRank);
-SEXP combine(SEXP a, SEXP b);
+SEXP combine_boot_results(SEXP a, SEXP b);
 
-SEXP boot(int n, ...)
+int boot(int n, ...)
 {
 
   int worldSize, worldRank;
   int nbytes;
-  SEXP  list, fn, tmp, ret;
+  SEXP  list, fn, tmp;
+  SEXP *ret;
   va_list ap;
 
   int objects_counter = 0;
@@ -44,7 +44,8 @@ SEXP boot(int n, ...)
 
       va_start(ap,n);
       list = va_arg(ap, SEXP);
-      fn = va_arg(ap, SEXP);      
+      fn = va_arg(ap, SEXP);
+      ret = va_arg(ap, SEXP *);
       va_end(ap);
 
   }
@@ -78,7 +79,7 @@ SEXP boot(int n, ...)
 
   }
 
-  PROTECT(ret = runBootstrapCall(list, fn, worldRank, worldSize));
+  PROTECT(tmp = runBootstrapCall(list, fn, worldRank, worldSize));
   objects_counter++;
 
   MPI_Status status;
@@ -86,34 +87,16 @@ SEXP boot(int n, ...)
 
   if(worldRank == 0) {
 
-    for(int i=1; i<worldSize; i++) {
+    reduce_combine(tmp, ret, &combine_boot_results, 0, MPI_COMM_WORLD);
 
-      MPI_Recv(&nbytes, 1, MPI_INT, i, 1, MPI_COMM_WORLD, &status);
-      PROTECT(tmp = allocVector(RAWSXP, nbytes)); objects_counter++;
-      MPI_Recv(RAW(tmp), nbytes, MPI_BYTE, i, 1, MPI_COMM_WORLD, &status);
-      PROTECT(chunk = unserialize_form(tmp)); objects_counter++;
-
-      PROTECT(ret = combine(ret, chunk)); objects_counter++;
-
-    }
-    
   } else {
 
-    tmp = serialize_form(ret);
-    nbytes = length(tmp);
-    MPI_Send(&nbytes, 1, MPI_INT, 0, 1, MPI_COMM_WORLD);
-    MPI_Send(RAW(tmp), nbytes, MPI_BYTE, 0, 1, MPI_COMM_WORLD);
+    reduce_combine(tmp, NULL, &combine_boot_results, 0, MPI_COMM_WORLD);
 
   }
 
-  if(worldRank == 0) {
-    UNPROTECT(objects_counter);
-  } else {
-    UNPROTECT(objects_counter);
-  }
-  
-  if(worldRank != 0) return 0;
-  if(worldRank == 0) return ret;
+  UNPROTECT(objects_counter);
+  return 0;
  
 }
 
@@ -148,7 +131,7 @@ SEXP runBootstrapCall(SEXP list, SEXP fn, int worldRank, int worldSize) {
   return(ans);
 }
 
-SEXP combine(SEXP a, SEXP b)
+SEXP combine_boot_results(SEXP a, SEXP b)
 {
     SEXP thunk;
     SEXP ret;
@@ -160,5 +143,3 @@ SEXP combine(SEXP a, SEXP b)
     UNPROTECT(1);
     return ret;
 }
-
-
