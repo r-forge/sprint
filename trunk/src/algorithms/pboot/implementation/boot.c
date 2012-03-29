@@ -31,7 +31,7 @@ int boot(int n, ...)
 
   int worldSize, worldRank;
   int nbytes;
-  SEXP  list, fn, tmp;
+  SEXP list, fn, tmp;
   SEXP *ret;
   va_list ap;
 
@@ -50,7 +50,8 @@ int boot(int n, ...)
 
   }
 
-  /* Broadcast function and data */
+  /* Broadcast function and data using serialize_form and unserialize_form
+    functions from coomon/serialize.c */
   
   if(worldRank == 0) {
 
@@ -84,6 +85,8 @@ int boot(int n, ...)
 
   MPI_Status status;
   SEXP chunk;
+
+    /* Do a tree reduction across the processes */
 
   if(worldRank == 0) {
 
@@ -131,6 +134,7 @@ SEXP runBootstrapCall(SEXP list, SEXP fn, int worldRank, int worldSize) {
   return(ans);
 }
 
+/* Use the interpreter "c" function to combine results */
 SEXP combine_boot_results(SEXP a, SEXP b)
 {
     SEXP thunk;
