@@ -113,7 +113,7 @@ SEXP runBootstrapCall(SEXP list, SEXP fn, int worldRank, int worldSize) {
   if(!isNewList(list)) error("’list’ must be a list");
   if(!isFunction(fn)) error("’fn’ must be a function");
   if(!isEnvironment(rho)) error("’rho’ should be an environment");
-  
+  e
   loopDistribute(worldRank, worldSize, length(list), &my_start, &my_end);
   n = my_end - my_start;
 
