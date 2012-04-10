@@ -1,5 +1,5 @@
-\name{phamming}
-\alias{phamming}
+\name{phamming.distance}
+\alias{phamming.distance}
 \title{Parallel hamming distance}
 \description{Calculates the hamming distance matrix between a set of DNA
   sequences provided as a ShortReadQ or DNAStringSet objects.
