@@ -7,7 +7,7 @@ implements a parallel version of the bootstrapping method boot() from the boot
 R package.
 }
 \usage{
-pboot(data, statistic, R, sim = ordinary, stype = i, 
+pboot(data, statistic, R, sim = ordinary, c("i", "f", "w")
       strata = rep(1, n), L = NULL, m = 0, weights = NULL, 
       ran.gen = function(d, p) d, mle = NULL, simple = FALSE, ...)
 }
