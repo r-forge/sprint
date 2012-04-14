@@ -6,11 +6,6 @@ pboot() generates R bootstrap replicates of a statistic applied to data. It
 implements a parallel version of the bootstrapping method boot() from the boot
 R package.
 }
-\usage{
-pboot(data, statistic, R, sim = ordinary, c("i", "f", "w")
-      strata = rep(1, n), L = NULL, m = 0, weights = NULL, 
-      ran.gen = function(d, p) d, mle = NULL, simple = FALSE, ...)
-}
 \arguments{
     \item{data}{array of data, if a 2D array then each row is considered as 
                 one multivariate observation}

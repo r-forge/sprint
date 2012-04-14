@@ -1,4 +1,4 @@
 \name{init.rng}
-\alias{inti.rng}
+\alias{init.rng}
 \title{init.rng}
 \description{Internal utility function.}
