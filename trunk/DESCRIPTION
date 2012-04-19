@@ -1,11 +1,11 @@
 Package: sprint
 Title: Simple Parallel R INTerface
-Version: 1.0.0
-Date: 2012-01-20
+Version: 1.0.1
+Date: 2012-04-19
 Author: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
 Maintainer: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
 Depends: R (>= 2.9.2), rlecuyer
-Suggests: ff (>= 2.1-1), randomForest, RankProd, cluster, RUnit, multtest, IRanges
+Suggests: ff (>= 2.1-1), randomForest, RankProd, cluster, multtest, IRanges
 Imports: boot
 SystemRequirements: MPI2, Unix
 Description: SPRINT (Simple Parallel R INTerface) is a parallel framework for 
