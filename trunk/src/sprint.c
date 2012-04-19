@@ -175,6 +175,7 @@ void worker() {
     DEBUG("%i: End logging\n", worldRank);
 
     R_CleanTempDir();
+    exit(0);
 
     return;
 
