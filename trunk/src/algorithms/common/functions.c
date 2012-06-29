@@ -33,7 +33,7 @@
  */
 
 extern int test(int n,...);
-extern int svm_call(int n,...)
+extern int svm_call(int n,...);
 extern int correlation(int n,...);
 extern int permutation(int n,...);
 extern int pamedoids(int n,...);
