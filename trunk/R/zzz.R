@@ -32,6 +32,10 @@
   ver <- read.dcf(file.path(lib, pkg, "DESCRIPTION"), "Version")
   ver <- as.character(ver)
   packageStartupMessage("SPRINT ", ver, " loaded\n")
+  packageStartupMessage("Welcome to SPRINT
+Please help us fund SPRINT by filling in the form at http://www.r-sprint.org/ 
+or emailing us at sprint@ed.ac.uk and letting us know whether you use SPRINT 
+for commercial or academic use. 
 }
 
 ## Called when the extension is unloaded. This is expected to happen
