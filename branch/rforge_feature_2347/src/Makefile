@@ -52,20 +52,18 @@ else
 endif
 else
 ifeq (mpicc,$(findstring mpicc,$(MPICC)))
-	$(MPICC) -shared -o $@ $^
+	$(MPICXX) -shared -o $@ $^
 else
 	$(CC) -shared -o $@ $^ $(MPILIBS)
 endif
 endif
 
-.cpp.o:
+%.o: %.cpp $(MAKEFILE)
 	$(MPICXX) $(LOCAL_CFLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
 
-.c.o:
+%.o: %.c $(MAKEFILE)
 	$(MPICC) $(LOCAL_CFLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
-# * ****************************************** *
-# *  Create object files for each main target  *
-# * ****************************************** *
+
 # * ****************************** *
 # *  Clean up the build directory  *
 # * ****************************** *
@@ -74,5 +72,4 @@ endif
 clean:
 	find . -name "*.o" -exec rm -f {} \;
 	rm -f sprint.so
-
 
