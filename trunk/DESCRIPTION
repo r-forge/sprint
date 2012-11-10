@@ -3,10 +3,10 @@ Title: Simple Parallel R INTerface
 Version: 1.0.4
 Date: 2012-10-23
 Author: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
-Maintainer: Eilidh Troup <sprint@ed.ac.uk>
+Maintainer: Eilidh Troup <e.troup@epcc.ed.ac.uk>
 Depends: R (>= 2.9.2), rlecuyer
 Suggests: ff (>= 2.1-1), randomForest, RankProd, cluster, multtest,
-        IRanges, RUnit
+        IRanges, RUnit, Matrix, SparseM
 Imports: boot
 SystemRequirements: MPI2, Unix
 Description: SPRINT (Simple Parallel R INTerface) is a parallel
