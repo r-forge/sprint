@@ -175,9 +175,9 @@ int pamedoids(int n,...) {
   MPI_Bcast(nisol, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   /* Local variables */
-  all_stats = (obj[0] == 0.),        /* if false, only return 'ncluv[]' */
-    med_given = (med[0] != 0),       /* if true, med[] contain initial medoids */
-    do_swap = (nisol[0] != 0);
+  all_stats = (obj[0] == 0.);   /* if false, only return 'ncluv[]' */
+  med_given = (med[0] != 0); /* if true, med[] contain initial medoids */
+  do_swap = (nisol[0] != 0);
 
   /* We've figured out if we should do swapping, so initialise nisol
    * correctly */
