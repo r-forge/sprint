@@ -169,7 +169,7 @@ int pamedoids(int n,...) {
   MPI_Bcast(ttsyl, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(obj, 2, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(med, n_clusters, MPI_INT, 0, MPI_COMM_WORLD);
-  MPI_Bcast(ncluv, n_clusters, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(ncluv, n_rows, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast(clusinf, n_clusters*5, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(sylinf, n_rows*4, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(nisol, n_clusters, MPI_INT, 0, MPI_COMM_WORLD);
