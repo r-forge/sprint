@@ -179,6 +179,9 @@ int pamedoids(int n,...) {
     med_given = (med[0] != 0),       /* if true, med[] contain initial medoids */
     do_swap = (nisol[0] != 0);
 
+  /* We've figured out if we should do swapping, so initialise nisol
+   * correctly */
+  nisol[0] = 0;
   clusinf_dim1 = n_clusters;
   
   /* initialise medoids before broadcasting nrepr array */
