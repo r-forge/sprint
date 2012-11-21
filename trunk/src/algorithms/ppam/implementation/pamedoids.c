@@ -124,7 +124,7 @@ int pamedoids(int n,...) {
     ncluv = (int *) R_alloc(n_rows, sizeof(int));
     clusinf = (double *) R_alloc(n_clusters*5, sizeof(double));
     sylinf = (double *) R_alloc(n_rows*4, sizeof(double));
-    nisol = (int*) R_alloc(1, sizeof(int));
+    nisol = (int*) R_alloc(n_clusters, sizeof(int));
 
     if ( (nsend == NULL) || (nrepr == NULL) || (nelem == NULL) || (radus == NULL) ||
          (damer == NULL) || (avsyl == NULL) || (separ == NULL) || (ttsyl == NULL) ||
@@ -172,7 +172,7 @@ int pamedoids(int n,...) {
   MPI_Bcast(ncluv, n_clusters, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast(clusinf, n_clusters*5, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(sylinf, n_rows*4, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(nisol, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(nisol, n_clusters, MPI_INT, 0, MPI_COMM_WORLD);
 
   /* Local variables */
   all_stats = (obj[0] == 0.);   /* if false, only return 'ncluv[]' */
