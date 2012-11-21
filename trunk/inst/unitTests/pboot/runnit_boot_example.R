@@ -31,7 +31,6 @@ trimmedmean <- function(x, d, trim=0) { return(mean(x[d], trim/length(x))) }
 test.bootExample1 <- function() {
 
   # example from http://www.ats.ucla.edu/stat/r/library/bootstrap.htm 
-  data(city)
   #defining the ratio function
   #using the boot function
   set.seed(1337)
