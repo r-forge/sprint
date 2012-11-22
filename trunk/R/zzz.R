@@ -28,7 +28,15 @@
 .onAttach <- function(lib, pkg) {
   ## We start the worker after attaching the library so that
   ## lazy-loaded R code in SPRINT is available to the slave processes
-  invisible(.C("worker"))
+  invisible(return_val <- .Call("worker"))
+
+  ## If the return value is not 0, which indicates a 'worker' MPI
+  ## process, then immediately quit. This will prevent any messages
+  ## printed out, or any other unwanted behavior.
+  if(return_val != 0) {
+    q(save = "no")
+  }
+
   ver <- read.dcf(file.path(lib, pkg, "DESCRIPTION"), "Version")
   ver <- as.character(ver)
   packageStartupMessage("SPRINT ", ver, " loaded\n")
