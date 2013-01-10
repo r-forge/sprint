@@ -26,6 +26,7 @@ IMPLEMENTATION_OBJS = algorithms/papply/implementation/apply.o algorithms/papply
 SHARED_ALGORITHM_OBJS = algorithms/common/functions.o algorithms/common/mmap.o algorithms/common/serialize.o algorithms/common/utils.o
 
 OS := $(shell uname)
+LONG_OS := $(shell uname -a)
 
 # * **************************************************************** *
 # *  Compiler flags additional to the ones R automatically provides  *
