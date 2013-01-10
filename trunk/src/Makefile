@@ -51,12 +51,17 @@ else
 
 endif
 else
+ifeq (cray,$(findstring cray,$(LONG_OS)))
+	cc -shared -o $@ $^ 
+else
 ifeq (mpicc,$(findstring mpicc,$(MPICC)))
 	$(MPICXX) -shared -o $@ $^
 else
 	$(CC) -shared -o $@ $^ $(MPILIBS)
 endif
 endif
+endif
+
 
 %.o: %.cpp $(MAKEFILE)
 	$(MPICXX) $(LOCAL_CFLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
