@@ -1,0 +1,92 @@
+<!-- START OF CONTENT -->
+
+
+<h2>R and SPRINT</h2>
+
+<a name="access"></a>
+<h3 class="subsection"> Licensing and access  </h3>
+<p>
+R is freely available under the <a href="http://www.r-project.org/COPYING">
+GNU General Public Licence</a>. All HECToR users have access to the R binaries and source. </p>
+
+<a name="compilation"></a>
+<h3 class="subsection">Compilation </h3>
+
+<ul>
+    <li><a href="file:///Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/doc/rcompilation.htm">Compiling R 2.15.2 and SPRINT on Phase 3</li>
+</ul>
+
+<a name="running"></a>
+<h3 class="subsection">Running </h3>
+<p>
+To run R you need to add the correct module to your environment. 
+</p>
+<pre>
+module add R
+</pre>
+<p>
+You should make sure that you have set the environment variable $TMP to point to a directory in your /work filesystem before running R. e.g.
+</p>
+<pre>
+export TMP=/work/z01/z01/aturner/temp
+</pre>
+
+<h3>Example job submission script</h3>
+<p>
+As R runs in serial you will either have to run your jobs on the serial queues or use SPRINT 
+or your own MPI task farm which you can then use with aprun. (You must also ensure that the R 
+script keeps track of the results in a sensible way - e.g. by writing to task specific files.) 
+The following example uses SPRINT.
+</p>
+<p>
+An R script that calls SPRINT. Save as 'install_test.R'.
+</p>
+<pre>
+library("sprint")
+ptest()
+pterminate()
+quit()
+</pre>
+<p>The job submission script. Save as 'submission_script.pbs'.</p>
+<pre>
+#!/bin/bash --login
+#PBS -N R_job
+#PBS -l mppwidth=32
+#PBS -l mppnppn=32
+#PBS -l walltime=01:00:00
+# Replace with your own buget
+#PBS -A b10                 
+
+#module add R
+
+# Replace with your own temporary directory.
+export TMP=/home/z01/z01/egrant1/work/Rinstall/tmp  
+
+export R_WORK_HOME=/usr/local/packages/rpackage/2.15.2-phase3/R-2.15.2
+
+# Change to the directory that the job was submitted from
+cd $PBS_O_WORKDIR
+
+aprun -n 4 -N 4 $R_WORK_HOME/bin/R -f install_test.R
+</pre>
+<p>Submit the code with the command:</p>
+<pre>
+ qsub submission_script.pbs
+</pre>
+<p>Check the queue:</p>
+<pre>
+ qstat -u $USER
+</pre>
+<p>The output of the results should be in R_job.o{job_no.} and R_job.e{job_no.}</p>
+
+<h3 class="subsection">Useful links</h3>
+
+<ul>
+	<li><a href="http://www.r-project.org/">R Webpage</a></li>
+	<li><a href="http://www.r-sprint.org/">SPRINT</a></li>
+</ul>
+
+
+
+
+<!-- END OF CONTENT -->
