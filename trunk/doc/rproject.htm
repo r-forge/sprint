@@ -6,40 +6,41 @@
 <a name="access"></a>
 <h3 class="subsection"> Licensing and access  </h3>
 <p>
-R is freely available under the <a href="http://www.r-project.org/COPYING">
-GNU General Public Licence</a>. All HECToR users have access to the R binaries and source. </p>
+R and SPRINT are freely available under the <a href="http://www.r-project.org/COPYING">
+GNU General Public Licence</a>. All HECToR users have access to the R and SPRINT binaries and source. </p>
 
-<a name="compilation"></a>
-<h3 class="subsection">Compilation </h3>
-
-<ul>
-    <li><a href="file:///Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/doc/rcompilation.htm">Compiling R 2.15.2 and SPRINT on Phase 3</li>
-</ul>
-
-<a name="running"></a>
-<h3 class="subsection">Running </h3>
+<a name="runningR"></a>
+<h3 class="subsection">Running R on HECToR</h3>
 <p>
 To run R you need to add the correct module to your environment. 
 </p>
+<p>
+On the HECToR command line enter the following:
+</p>
 <pre>
-module add R
+> module add R
 </pre>
 <p>
-You should make sure that you have set the environment variable $TMP to point to a directory in your /work filesystem before running R. e.g.
+You should make sure that you have set the environment variable $TMP to point to a directory in 
+your /work filesystem before running R. e.g.
 </p>
 <pre>
 export TMP=/work/z01/z01/aturner/temp
 </pre>
-
-<h3>Example job submission script</h3>
 <p>
-As R runs in serial you will either have to run your jobs on the serial queues or use SPRINT 
+As R runs in serial you will either have to run your jobs on the 
+<a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#serial">serial queues</a> or use SPRINT 
 or your own MPI task farm which you can then use with aprun. (You must also ensure that the R 
 script keeps track of the results in a sensible way - e.g. by writing to task specific files.) 
-The following example uses SPRINT.
+The following examples use SPRINT.
 </p>
+
+
+<a name="runningSprint"></a>
+<h3 class="subsection">Running SPRINT</h3>
+
 <p>
-An R script that calls SPRINT. Save as 'install_test.R'.
+First write an R script that uses SPRINT. Here's an example, saved as 'install_test.R'.
 </p>
 <pre>
 library("sprint")
@@ -47,6 +48,28 @@ ptest()
 pterminate()
 quit()
 </pre>
+
+You can't run SPRINT on the front end of HECToR (where you first log in to). If you try this, 
+then you'll see an MPI initialisation error as MPI is not installed on the front end.
+You must run your SPRINT script on the backend, either run interactively, 
+or by submitting a job. Both ways are described below.
+
+<h3>Interactive example</h3><p>
+<a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#int">Running interactive jobs</a>
+</p>
+<pre>
+qsub -IVl mppwidth=32,walltime=0:10:0 -A b10
+</pre>
+<p>wait a little...</p>
+<pre>
+module add R
+export TMP=`pwd`
+aprun -n 4 R -f install_test.R
+</pre>
+
+<h3>Example job submission script</h3>
+<a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#xt">Submitting batch jobs</a>
+
 <p>The job submission script. Save as 'submission_script.pbs'.</p>
 <pre>
 #!/bin/bash --login
@@ -54,20 +77,19 @@ quit()
 #PBS -l mppwidth=32
 #PBS -l mppnppn=32
 #PBS -l walltime=01:00:00
-# Replace with your own buget
+# Replace with your own budget
 #PBS -A b10                 
 
-#module add R
+module add R
 
 # Replace with your own temporary directory.
 export TMP=/home/z01/z01/egrant1/work/Rinstall/tmp  
 
-export R_WORK_HOME=/usr/local/packages/rpackage/2.15.2-phase3/R-2.15.2
-
 # Change to the directory that the job was submitted from
 cd $PBS_O_WORKDIR
 
-aprun -n 4 -N 4 $R_WORK_HOME/bin/R -f install_test.R
+# Run R in parallel using 4 tasks
+aprun -n 4 -N 4 R -f install_test.R
 </pre>
 <p>Submit the code with the command:</p>
 <pre>
@@ -87,6 +109,12 @@ aprun -n 4 -N 4 $R_WORK_HOME/bin/R -f install_test.R
 </ul>
 
 
+<a name="compilation"></a>
+<h3 class="subsection">Compilation Notes for Maintainer</h3>
+
+<ul>
+    <li><a href="file:///Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/doc/rcompilation.htm">Compiling R 2.15.2 and SPRINT on Phase 3</li>
+</ul>
 
 
 <!-- END OF CONTENT -->
