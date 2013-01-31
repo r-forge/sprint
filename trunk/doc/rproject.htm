@@ -9,8 +9,20 @@
 R and SPRINT are freely available under the <a href="http://www.r-project.org/COPYING">
 GNU General Public Licence</a>. All HECToR users have access to the R and SPRINT binaries and source. </p>
 
+
+<h3 class="subsection"> Getting started on HECToR  </h3>
+
+<p><a href="http://www.hector.ac.uk/howcan/admin/"> Get an account on HECToR</a> </p>
+<p><a href="http://www.hector.ac.uk/support/documentation/userguide/connecting.php"> Login to HECToR</a> </p>
+ 
 <a name="runningR"></a>
+
 <h3 class="subsection">Running R on HECToR</h3>
+<p>
+This section describes how to run R in serial, but to take advantage of HECToR's computing power, 
+you will have to run the code in parallel on multiple processors. 
+Skip to the <a href="#runningSprint">Running SPRINT on HECToR section</a> to see how to run R in parallel.
+</p>
 <p>
 To run R you need to add the correct module to your environment. 
 </p>
@@ -25,19 +37,19 @@ You should make sure that you have set the environment variable $TMP to point to
 your /work filesystem before running R. e.g.
 </p>
 <pre>
-export TMP=/work/z01/z01/aturner/temp
+> export TMP=/work/z01/z01/aturner/temp
 </pre>
 <p>
-As R runs in serial you will either have to run your jobs on the 
-<a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#serial">serial queues</a> or use SPRINT 
-or your own MPI task farm which you can then use with aprun. (You must also ensure that the R 
-script keeps track of the results in a sensible way - e.g. by writing to task specific files.) 
-The following examples use SPRINT.
+You can then run R as usual from the command line:
 </p>
 
+<pre>
+> R
+... enter R commands.
+</pre>
 
 <a name="runningSprint"></a>
-<h3 class="subsection">Running SPRINT</h3>
+<h3 class="subsection">Running SPRINT on HECToR</h3>
 
 <p>
 First write an R script that uses SPRINT. Here's an example, saved as 'install_test.R'.
@@ -48,41 +60,61 @@ ptest()
 pterminate()
 quit()
 </pre>
+You can't run SPRINT on the login node of HECToR (where you log in to). If you try this, 
+then you'll see an MPI initialisation error as MPI is not installed there. You must send your 
+SPRINT script to be run on the compute nodes, either by using the interactive queue, or by 
+submitting a batch job. Both ways are described below.
 
-You can't run SPRINT on the front end of HECToR (where you first log in to). If you try this, 
-then you'll see an MPI initialisation error as MPI is not installed on the front end.
-You must run your SPRINT script on the backend, either run interactively, 
-or by submitting a job. Both ways are described below.
-
-<h3>Interactive example</h3><p>
+<h3>Interactive job submission</h3><p>
 <a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#int">Running interactive jobs</a>
 </p>
+<p>
+From a subdirectory of /work on HECToR, enter the following:
+</p>
 <pre>
-qsub -IVl mppwidth=32,walltime=0:10:0 -A b10
+> qsub -IVl mppwidth=32,walltime=0:20:0 -A b10
 </pre>
-<p>wait a little...</p>
+<p>This will reserve 32 cores for 20 minutes using budget 'b10'. 
+The '-I' flag is for interactive mode, the '-V' flag exports the current environment 
+variables to the compute nodes, and '-l' indicates the start of the list of requested resources.</p>
+<p>Wait a little...</p>
+<p>Load the R module</p>
 <pre>
-module add R
-export TMP=`pwd`
+> module add R
+</pre>
+<p>Set the $TMP variable</p>
+<pre>
+> export TMP=`pwd`
+</pre>
+<p>Run the 'install_test.R' script  
+using 4 MPI tasks. See <a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#xtaprun">aprun</a>
+ for more options.
+ </p>
+<pre>
 aprun -n 4 R -f install_test.R
 </pre>
 
-<h3>Example job submission script</h3>
-<a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#xt">Submitting batch jobs</a>
+<h3>Batch job submission </h3>
+<a href="http://www.hector.ac.uk/support/documentation/userguide/batch.php#xtmpi">Submitting batch MPI jobs</a>
 
 <p>The job submission script. Save as 'submission_script.pbs'.</p>
 <pre>
 #!/bin/bash --login
+# Name your job
 #PBS -N R_job
+# The total number of MPI tasks for your job.
 #PBS -l mppwidth=32
+# The number of processes to place on a node.
 #PBS -l mppnppn=32
+# the maximum wall clock time required for your job.
 #PBS -l walltime=01:00:00
-# Replace with your own budget
+# The budget your job is going to be charged to.
 #PBS -A b10                 
 
+# Load the R module
 module add R
 
-# Replace with your own temporary directory.
+# Replace $TMP with your own temporary directory.
 export TMP=/home/z01/z01/egrant1/work/Rinstall/tmp  
 
 # Change to the directory that the job was submitted from
@@ -100,6 +132,17 @@ aprun -n 4 -N 4 R -f install_test.R
  qstat -u $USER
 </pre>
 <p>The output of the results should be in R_job.o{job_no.} and R_job.e{job_no.}</p>
+
+<h3 class="subsection">Getting the Results</h3>
+<p>
+The example above writes to standard output (displayed on screen in interactive mode, saved to R_job.o{job_no.} 
+in batch mode.) You should ensure that your R script keeps track of the results in a sensible way - e.g. by 
+writing to a file. </p>
+<p>
+HECToR has a shared file system, and so the same directories are available from the login and compute nodes. You 
+should write to files somewhere in your 'work' directory, e.g. 
+/work/z01/z01/aturner/results
+ but note that these files are not backed up.</P
 
 <h3 class="subsection">Useful links</h3>
 
