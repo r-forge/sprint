@@ -26,8 +26,13 @@ listt = list(matrix(sin(1:10000), ncol=200), matrix(sin(1:200), ncol=25), matrix
 
 ffobjectt = ff(sin(1:10000), vmode="double", dim=c(200,50))
 
-#===============================================
+simple_list = list(1:10,3:13)  # Does not work.
 
+logic_list = list(c(TRUE,FALSE,FALSE,TRUE)) # Does not work.
+
+integers = 1:10  # Does not work.
+
+#===============================================
 
 #Compare results for mean function applied over rows
 test.compare_results_matrix_rows <- function()
@@ -111,6 +116,27 @@ test.compare_results_list <- function()
     expected_result = lapply(listt, mean)
     papply_result = papply(listt,mean)
 
-    checkEquals(expected_result, papply_result, " papply, list as a data argument, mean function")
+    checkEquals(expected_result, papply_result, " papply, list of matrices as a data argument, mean function")
 
   }
+
+test.compare_results_simple_list <- function()
+{
+	expected_message = "papply only supports matrix, list of matrices or ff data"
+	checkException(papply(simple_list, mean), "papply, integers as a data argument, mean function")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), "Expected error message when integers passed into papply")
+}
+
+test.compare_results_logic_list <- function()
+{
+	expected_message = "papply only supports matrix, list of matrices or ff data"
+	checkException(papply(logic_list, mean), "papply, integers as a data argument, mean function")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), "Expected error message when integers passed into papply")
+}
+
+test.compare_results_integers <- function()
+{
+	expected_message = "papply only supports matrix, list of matrices or ff data"
+	checkException(papply(integers,mean), "papply, integers as a data argument, mean function")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), "Expected error message when integers passed into papply")
+}

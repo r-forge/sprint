@@ -1,7 +1,7 @@
 ##########################################################################
 #                                                                        #
-#  SPRINT: Simple Parallel R INTerface                                   #
-#  Copyright © 2008,2009 The University of Edinburgh                     #
+#  SPRINT: Simple Parallel R IN..sprintMsgTerface                                   #
+#  Copyright ï¿½ 2008,2009 The University of Edinburgh                     #
 #                                                                        #
 #  This program is free software: you can redistribute it and/or modify  #
 #  it under the terms of the GNU General Public License as published by  #
@@ -19,15 +19,7 @@
 ##########################################################################
 
 ## consistent error / warning messages; could use for internationalization
-..msg <- list(error =
-              c(non.double = "x must be of type double",
-                non.square = "x is not and cannot be converted to a square matrix",
-                non.ff = "x must be a valid ff object",
-                non.ffmatrix = "ff object must be a matrix", 
-                no.filename = "The filename of the ff object cannot be read",
-                non.function = "The fun argument needs to be a function"
-                ), warn = c()
-              )
+
 
 # This stub function simply calls down to a stub in the library.
 
@@ -36,14 +28,14 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
   ncols = nrows = 0
   IS_MATRIX = FALSE
   IS_LIST = FALSE
-
-  if(is.ff(data)) {
+	
+	if(exists("is.ff") && is.ff(data)) {
     ## check type of input ff object 
     if(vmode(data) != "double") 
-      stop(..msg$error["non.double"])
+      stop(..sprintMsg$error["non.double"])
     
     if(data.class(data) != "ff_matrix") {
-      stop(..msg$error["non.ffmatrix"]) 
+      stop(..sprintMsg$error["non.ffmatrix"]) 
     }
     # get dimensions of the ff matrix
     nrows = dim.ff(data)[1]
@@ -51,7 +43,7 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
 
     filename = attr(attr(data, "physical"), "filename")
     if (!is.character(filename)) {
-      stop(..msg$error["no.filename"])
+      stop(..sprintMsg$error["no.filename"])
     }
     data = filename;
 
@@ -62,14 +54,25 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
     
     MAP_FILE = TRUE
   } else {
+	  
     MAP_FILE = FALSE
     
     if(is.matrix(data)) {
+		
       IS_MATRIX = TRUE
       dims = dim(data)
-    }
-      
-    if(is.list(data)) IS_LIST = TRUE
+		
+    } else if(is.list(data)) {
+		
+		IS_LIST = TRUE
+        # check that every list entry is a matrix
+		if(!all(unlist(lapply(data, is.matrix)))){
+			stop(..sprintMsg$error["non.supportedtype"])
+		}
+	} else {
+		
+		stop(..sprintMsg$error["non.supportedtype"])
+	}
   }
 
   # serialise function definition or function name into character type
@@ -77,7 +80,7 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
   if (is.function(fun)) {
     deparsed_fun <- deparse(substitute(fun))
   } else {
-    stop(..msg$error["non.function"])
+    stop(..sprintMsg$error["non.function"])
   }
   
 #  pass an R object that will store the result

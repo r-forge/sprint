@@ -21,16 +21,6 @@
 ## Ensure consistent "diss.." class --- make "namespace-private-global !
 dissiCl <- c("dissimilarity", "dist")
 
-## consistent error / warning messages; could use for internationalization
-..msg <- list(error =
-              c(non.double = "x must be of type double",
-                non.square = "x is not and cannot be converted to a square matrix",
-                non.ff = "x must be a valid ff object",
-                no.valid.k = "Number of clusters `k' must be in {1,2, .., n-1}; hence n >= 2",
-                no.filename = "The filename of the ff object cannot be read"
-                ), warn = c()
-              )
-
 ppam <- function(x, k, medoids = NULL, is_dist = inherits(x, "dist"),
                  cluster.only = FALSE, do.swap = TRUE, trace.lev = 0)
 {
@@ -39,7 +29,7 @@ ppam <- function(x, k, medoids = NULL, is_dist = inherits(x, "dist"),
   if(is.ff(x)) {
     ## check type of input ff object
     if(vmode(x) != "double")
-      stop(..msg$error["non.square"])
+      stop(..sprintMsg$error["non.square"])
     
     if(data.class(x) != "ff_matrix") {
       length_x <- attr(attr(x, "virtual"), "Length")
@@ -47,16 +37,16 @@ ppam <- function(x, k, medoids = NULL, is_dist = inherits(x, "dist"),
       
       # check if the vector can form a square matrix
       if (length_x %% n_rows)
-        stop(..msg$error["non.square"])
+        stop(..sprintMsg$error["non.square"])
     } else {
       n_rows = dim.ff(x)[1]
       if (dim.ff(x)[1] != dim.ff(x)[2]) {
-        stop(..msg$error["non.square"])
+        stop(..sprintMsg$error["non.square"])
       }
     }
     filename = attr(attr(x, "physical"), "filename")
     if (!is.character(filename)) {
-      stop(..msg$error["no.filename"])
+      stop(..sprintMsg$error["no.filename"])
     }
     
     MAP_FILE= TRUE
@@ -76,7 +66,7 @@ ppam <- function(x, k, medoids = NULL, is_dist = inherits(x, "dist"),
   }
   
   if((k <- as.integer(k)) < 1 || k >= n_rows)
-    stop(..msg$err["no.valid.k"])
+    stop(..sprintMsg$err["no.valid.k"])
   if(is.null(medoids))# default: using "build & swap" to determine medoids"
     medID <- integer(k)# all 0 -> will be used as `code' in C
   else {

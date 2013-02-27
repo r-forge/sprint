@@ -55,9 +55,11 @@ int phamming(char **x,
   
   // Broadcast command to other processors
   commandCode = PHAMMING;
+  //MPI_BCAST (buffer(address of data to be sent), count (no. of elements in buffer),
+  // datatype, root (rank of root process, comm)
   MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
   
-  // Call the partitioning around medoids function
+  // Call the hamming function
   response = hamming(4, *x, *sample_width, *number_of_samples, *out_filename);
   
   return response;

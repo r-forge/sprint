@@ -1,7 +1,7 @@
 ##########################################################################
 #                                                                        #
 #  SPRINT: Simple Parallel R INTerface                                   #
-#  Copyright © 2008,2009 The University of Edinburgh                     #
+#  Copyright ï¿½ 2008,2009 The University of Edinburgh                     #
 #                                                                        #
 #  This program is free software: you can redistribute it and/or modify  #
 #  it under the terms of the GNU General Public License as published by  #
@@ -20,14 +20,6 @@
 
 # The R stub for the pcor function. This does some rudimentary
 # argument type checking and then hands off to the C stub.
-
-## consistent error / warning messages; could use for internationalization
-..msg <- list(error =
-              c(non.double = "x must be of type double",
-                non.numeric = "PCOR only accepts numeric matrices",
-                no.dims = "Dimensios of x and y matrices do not match"
-                ), warn = c()
-              )
 
 pcor <- function(
   data_x                       # input numerical matrix
@@ -71,13 +63,13 @@ pcor <- function(
       length_ <- height * height
     }
     else
-      stop(..msg$error["non.numeric"])
+      stop(..sprintMsg$error["non.numeric"])
 
     if(!is.null(data_y)) {
       if (!is.matrix(data_y) && !is.numeric(data_y))
-        stop(..msg$error["non.numeric"])
+        stop(..sprintMsg$error["non.numeric"])
       if (dim(data_x)[0] != dim(data_y)[0] && dim(data_x)[1] != dim(data_y)[1])
-        stop(..msg$error["no.dims"])
+        stop(..sprintMsg$error["no.dims"])
     }
 
     if (is.null(caching_))

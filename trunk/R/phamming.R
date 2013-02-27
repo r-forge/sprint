@@ -16,33 +16,26 @@
 #                                                                        #
 ##########################################################################
 
-## consistent error / warning messages;
-..msg <- list(error =
-              c(non.dna = "Function only accepts ShortReadQ or DNAStringSet objects",
-                empty = "Data object is empty",
-                no_file = "Output filename is missing"
-                ), warn = c()
-              )
               
 library(ShortRead)
 
 phamming.distance <- function (data, output_filename) {
 
   objectType <- class(data)
-  if(!length(data)) stop(..msg$error["empty"])
+  if(!length(data)) stop(..sprintMsg$error["empty"])
 
-  if (is.null(output_filename)) stop(..msg$error["empty"])
+  if (is.null(output_filename)) stop(..sprintMsg$error["empty"])
   
   if (objectType=='ShortReadQ') {  
     data <- ShortRead::sread(data)
   } else if (objectType!='DNAStringSet') {
-    stop(..msg$error["non.dna"])
+    stop(..sprintMsg$error["non.dna"])
   }
 
   sample_width <- width(data[1])
   number_of_samples <- length(data)
 
-  if(sample_width<1 || number_of_samples<2) stop(..msg$error["empty"])
+  if(sample_width<1 || number_of_samples<2) stop(..sprintMsg$error["empty"])
 
   return_val <- .C("phamming",
                    as.character(IRanges::unlist(data)),
