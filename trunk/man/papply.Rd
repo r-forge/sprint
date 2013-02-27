@@ -29,8 +29,15 @@ name or as a function definition. When only the function name is provided,
 the package implementing the function has to be loaded before the SPRINT 
 library is initialised in order to ensure that the name is recognised by all 
 the processes involved in the computation.
+
 Note that papply() does not fully implement lapply functionality. It will 
 only accept lists of matrices, and not lists made up of other data types. 
+
+The function to be applied can be supplied to papply() either as a function 
+name or as a function definition. When only the function name is provided, 
+the package implementing the function has to be loaded before the SPRINT 
+library is initialised in order to ensure that the name is recognised by 
+all the processes involved in the computation. 
 }
 \seealso{
     \code{\link{apply}}
