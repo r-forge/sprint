@@ -3,17 +3,18 @@
 \title{Parallel Apply}
 \description{ 
 Parallel apply function used to perform the same operation over all the 
-elements of data objects like matrices, data frames or lists. This function 
+elements of data objects like matrices, or lists. This function 
 provides a parallel implementation of both the apply() and lapply() functions
 from the core of the R programming language. This parallel implementation 
 papply() has been extended to accept an ff object as input which allows the 
-processing of much larger data stored on disk. 
+processing of much larger data stored on disk. The papply() function only 
+accepts matrices, lists of matrices or ff_matrix  as input data objects. 
 }
 \usage{
 papply(data, fun, margin = 1, out_filename = NULL)
 }
 \arguments{
-    \item{data}{array, list or ff object}
+    \item{data}{input data matrix, list of matrices or ff_matrix object}
     \item{fun}{function to be applied}
     \item{margin}{vector indicating which elements of the matrix the function
                   will be applied to. The default value is 1 and indicates the
@@ -28,6 +29,8 @@ name or as a function definition. When only the function name is provided,
 the package implementing the function has to be loaded before the SPRINT 
 library is initialised in order to ensure that the name is recognised by all 
 the processes involved in the computation.
+Note that papply() does not fully implement lapply functionality. It will 
+only accept lists of matrices, and not lists made up of other data types. 
 }
 \seealso{
     \code{\link{apply}}
