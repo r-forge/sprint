@@ -85,7 +85,13 @@ pcor <- function(
 
     # Call C interface
     return_val <- .Call("pcor", data_x, data_y, filename_, distance)
-
+	
+	colnames1 <- colnames(data_x)
+	if(is.null(data_y))
+	  colnames2 <- colnames(data_x)
+	else
+	  colnames2 <- colnames(data_y)
+	  
     # Return values from the interface have meaning.
     #  0    -->     success
     # -1    -->     MPI is not initialized
@@ -93,7 +99,8 @@ pcor <- function(
     if ( return_val == 0 ) {
       # Open result binary file and return as ff object
       result = ff(
-        dim=c(height,height)
+        dim=c(height,height),
+		dimnames=list(colnames1,colnames2),
         , filename=filename_
         , vmode=vmode_
         , caching=caching_
