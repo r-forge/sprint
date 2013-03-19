@@ -1,6 +1,8 @@
 library("RUnit")
 library("ff")
 library("cluster")
+library("golubEsets")
+
 
 for (nm in list.files("../inst/unitTests/ppam/", pattern = "\\.[Rr]$")){
   source(file.path("../inst/unitTests/ppam/", nm))

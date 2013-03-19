@@ -27,7 +27,7 @@ ppam <- function(x, k, medoids = NULL, is_dist = inherits(x, "dist"),
 	if (is_dist){
 		xLab <- attr(x, "Labels")
 	}else{
-		xLab <- dimnames(x)[[1]]}
+		xLab <- rownames(x)}
 	
   # === CHECK DISTANCE DATA INPUT === #
   if(is.ff(x)) {
