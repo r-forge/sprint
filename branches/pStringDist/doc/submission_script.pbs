@@ -1,0 +1,19 @@
+#!/bin/bash --login
+#PBS -N R_job
+#PBS -l mppwidth=32
+#PBS -l mppnppn=32
+#PBS -l walltime=00:20:00
+# Replace with your own buget
+#PBS -A b10                 
+
+#module add R
+
+# Replace with your own temporary directory.
+export TMP=/home/z01/z01/egrant1/work/Rinstall/tmp  
+
+export R_WORK_HOME=/usr/local/packages/rpackage/2.15.2-phase3/R-2.15.2
+
+# Change to the directory that the job was submitted from
+cd $PBS_O_WORKDIR
+
+aprun -n 4 -N 4 $R_WORK_HOME/bin/R -f install_test.R
