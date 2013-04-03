@@ -40,7 +40,7 @@ extern int pamedoids(int n,...);
 extern int apply(int n,...);
 extern int random_forest_driver(int,...);
 extern int boot(int,...);
-extern int hamming(int,...);
+extern int stringDist(int,...);
 extern int init_rng_worker(int n, ...);
 extern int reset_rng_worker(int n, ...);
 extern int boot_rank_product(int n, ...);
@@ -70,7 +70,7 @@ commandFunction commandLUT[] = {voidCommand,
                                 apply,
                                 random_forest_driver,
                                 boot,
-                                hamming,
+                                stringDist,
                                 test,
                                 init_rng_worker,
                                 reset_rng_worker,

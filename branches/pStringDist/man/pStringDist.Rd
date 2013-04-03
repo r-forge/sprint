@@ -1,11 +1,11 @@
-\name{phamming.distance}
-\alias{phamming.distance}
+\name{pStringDist}
+\alias{pStringDist}
 \title{Parallel hamming distance}
 \description{Calculates the hamming distance matrix between a set of DNA
   sequences provided as a ShortReadQ or DNAStringSet objects.
 }
 \usage{
-  phamming.distance(data, output_filename)
+  pStringDist(data, output_filename)
 }
 \arguments{
   \item{data}{ShortReadQ or DNAStringSet objects}

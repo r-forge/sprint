@@ -18,13 +18,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "hamming_kernel.h"
+#include "stringDist_kernel.h"
 #include "../../../sprint.h"
 #include "../../common/utils.h"
 
 #define FILENAME_SIZE 256
 
-int hamming(int n, ...) {
+int stringDist(int n, ...) {
 
   va_list ap; /*will point to each unnamed argument in turn*/
   int worldSize, worldRank, response;
@@ -36,7 +36,7 @@ int hamming(int n, ...) {
   char *DNAStringSet = NULL;
   char *out_filename = NULL;
   
-  int *hammingDistance;
+  int *stringDist;
 
   // Get size and rank from communicator
   MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
@@ -111,13 +111,13 @@ int hamming(int n, ...) {
   loopDistribute(worldRank, worldSize, number_of_samples, &my_start, &my_end);
   DEBUG("loopDistribute results on %i, %i %i\n", worldRank, my_start, my_end);
 
-  chunk_size = allocateMaxChunk(worldRank, my_start, my_end, hammingDistance, number_of_samples);
-  hammingDistance = (int *)malloc(sizeof(int) * number_of_samples * chunk_size);
+  chunk_size = allocateMaxChunk(worldRank, my_start, my_end, stringDist, number_of_samples);
+  stringDist = (int *)malloc(sizeof(int) * number_of_samples * chunk_size);
 
-  response = computeHamming(worldRank, worldSize, DNAStringSet, hammingDistance, out_filename,
+  response = computeStringDist(worldRank, worldSize, DNAStringSet, stringDist, out_filename,
                             sample_width, number_of_samples, my_start, my_end, chunk_size);
 
-  DEBUG("Done running hamming kernel on %i\n", worldRank);
+  DEBUG("Done running stringDist kernel on %i\n", worldRank);
 
   // Free memory allocated for output filename and data array on slave processes
   if ( worldRank != 0 ) {

@@ -18,50 +18,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include <Rdefines.h>
-#include <string.h>
-#include "../../../sprint.h"
-#include "../../../functions.h"
+#ifndef _STRINGDIST_KERNEL_H
+#define _STRINGDIST_KERNEL_H
 
-extern int hamming(int n,...);
+int computeStringDist(int worldRank, int worldSize, char* DNAStringSet, int *stringDist, char *out_filename,
+                   int sample_width, int number_of_samples, int my_start, int my_end, int chunk_size);
+int allocateMaxChunk(int worldRank, int my_start, int my_end, int *stringDist,
+                     int number_of_samples);
 
-/* **************************************************************** *
- *  Accepts information from R gets response and returns it.        *
- *                                                                  *
- * **************************************************************** */
-int phamming(char **x,
-             char **out_filename,
-             int *sample_width,
-             int *number_of_samples)
-{
-
-  int response;
-  int worldSize, worldRank;
-  
-  enum commandCodes commandCode;
-  
-  // Check that MPI is initialized
-  MPI_Initialized(&response);
-  if (response) {
-    DEBUG("\nMPI is init'ed in phamming\n");
-  } else {
-    DEBUG("\nMPI is NOT init'ed in phamming\n");
-    return(-1);
-  }
-  
-  // Get size and rank from communicatorx
-  MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
-  MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
-  
-  // Broadcast command to other processors
-  commandCode = PHAMMING;
-  //MPI_BCAST (buffer(address of data to be sent), count (no. of elements in buffer),
-  // datatype, root (rank of root process, comm)
-  MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
-  
-  // Call the hamming function
-  response = hamming(4, *x, *sample_width, *number_of_samples, *out_filename);
-  
-  return response;
-
-}
+#endif

@@ -1,0 +1,240 @@
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 04:35:50 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (642.98 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 04:46:58 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (661.6 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 04:58:55 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (708.57 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 05:11:11 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (726.5 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 05:20:52 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (570.77 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 05:28:56 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (473.59 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 05:37:46 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (519.08 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 05:48:55 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (658.02 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 06:01:29 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (745.98 seconds)
+ done successfully.
+
+RUNIT TEST PROTOCOL -- Wed Apr  3 06:07:41 2013 
+*********************************************** 
+Number of test functions: 1 
+Number of errors: 0 
+Number of failures: 0 
+
+ 
+1 Test Suite : 
+batch - 1 test function, 0 errors, 0 failures
+
+
+
+Details 
+*************************** 
+Test Suite: batch 
+Test function regexp: ^test.+ 
+Test file regexp: ppam_once_test.R 
+Involved directory: 
+/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch/ 
+--------------------------- 
+Test file: /Users/egrant1/Documents/SPRINT/workspace/sprint/trunk/inst/unitTests/batch//ppam_once_test.R 
+test.ppam_once_test: (2 checks) ... OK (364.69 seconds)

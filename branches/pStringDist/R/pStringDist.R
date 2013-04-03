@@ -19,7 +19,7 @@
               
 library(ShortRead)
 
-phamming.distance <- function (data, output_filename) {
+pStringDist <- function (data, output_filename) {
 
   objectType <- class(data)
   if(!length(data)) stop(..sprintMsg$error["empty"])
@@ -37,7 +37,7 @@ phamming.distance <- function (data, output_filename) {
 
   if(sample_width<1 || number_of_samples<2) stop(..sprintMsg$error["empty"])
 
-  return_val <- .C("phamming",
+  return_val <- .C("pStringDist",
                    as.character(IRanges::unlist(data)),
                    as.character(output_filename),
                    as.integer(sample_width),

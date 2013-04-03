@@ -21,7 +21,7 @@
 #include "../../../sprint.h"
 #include "../../common/utils.h"
 
-int computeHamming(int worldRank, int worldSize, char* DNAStringSet, int *hammingDistance, char *out_filename,
+int computeStringDist(int worldRank, int worldSize, char* DNAStringSet, int *stringDist, char *out_filename,
                    int sample_width, int number_of_samples, int my_start, int my_end, int chunk_size) {
 
   MPI_Status stat;
@@ -47,19 +47,19 @@ int computeHamming(int worldRank, int worldSize, char* DNAStringSet, int *hammin
           diff++;
 
       }
-      hammingDistance[(c*number_of_samples)+j] = diff;
+      stringDist[(c*number_of_samples)+j] = diff;
     }
 
     if(c==chunk_size) {
 
-      MPI_File_write_at(fh, (my_start*number_of_samples)+(chunk_size*number_of_samples*count), hammingDistance, number_of_samples*chunk_size, MPI_INT, &stat);
+      MPI_File_write_at(fh, (my_start*number_of_samples)+(chunk_size*number_of_samples*count), stringDist, number_of_samples*chunk_size, MPI_INT, &stat);
       count++;
       c=0;
     }
     
   }
 
-  MPI_File_write_at(fh, (my_start*number_of_samples)+(chunk_size*number_of_samples*count), hammingDistance, number_of_samples*c, MPI_INT, &stat);
+  MPI_File_write_at(fh, (my_start*number_of_samples)+(chunk_size*number_of_samples*count), stringDist, number_of_samples*c, MPI_INT, &stat);
 
 
   /* Close file handler */
@@ -69,13 +69,13 @@ int computeHamming(int worldRank, int worldSize, char* DNAStringSet, int *hammin
 }
 
 
-int allocateMaxChunk(int worldRank, int my_start, int my_end, int *hammingDistance,
+int allocateMaxChunk(int worldRank, int my_start, int my_end, int *stringDist,
                      int number_of_samples) {
 
   int chunk_size = (my_end-my_start);
   int malloc_failed=1;
     
-  if(NULL == (hammingDistance = (int *)malloc(sizeof(int)
+  if(NULL == (stringDist = (int *)malloc(sizeof(int)
                                               * number_of_samples * chunk_size)))
   {
   
@@ -83,13 +83,13 @@ int allocateMaxChunk(int worldRank, int my_start, int my_end, int *hammingDistan
       malloc_failed=0;
       chunk_size = chunk_size/2;
       
-      hammingDistance = (int *)malloc(sizeof(int) * number_of_samples * chunk_size);
+      stringDist = (int *)malloc(sizeof(int) * number_of_samples * chunk_size);
       
-      if(hammingDistance == NULL) {
+      if(stringDist == NULL) {
         malloc_failed=1;
       }
 
-      free(hammingDistance);
+      free(stringDist);
     
     }
 
