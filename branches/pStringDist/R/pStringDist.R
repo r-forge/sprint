@@ -17,29 +17,39 @@
 ##########################################################################
 
               
-library(ShortRead)
+#library(ShortRead)
 
-pStringDist <- function (data, output_filename) {
+#(x, method="hamming", filename="output_file")
+pStringDist <- function (data, output_file) {
 
   objectType <- class(data)
   if(!length(data)) stop(..sprintMsg$error["empty"])
 
-  if (is.null(output_filename)) stop(..sprintMsg$error["empty"])
+  if (is.null(output_file)) stop(..sprintMsg$error["empty"])
   
-  if (objectType=='ShortReadQ') {  
-    data <- ShortRead::sread(data)
-  } else if (objectType!='DNAStringSet') {
+  if (objectType=='character') {  
+	flatData <- paste(data, collapse = '')
+  }
+  else if (objectType!='XStringSet') {
+	  flatData <- IRanges::unlist(data)
+	  dataNames <- names(data)
+  }
+  else {
     stop(..sprintMsg$error["non.dna"])
   }
 
   sample_width <- width(data[1])
   number_of_samples <- length(data)
+	
+	if(!exists("dataNames")||is.null(dataNames)){
+		dataNames <- as.character(c(1:number_of_samples))
+	}
 
   if(sample_width<1 || number_of_samples<2) stop(..sprintMsg$error["empty"])
 
   return_val <- .C("pStringDist",
-                   as.character(IRanges::unlist(data)),
-                   as.character(output_filename),
+                   as.character(flatData),
+                   as.character(output_file),
                    as.integer(sample_width),
                    as.integer(number_of_samples)                   
                    )
@@ -47,6 +57,30 @@ pStringDist <- function (data, output_filename) {
   # Return values from the interface have meaning.
   #  0    -->     success
   # -1    -->     MPI is not initialized
+	
+	vmode_ <- "integer"
+	caching_ <- "mmeachflush"
+	finalizer_ <- "close"
+	filename_ <- as.character(output_file)
+	
+#	if ( return_val == 0 ) {
+# Open result binary file and return as ff object
+		result = ff(
+		   dim=c(number_of_samples,number_of_samples),
+		   dimnames=list(dataNames,dataNames),
+		   , filename=filename_
+		   , vmode=vmode_
+		   , caching=caching_
+		   , finalizer=finalizer_
+		   , length=number_of_samples*number_of_samples
+		   )
+#    } else {
+		
+#        if ( return_val == -1 )
+#		warning(paste("MPI is not initialized. Function is aborted.\n"))
+#        result <- FALSE
+#    }
+	
   
-  return(return_val)
+  return(result)
 }

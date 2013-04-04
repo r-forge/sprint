@@ -8,7 +8,7 @@
   pStringDist(data, output_filename)
 }
 \arguments{
-  \item{data}{ShortReadQ or DNAStringSet objects}
+  \item{data}{a character vector or an 'XStringSet' object}
   \item{output_filename}{results will be stored here as binary data}
 }
 \details{
