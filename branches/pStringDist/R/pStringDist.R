@@ -21,6 +21,18 @@
 
 #(x, method="hamming", filename="output_file")
 pStringDist <- function (data, output_file) {
+	
+# Load the "Biostrings" package in case is not already loaded. Warn user in case the package is missing
+    if( !require("Biostrings", quietly=TRUE) ) {
+        warning("Function pStringDist was unable to execute - failed to load package \"Biostrings\". Please check that the package is installed and try again.")
+        return(NA)
+    }
+	
+# Load the "ff" package in case is not already loaded. Warn user in case the package is missing
+    if( !require("ff", quietly=TRUE) ) {
+        warning("Function pStringDist was unable to execute - failed to load package \"ff\". Please check that the package is installed and try again.")
+        return(NA)
+    }
 
   objectType <- class(data)
   if(!length(data)) stop(..sprintMsg$error["empty"])
@@ -51,19 +63,21 @@ pStringDist <- function (data, output_file) {
                    as.character(flatData),
                    as.character(output_file),
                    as.integer(sample_width),
-                   as.integer(number_of_samples)                   
+                   n=as.integer(number_of_samples)                   
                    )
 
-  # Return values from the interface have meaning.
-  #  0    -->     success
-  # -1    -->     MPI is not initialized
+	# The number_of_samples is overloaded to also indicate whether MPI is initialized.
+	# -1    -->     MPI is not initialized
 	
 	vmode_ <- "integer"
 	caching_ <- "mmeachflush"
 	finalizer_ <- "close"
 	filename_ <- as.character(output_file)
 	
-#	if ( return_val == 0 ) {
+		if ( return_val$n == -1 )  {
+			warning(paste("MPI is not initialized. Function is aborted.\n"))
+			result <- FALSE
+		} else {
 # Open result binary file and return as ff object
 		result = ff(
 		   dim=c(number_of_samples,number_of_samples),
@@ -74,13 +88,6 @@ pStringDist <- function (data, output_file) {
 		   , finalizer=finalizer_
 		   , length=number_of_samples*number_of_samples
 		   )
-#    } else {
-		
-#        if ( return_val == -1 )
-#		warning(paste("MPI is not initialized. Function is aborted.\n"))
-#        result <- FALSE
-#    }
-	
-  
+    } 
   return(result)
 }

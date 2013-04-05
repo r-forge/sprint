@@ -29,7 +29,7 @@ extern int stringDist(int n,...);
  *  Accepts information from R gets response and returns it.        *
  *                                                                  *
  * **************************************************************** */
-int pStringDist(char **x,
+void pStringDist(char **x,
              char **out_filename,
              int *sample_width,
              int *number_of_samples)
@@ -46,7 +46,12 @@ int pStringDist(char **x,
     DEBUG("\nMPI is init'ed in pStringDist\n");
   } else {
     DEBUG("\nMPI is NOT init'ed in pStringDist\n");
-    return(-1);
+
+    // This is called from .C and so can't return a value.
+    // The number_of_samples will be checked in the R code as an indication that the code has worked.
+    // The code could be refactored to use .Call instead of .C to return a value.
+    *number_of_samples = -1;
+    return;
   }
   
   // Get size and rank from communicatorx
@@ -61,7 +66,4 @@ int pStringDist(char **x,
   
   // Call the stringDist function
   response = stringDist(4, *x, *sample_width, *number_of_samples, *out_filename);
-  
-  return response;
-
 }
