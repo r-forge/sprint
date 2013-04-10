@@ -53,10 +53,6 @@ gc(reset=TRUE, verbose=FALSE)
 # the input data so no additional parameter is required
 pam_result <- pam(distance_matrix, k=6, diss=TRUE)
 ppam_result <- ppam(pdistance_matrix, k=6)
-
-	print(paste(pam_result$medoids))
-	print(paste(ppam_result$medoids))
-	
 checkEquals(pam_result$medoids,
 ppam_result$medoids, " Medoids should have same names.")
 

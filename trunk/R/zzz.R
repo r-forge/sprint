@@ -48,10 +48,13 @@
                               "or academic use."))
 }
 
+.onUnload <- function(libpath) {
+	.Call("sprint_shutdown")
+}
+
 ## Called when the extension is unloaded. This is expected to happen
 ## when the script terminates and R shuts down.
 .Last.lib <- function(libpath) {
   .Call("sprint_shutdown")
-  library.dynam.unload("sprint", libpath)
 }
 
