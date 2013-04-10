@@ -54,7 +54,7 @@ ppam <- function(x, k, medoids = NULL, is_dist = inherits(x, "dist"),
     }
     
     MAP_FILE= TRUE
-    x = NULL
+	  x = 0;
 
   } else {
     
