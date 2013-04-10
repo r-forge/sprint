@@ -12,12 +12,14 @@ Imports: boot, ShortRead, e1071
 SystemRequirements: MPI2, Unix
 Description: SPRINT (Simple Parallel R INTerface) is a parallel
         framework for R. It provides a High Performance Computing (HPC)
-        harness which allow R scripts to run on HPC clusters. SPRINT
+        harness which allows R scripts to run on HPC clusters. SPRINT
         contains a library of selected R functions that have been
         parallelized. Functions are named after the original R function
         with the added prefix 'p', i.e. the parallel version of cor()
         in SPRINT is called pcor(). Call to the parallel R functions
         are included directly in standard R scripts.
+		SPRINT contains functions for correlation, partitioning around medoids, 
+		apply, permutation tesing, bootstrapping, random forest, rank product and more. 
 License: GPL (>= 3)
 URL: http://www.r-sprint.org
 Repository: CRAN
