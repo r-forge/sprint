@@ -178,42 +178,42 @@ int svm_call(int n, ...)
 void printPSVM(params* par, int* nPSV, int* nclasses){
 
   int i, nTSV;
-  printf("\n\n"); 
+  Rprintf("\n\n");
 
   print_svmType(par->type);
   print_svmKernel(par->kernel);
 
-  printf("\n\n");
-  printf("Parameters :\n");
+  Rprintf("\n\n");
+  Rprintf("Parameters :\n");
   
     
   if(par->type == 0 || par->type ==3 || par->type == 4)
-    printf("cost: %g\n", par->cost);
+    Rprintf("cost: %g\n", par->cost);
   
   if(par->kernel == 1)
-    printf("degree: %d\n", par->degree);
+    Rprintf("degree: %d\n", par->degree);
   
-  printf("gamma: %g \n", par->gamma);
+  Rprintf("gamma: %g \n", par->gamma);
   
   if(par->kernel == 1 || par->kernel == 3)
-    printf("coef 0: %g\n", par->coef0);
+    Rprintf("coef 0: %g\n", par->coef0);
   
   if(par->type == 1 || par->type == 2 || par->type == 4)
-    printf("nu: %g \n", par->nu);
+    Rprintf("nu: %g \n", par->nu);
   
   if(par->type == 3)
-    printf("epsilon: %g\n", par->epsilon);
+    Rprintf("epsilon: %g\n", par->epsilon);
   
   nTSV = 0;
   for(i = 0; i < *nclasses; i++ )
     nTSV += nPSV[i];
   
-  printf("Number of Support Vectors: %d \n",nTSV);
-  printf("\n\n");
+  Rprintf("Number of Support Vectors: %d \n",nTSV);
+  Rprintf("\n\n");
   
    
   if(par->type << 2)
-    printf("Number of Classes: %d\n", par->nclasses);
+    Rprintf("Number of Classes: %d\n", par->nclasses);
   
 }
 
@@ -223,27 +223,27 @@ void print_svmType(int n){
   switch(n){
     
   case 0:
-    printf(" svm-Type: C-classification\n");
+    Rprintf(" svm-Type: C-classification\n");
     break;
    
   case 1:
-    printf(" svm-Type: nu-classification\n");
+    Rprintf(" svm-Type: nu-classification\n");
     break;
     
   case 2:
-    printf(" svm-Type: one-classification\n");
+    Rprintf(" svm-Type: one-classification\n");
     break;
     
   case 3:
-    printf(" svm-Type: eps-regression\n");
+    Rprintf(" svm-Type: eps-regression\n");
     break;
     
   case 4:
-    printf(" svm-Type: nu-regression\n");
+    Rprintf(" svm-Type: nu-regression\n");
     break;
     
   default:
-    printf(" svm-Type: error \n");
+    Rprintf(" svm-Type: error \n");
     break;
     
   }
@@ -254,23 +254,23 @@ void print_svmKernel(int n){
   switch(n){
     
   case 0:
-    printf(" svm-Kernel: Linear\n");
+    Rprintf(" svm-Kernel: Linear\n");
     break;
    
   case 1:
-    printf(" svm-Kernel: Polynomial\n");
+    Rprintf(" svm-Kernel: Polynomial\n");
     break;
     
   case 2:
-    printf(" svm-Kernel: Radial\n");
+    Rprintf(" svm-Kernel: Radial\n");
     break;
     
   case 3:
-    printf(" svm-Kernel: Sigmoid\n");
+    Rprintf(" svm-Kernel: Sigmoid\n");
     break;
     
   default:
-    printf(" svm-Kernel: error \n");
+    Rprintf(" svm-Kernel: error \n");
     break;
     
   }

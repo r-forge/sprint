@@ -40,8 +40,8 @@
         { \
           struct timeval tick; \
           gettimeofday(&tick, NULL); \
-          fprintf(stdout, "%i.%i - ", (int)tick.tv_sec, (int)tick.tv_usec); \
-          fprintf(stdout, __VA_ARGS__); fflush(stdout); \
+          Rprintf( "%i.%i - ", (int)tick.tv_sec, (int)tick.tv_usec); \
+          Rprintf( __VA_ARGS__);  \
 	  }
 
 /* A handy little macto to force error logging */
@@ -59,8 +59,8 @@
         { \
           struct timeval tick; \
           gettimeofday(&tick, NULL); \
-          fprintf(stdout, "%i.%i - ", (int)tick.tv_sec, (int)tick.tv_usec); \
-          fprintf(stdout, __VA_ARGS__); fflush(stdout); \
+          Rprintf( "%i.%i - ", (int)tick.tv_sec, (int)tick.tv_usec); \
+          Rprintf( __VA_ARGS__); \
         }
 #else
 #define DEBUG(...)
@@ -68,7 +68,7 @@
 
 /* A handy macro to force profiling */
 #ifdef _PROF
-#define PROF(x, ...) if (!(x)) { fprintf(stdout, __VA_ARGS__); fflush(stdout); }
+#define PROF(x, ...) if (!(x)) { Rprintf( __VA_ARGS__);  }
 #else
 #define PROF(...)
 #endif

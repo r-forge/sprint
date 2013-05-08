@@ -1,3 +1,4 @@
+#include <R.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,8 +39,7 @@ static inline double powi(double base, int times)
 
 static void print_string_stdout(const char *s)
 {
-  fputs(s,stdout);
-  fflush(stdout);
+  Rprintf(s);
 }
 static void (*svm_print_string) (const char *) = &print_string_stdout;
 #if 0
@@ -2149,7 +2149,7 @@ svm_model *svm_train(const svm_problem *prob,
             if(param->weight_label[i] == label[j])
               break;
           if(j == nr_class)
-            fprintf(stderr,"warning: class label %d specified in weight is not found\n", param->weight_label[i]);
+            REprintf("warning: class label %d specified in weight is not found\n", param->weight_label[i]);
           else
             weighted_C[j] *= param->weight[i];
         }
@@ -2450,7 +2450,7 @@ double svm_get_svr_probability(const svm_model *model)
     return model->probA[0];
   else
     {
-      fprintf(stderr,"Model doesn't contain information for SVR probability inference\n");
+      REprintf("Model doesn't contain information for SVR probability inference\n");
       return 0;
     }
 }
@@ -2737,7 +2737,7 @@ svm_model *svm_load_model(const char *model_file_name)
             }
           if(svm_type_table[i] == NULL)
             {
-              fprintf(stderr,"unknown svm type.\n");
+              REprintf("unknown svm type.\n");
               free(model->rho);
               free(model->label);
               free(model->nSV);
@@ -2759,7 +2759,7 @@ svm_model *svm_load_model(const char *model_file_name)
             }
           if(kernel_type_table[i] == NULL)
             {
-              fprintf(stderr,"unknown kernel function.\n");
+              REprintf("unknown kernel function.\n");
               free(model->rho);
               free(model->label);
               free(model->nSV);
@@ -2823,7 +2823,7 @@ svm_model *svm_load_model(const char *model_file_name)
         }
       else
         {
-          fprintf(stderr,"unknown text in model file: [%s]\n",cmd);
+          REprintf("unknown text in model file: [%s]\n",cmd);
           free(model->rho);
           free(model->label);
           free(model->nSV);

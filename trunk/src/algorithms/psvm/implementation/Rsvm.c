@@ -5,6 +5,7 @@
 #include "svm.h"
 #include <mpi.h>
 #include "Rsvm.h"
+#include <R.h>
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
 /*
@@ -20,7 +21,7 @@ struct crossresults
 
 void foote(int a){
   int n = returnFoo(a);
-  printf("I am foote %i\n", n);
+  Rprintf("I am foote %i\n", n);
 }
 
 struct svm_node ** sparsify (double *x, int r, int c)

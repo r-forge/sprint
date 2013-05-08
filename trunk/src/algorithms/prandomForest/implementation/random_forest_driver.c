@@ -22,6 +22,7 @@
 #include "../../../sprint.h"
 #include "../../common/serialize.h"
 #include <R_ext/Parse.h>
+#include <R.h>
 
 /* These match up with the R interface.  So that nthcdr(args,
  * arguments_t) gives the relevant SEXP value. */
@@ -126,7 +127,6 @@ SEXP serial_randomForest(SEXP args, int rank, int size)
     UNPROTECT(2);
 #ifdef _PROF
     Rprintf("[%d: subforest-gen] %g (%d trees)\n", rank, MPI_Wtime() - t, chunksize);
-    fflush(stdout);
 #endif
     return ret;
 }
@@ -200,7 +200,6 @@ int random_forest_driver(int n, ...)
         UNPROTECT(1);           /* tmp */
 #ifdef _PROF
         Rprintf("[0: setup-and-send] %g (%d bytes)\n", MPI_Wtime() - t, length);
-        fflush(stdout);
 #endif
         /* Do some work on master too */
         PROTECT(tmp = serial_randomForest(args, rank, size));
@@ -218,7 +217,6 @@ int random_forest_driver(int n, ...)
         reduce_combine(tmp, ret, &combine_forests, 0, comm);
 #ifdef _PROF
         Rprintf("[%d: combine-forests] %g\n", rank, MPI_Wtime() - t);
-        fflush(stdout);
 #endif
         UNPROTECT(2);           /* tmp and args */
     } else {
@@ -235,7 +233,6 @@ int random_forest_driver(int n, ...)
         UNPROTECT_PTR(tmp);
 #ifdef _PROF
         Rprintf("[%d: setup-and-recv] %g (%d bytes)\n", rank, MPI_Wtime() - t, length);
-        fflush(stdout);
 #endif
         /* Do our bit of work */
         PROTECT(tmp = serial_randomForest(args, rank, size));
@@ -250,7 +247,6 @@ int random_forest_driver(int n, ...)
         reduce_combine(tmp, NULL, &combine_forests, 0, comm);
 #ifdef _PROF
         Rprintf("[%d: combine-forests] %g\n", rank, MPI_Wtime() - t);
-        fflush(stdout);
 #endif
         UNPROTECT(2);           /* tmp and args */
     }

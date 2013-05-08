@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include "mt.h"
 #include "../../../sprint.h"
+#include <R.h>
 
 #define mtT 1
 #define mtF 2
@@ -64,9 +65,9 @@ void create_gene_data(double *d, int *pnrow, int *pncol, int *L, double *pna, GE
     for (i=0; i<pdata->nrow; i++) {
         // Used for the indexes
         if(PrintIDX)
-            sprintf(pdata->id[i], "%d", i+1); 
+            Rprintf(pdata->id[i], "%d", i+1);
         else
-            sprintf(pdata->id[i], "0");
+            Rprintf(pdata->id[i], "0");
 
         for (j=0; j<pdata->ncol; j++) {
             // Using the R tradition, which store the data column by column

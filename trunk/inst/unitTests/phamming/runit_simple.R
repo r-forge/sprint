@@ -27,7 +27,7 @@ z <- c(1, 1, 1)
 w <- rbind(x,y,z)
 rownames(w) <- c("Fred", "Tom", "Bob")
 
-a <- readFastq("../inst/data/smallData.fastq")
+#a <- readFastq("../inst/data/smallData.fastq")
 
 #===============================================
 
@@ -49,13 +49,13 @@ a <- readFastq("../inst/data/smallData.fastq")
 #}
 
 # Compare small fastq dataset
-test.small_fastq_compare <- function()
-{
+#test.small_fastq_compare <- function()
+#{
 #expected_result = hamming.distance(w)
-	phamming_result = phamming.distance(a, "phamming_result.out")
-	phamming_result
+	#phamming_result = phamming.distance(a, "phamming_result.out")
+#	phamming_result
 #checkEquals(expected_result, phamming_result, "Test simple matrix")
-}
+#}
 
 # expected input data
 #item{data}{ShortReadQ or DNAStringSet objects}
