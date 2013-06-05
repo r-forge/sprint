@@ -55,11 +55,8 @@
 nreads <- 10
 #rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
 
-vmode_ <- "integer"
-caching_ <- "mmeachflush"
-finalizer_ <- "close"
-length_ <- nreads * nreads
 filename_ <- "pStringDist_result.out"
+strings <- c("lazy", "HaZy", "rAzY")
 
 
 #test.stringDistHamming <- function()
@@ -83,14 +80,38 @@ filename_ <- "pStringDist_result.out"
 # tests that pStringDist accepts simple strings, not just DNAStringSet objects
 test.stringDistSimple <- function()
 {
-	strings <- c("lazy", "HaZy", "rAzY")
-	sdist <- stringDist(strings, method="hamming")
-	actual_result <- pStringDist(strings, filename_)
-	expected_result <- as.matrix(sdist)
-	strLength <- length(strings)
-	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), "pStringDist and stringDist should give same simple results")
-	checkEquals(expected_result[], actual_result[], "Test simple matrix")
+	expected_result <- stringDist(strings, method="hamming")
+	result <- pStringDist(x=strings, method="hamming")
+	actual_result <- as.dist(result[,])
+	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pStringDist and stringDist with list of strings.")
 }
+
+# Checking with different args
+test.stringDistAllArgs <- function()
+{
+	expected_result <- stringDist(strings, method="hamming")
+	result <- pStringDist(x=strings, method="hamming", filename=filename_)
+	actual_result <- as.dist(result[,])
+	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pStringDist and stringDist with list of strings.")
+}
+
+# Checking with different args
+test.stringDistDataArgOnly <- function()
+{
+	expected_result <- stringDist(strings, method="hamming")
+	result  <- pStringDist( filename=filename_, x=strings, method="hamming") #args in different orders
+	actual_result <- as.dist(result[,])
+	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pStringDist and stringDist with list of strings.")
+}
+
+
+test.wrongMethodArg <- function()
+{
+	expected_message = "pStringDist only supports the 'hamming' method. Please choose method=\"hamming\"."
+	checkException(pStringDist(x=strings, method="levenshtein"), "An exception should be raised when pStringDist is passed a method other than hamming")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), "Expected error message when non-hamming method passed to pStringDist.")
+}
+
 
 #  tests that pStringDist returns correct dimnames
 test.stringDistPhageWithNames <- function()
@@ -99,7 +120,7 @@ test.stringDistPhageWithNames <- function()
 	strings <- phiX174Phage
 	
 	sdist <- stringDist(strings, method="hamming")
-	actual_result <- pStringDist(strings, filename_)
+	actual_result <- pStringDist(strings, filename=filename_)
 	expected_result <- as.matrix(sdist)
 	strLength <- length(strings)
 #	actual_result <- ff(
@@ -116,13 +137,14 @@ test.stringDistPhageWithNames <- function()
 
 
 test.stringDistPhi <- function()
-{
+{	
+#	DNAStringSet
 	data(srPhiX174)
 	strings <- srPhiX174[1:4]
 	strLength <- length(strings)
 	
 	sdist <- stringDist(strings, method="hamming")
-	actual_result <- pStringDist(strings, filename_)
+	actual_result <- pStringDist(strings, filename=filename_)
 	expected_result <- as.matrix(sdist)
 	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), "pStringDist and stringDist should give same simple results")
 	checkEquals(expected_result[], actual_result[], "Test simple matrix")

@@ -16,11 +16,32 @@
 #                                                                        #
 ##########################################################################
 
-              
+#Arguments:
+
+# x: a character vector or an ‘XStringSet’ object.
+
+#method: calculation method. One of ‘"levenshtein"’, ‘"hamming"’,
+#‘"quality"’, or ‘"substitutionMatrix"’.
+
+#ignoreCase: logical value indicating whether to ignore case during
+#scoring.
+
+
 #library(ShortRead)
 
 #(x, method="hamming", filename="output_file")
-pStringDist <- function (data, output_file) {
+pStringDist <- function (x, method="hamming", filename=NULL) {
+	
+	data <- x
+	
+	if(!method=="hamming"){
+		stop(..sprintMsg$error["hamming"])	}
+	
+    if (is.null(filename)){
+# temporary ff object
+		filename <- tempfile(pattern =  "ff" , tmpdir = getwd())
+    }
+	
 	
 # Load the "Biostrings" package in case is not already loaded. Warn user in case the package is missing
     if( !require("Biostrings", quietly=TRUE) ) {
@@ -36,8 +57,6 @@ pStringDist <- function (data, output_file) {
 
   objectType <- class(data)
   if(!length(data)) stop(..sprintMsg$error["empty"])
-
-  if (is.null(output_file)) stop(..sprintMsg$error["empty"])
   
   if (objectType=='character') {  
 	flatData <- paste(data, collapse = '')
@@ -61,7 +80,7 @@ pStringDist <- function (data, output_file) {
 
   return_val <- .C("pStringDist",
                    as.character(flatData),
-                   as.character(output_file),
+                   as.character(filename),
                    as.integer(sample_width),
                    n=as.integer(number_of_samples)                   
                    )
@@ -72,7 +91,7 @@ pStringDist <- function (data, output_file) {
 	vmode_ <- "integer"
 	caching_ <- "mmeachflush"
 	finalizer_ <- "close"
-	filename_ <- as.character(output_file)
+	filename_ <- as.character(filename)
 	
 		if ( return_val$n == -1 )  {
 			warning(paste("MPI is not initialized. Function is aborted.\n"))
