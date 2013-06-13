@@ -65,5 +65,6 @@ void pStringDist(char **x,
   MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
   
   // Call the stringDist function
+  // The 4 is for the number of arguments
   response = stringDist(4, *x, *sample_width, *number_of_samples, *out_filename);
 }

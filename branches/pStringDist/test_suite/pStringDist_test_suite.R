@@ -4,7 +4,7 @@ library("sprint")
 #biocLite("Biostrings")
 library("Biostrings")
 #biocLite("BSgenome.Celegans.UCSC.ce2")
-#library("BSgenome.Celegans.UCSC.ce2")
+library("BSgenome.Celegans.UCSC.ce2")
 library("ff")
 
 

@@ -23,59 +23,24 @@
 #a <- readFastq("../inst/data/smallData.fastq")
 
 
-#===============================================
-
-# Compare simple strings - not implimented by pStringDist.
-#test.simple_string_compare <- function()
-#{
-#	expected_result = hamming.distance(x, y)
-#	pStringDist_result = pStringDist.distance(x, y)
-#	
-#	checkEquals(expected_result, pStringDist_result, "Test simple string")
-#}
-
-# Compare simple matrix
-#test.simple_string_compare <- function()
-#{
-#	expected_result = hamming.distance(w)
-#	pStringDist_result = pStringDist.distance(w, pStringDist_result.out)	
-#checkEquals(expected_result, pStringDist_result, "Test simple matrix")
-#}
 
 ## Randomly extract 10000 40-mers from C.elegans chrI:
 # Big test, a bit slow to run, put it back for final testing.
-#extractRandomReads <- function(subject, nread, readlength)
-#{
-#	if (!is.integer(readlength))
-#	readlength <- as.integer(readlength)
-#	start <- sample(length(subject) - readlength + 1L, nread,
-#					replace=TRUE)
-#	DNAStringSet(subject, start=start, width=readlength)
-#}
-nreads <- 10
-#rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
+extractRandomReads <- function(subject, nread, readlength)
+{
+	if (!is.integer(readlength))
+	readlength <- as.integer(readlength)
+	start <- sample(length(subject) - readlength + 1L, nread,
+					replace=TRUE)
+	DNAStringSet(subject, start=start, width=readlength)
+}
+
+# Change this to test scaling.
+nreads <- 10000
+rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
 
 filename_ <- "pStringDist_result.out"
 strings <- c("lazy", "HaZy", "rAzY")
-
-
-#test.stringDistHamming <- function()
-#{
-#	pStringDist(rndreads, filename_)
-#	sdist <- stringDist(rndreads, method="hamming")
-#	expected_result <- as.matrix(sdist)
-#	actual_result <- ff(
-#				dim=c(nreads,nreads)
-#				, filename=filename_
-#				, vmode=vmode_
-#				, caching=caching_
-#				, finalizer=finalizer_
-#				, length=length_
-#				)
-#	
-#	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE),"pStringDist and stringDist should give same results")
-#checkEquals(expected_result[], actual_result[], "Test simple matrix")
-#}
 
 # tests that pStringDist accepts simple strings, not just DNAStringSet objects
 test.stringDistSimple <- function()
@@ -84,6 +49,76 @@ test.stringDistSimple <- function()
 	result <- pStringDist(x=strings, method="hamming")
 	actual_result <- as.dist(result[,])
 	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pStringDist and stringDist with list of strings.")
+	checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
+}
+
+# tests pStringDist with a larger data set
+test.stringDistScalingLarge <- function()
+{
+	DEACTIVATED("Not running large function.")
+	
+	nreads <- 70000 #Large enough for ordinary stringDist to refuse.
+	rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
+	
+#	stime_original <- proc.time()["elapsed"]
+#	expected_result <- stringDist(rndreads, method="hamming")
+#	etime_original <- proc.time()["elapsed"]
+	
+	stime_sprint <- proc.time()["elapsed"]
+	result <- pStringDist(rndreads, method="hamming", filename="large.ff")
+	etime_sprint <- proc.time()["elapsed"]
+	
+#	actual_result <- as.dist(result[,])
+	
+	print(paste("Number of strings: ")); print(paste(nreads))
+#	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
+	print(paste("SPRINT pStringDist time: ")); print(paste(etime_sprint-stime_sprint))
+	
+#TODO find way to check result.
+	
+#checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pStringDist and stringDist with list of strings.")
+#checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
+}
+
+
+# tests pStringDist with a small data set
+test.stringDistScalingSmall <- function()
+{
+	nreads <- 10
+	rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
+	
+	stime_original <- proc.time()["elapsed"]
+	expected_result <- stringDist(rndreads, method="hamming")
+	etime_original <- proc.time()["elapsed"]
+	
+	stime_sprint <- proc.time()["elapsed"]
+	result <- pStringDist(rndreads, method="hamming", filename="small.ff")
+	etime_sprint <- proc.time()["elapsed"]
+	
+	actual_result <- as.dist(result[,])
+	
+	print(paste("Number of strings: ")); print(paste(nreads))
+	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
+	print(paste("SPRINT pStringDist time: ")); print(paste(etime_sprint-stime_sprint))
+	
+	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pStringDist and stringDist with list of strings.")
+	checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
+}
+
+
+
+# test XStringSet dimnames check
+test.stringDistDimnames <- function()
+{
+	x0 <- c("GTAT", "TTGA", "AGAG")
+	width(x0)
+	x1 <- BStringSet(x0)
+	
+	expected_result <- stringDist(x1, method="hamming")
+	result <- pStringDist(x1, method="hamming")
+	actual_result <- as.dist(result[,])
+	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pStringDist and stringDist with BStringSet.")
+	checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
 }
 
 # Checking with different args
@@ -123,16 +158,9 @@ test.stringDistPhageWithNames <- function()
 	actual_result <- pStringDist(strings, filename=filename_)
 	expected_result <- as.matrix(sdist)
 	strLength <- length(strings)
-#	actual_result <- ff(
-#						dim=c(strLength,strLength)
-#						, filename=filename_
-#						, vmode=vmode_
-#						, caching=caching_
-#						, finalizer=finalizer_
-#						, length=strLength*strLength
-#						)
 	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), "pStringDist and stringDist should give same simple results")
     checkEquals(expected_result[], actual_result[], "Test simple matrix")
+	checkEquals(labels(sdist), labels(as.dist(actual_result[,])), "Test labels on dist")
 }
 
 
@@ -150,10 +178,6 @@ test.stringDistPhi <- function()
 	checkEquals(expected_result[], actual_result[], "Test simple matrix")
 }
 
-
-# expected input data
-#item{data}{ShortReadQ or DNAStringSet objects}
-#item{output_filename}{results will be stored here as binary data}
 
 
 

@@ -18,10 +18,10 @@
 
 #Arguments:
 
-# x: a character vector or an ‘XStringSet’ object.
+# x: a character vector or an XStringSet object.
 
-#method: calculation method. One of ‘"levenshtein"’, ‘"hamming"’,
-#‘"quality"’, or ‘"substitutionMatrix"’.
+#method: calculation method. One of�"levenshtein"�"hamming"�
+#"quality"� or "substitutionMatrix".
 
 #ignoreCase: logical value indicating whether to ignore case during
 #scoring.
@@ -105,7 +105,7 @@ pStringDist <- function (x, method="hamming", filename=NULL) {
 		   , vmode=vmode_
 		   , caching=caching_
 		   , finalizer=finalizer_
-		   , length=number_of_samples*number_of_samples
+#	   , length=(number_of_samples*number_of_samples)
 		   )
     } 
   return(result)
