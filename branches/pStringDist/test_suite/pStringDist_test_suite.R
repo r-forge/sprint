@@ -8,11 +8,11 @@ library("BSgenome.Celegans.UCSC.ce2")
 library("ff")
 
 
-for (nm in list.files("../inst/unitTests/pStringDist/", pattern = "\\.[Rr]$")){
-  source(file.path("../inst/unitTests/pStringDist/", nm))
+for (nm in list.files("../inst/unitTests/pstringDist/", pattern = "\\.[Rr]$")){
+  source(file.path("../inst/unitTests/pstringDist/", nm))
 }
 
-test.suite <- defineTestSuite("pStringDist", dirs = file.path("../inst/unitTests/pStringDist/"),testFileRegexp = '*.R')
+test.suite <- defineTestSuite("pstringDist", dirs = file.path("../inst/unitTests/pstringDist/"),testFileRegexp = '*.R')
 
 test.result <- runTestSuite(test.suite)
 printTextProtocol(test.result)

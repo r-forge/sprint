@@ -30,7 +30,7 @@
 #library(ShortRead)
 
 #(x, method="hamming", filename="output_file")
-pStringDist <- function (x, method="hamming", filename=NULL) {
+pstringDist <- function (x, method="hamming", filename=NULL) {
 	
 	data <- x
 	
@@ -45,13 +45,13 @@ pStringDist <- function (x, method="hamming", filename=NULL) {
 	
 # Load the "Biostrings" package in case is not already loaded. Warn user in case the package is missing
     if( !require("Biostrings", quietly=TRUE) ) {
-        warning("Function pStringDist was unable to execute - failed to load package \"Biostrings\". Please check that the package is installed and try again.")
+        warning("Function pstringDist was unable to execute - failed to load package \"Biostrings\". Please check that the package is installed and try again.")
         return(NA)
     }
 	
 # Load the "ff" package in case is not already loaded. Warn user in case the package is missing
     if( !require("ff", quietly=TRUE) ) {
-        warning("Function pStringDist was unable to execute - failed to load package \"ff\". Please check that the package is installed and try again.")
+        warning("Function pstringDist was unable to execute - failed to load package \"ff\". Please check that the package is installed and try again.")
         return(NA)
     }
 
@@ -78,7 +78,7 @@ pStringDist <- function (x, method="hamming", filename=NULL) {
 
   if(sample_width<1 || number_of_samples<2) stop(..sprintMsg$error["empty"])
 
-  return_val <- .C("pStringDist",
+  return_val <- .C("pstringDist",
                    as.character(flatData),
                    as.character(filename),
                    as.integer(sample_width),

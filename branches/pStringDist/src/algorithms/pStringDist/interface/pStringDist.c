@@ -29,7 +29,7 @@ extern int stringDist(int n,...);
  *  Accepts information from R gets response and returns it.        *
  *                                                                  *
  * **************************************************************** */
-void pStringDist(char **x,
+void pstringDist(char **x,
              char **out_filename,
              int *sample_width,
              int *number_of_samples)
@@ -43,9 +43,9 @@ void pStringDist(char **x,
   // Check that MPI is initialized
   MPI_Initialized(&response);
   if (response) {
-    DEBUG("\nMPI is init'ed in pStringDist\n");
+    DEBUG("\nMPI is init'ed in pstringDist\n");
   } else {
-    DEBUG("\nMPI is NOT init'ed in pStringDist\n");
+    DEBUG("\nMPI is NOT init'ed in pstringDist\n");
 
     // This is called from .C and so can't return a value.
     // The number_of_samples will be checked in the R code as an indication that the code has worked.

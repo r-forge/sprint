@@ -14,7 +14,7 @@
 	no_file = "Output filename is missing",
 	no.valid.k = "Number of clusters `k' must be in {1,2, .., n-1}; hence n >= 2",
 	no.filename = "The filename of the ff object cannot be read",
-	hamming = "pStringDist only supports the 'hamming' method. Please choose method=\"hamming\"."
+	hamming = "pstringDist only supports the 'hamming' method. Please choose method=\"hamming\"."
 	), 
 	warn = c()
 )
