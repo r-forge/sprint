@@ -73,13 +73,31 @@ int allocateMaxChunk(int worldRank, int my_start, int my_end, int *stringDist,
                      int number_of_samples) {
 
   int chunk_size = (my_end-my_start);
+
+/* First attempt at 1GB chunk sizes. Does not produce correct results though.
+  int size_on_disk = sizeof(int)* number_of_samples * chunk_size;
+
+  int ONE_GB = 100;//1073741824;
+  	  	  	    //484 000 000
+  Rprintf("chunk_size at beginning: %d\n", chunk_size);
+
+  Rprintf("size_on_disk before check: %d\n", size_on_disk);
+
+  while(size_on_disk > ONE_GB){
+	  Rprintf("size_on_disk: %d\n", size_on_disk);
+      chunk_size = chunk_size/2;
+	  Rprintf("halving chunk size to: %d\n", chunk_size);
+      size_on_disk = sizeof(int)* number_of_samples * chunk_size;
+	  Rprintf("new size_on_disk: %d\n", size_on_disk);
+  }
+*/
   int malloc_failed=1;
     
+  // This malloc fail handler is probably not used, but leaving it in just in case.
   if(NULL == (stringDist = (int *)malloc(sizeof(int)
                                               * number_of_samples * chunk_size)))
   {
-  
-    while(malloc_failed) {
+    while(malloc_failed) { // This does not work malloc will allocate more virtual memory than is available.
       malloc_failed=0;
       chunk_size = chunk_size/2;
       
@@ -88,12 +106,10 @@ int allocateMaxChunk(int worldRank, int my_start, int my_end, int *stringDist,
       if(stringDist == NULL) {
         malloc_failed=1;
       }
-
       free(stringDist);
-    
     }
-
   }
+  free(stringDist);
 
   Rprintf("chunk_size: %d\n", chunk_size);
 

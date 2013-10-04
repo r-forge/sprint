@@ -124,6 +124,7 @@ int stringDist(int n, ...) {
     
     free(out_filename);
     free(DNAStringSet);
+    free(stringDist);
   }
   
   return (0);

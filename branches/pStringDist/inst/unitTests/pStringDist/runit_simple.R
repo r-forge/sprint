@@ -23,7 +23,6 @@
 #a <- readFastq("../inst/data/smallData.fastq")
 
 
-
 ## Randomly extract 10000 40-mers from C.elegans chrI:
 # Big test, a bit slow to run, put it back for final testing.
 extractRandomReads <- function(subject, nread, readlength)
@@ -36,48 +35,55 @@ extractRandomReads <- function(subject, nread, readlength)
 }
 
 # Change this to test scaling.
-nreads <- 10000
+nreads <- 100
 rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
 
 filename_ <- "pstringDist_result.out"
 strings <- c("lazy", "HaZy", "rAzY")
+other.strings <- c("lazy", "Hazy")
 
 # tests that pstringDist accepts simple strings, not just DNAStringSet objects
-test.stringDistSimple <- function()
+test.stringDistMatrixSimple <- function()
 {
-	expected_result <- stringDist(strings, method="hamming")
-	result <- pstringDist(x=strings, method="hamming")
-	actual_result <- as.dist(result[,])
-	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pstringDist and stringDist with list of strings.")
-	checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
+	expected_result <- stringdistmatrix(strings, strings, method="h")
+	actual_result <- pstringdistmatrix(strings, strings, method="h")
+	
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix with list of strings.")
+	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
 }
 
 # tests pstringDist with a larger data set
 test.stringDistScalingLarge <- function()
 {
-	DEACTIVATED("Not running large function.")
+#	DEACTIVATED("Not running large function.")
 	
-	nreads <- 70000 #Large enough for ordinary stringDist to refuse.
+	nreads <- 6
 	rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
 	
-#	stime_original <- proc.time()["elapsed"]
-#	expected_result <- stringDist(rndreads, method="hamming")
-#	etime_original <- proc.time()["elapsed"]
+	print(paste("stringDist: "))
+	stime_original <- proc.time()["elapsed"]
+	expected_result <- stringdistmatrix(rndreads, rndreads, method="h")
+	etime_original <- proc.time()["elapsed"]
 	
+	print(paste("pstringDist: "))
 	stime_sprint <- proc.time()["elapsed"]
-	result <- pstringDist(rndreads, method="hamming", filename="large.ff")
+	actual_result <- pstringdistmatrix(rndreads, rndreads, method="h", filename="large.ff")
 	etime_sprint <- proc.time()["elapsed"]
 	
-#	actual_result <- as.dist(result[,])
+	print(paste("expected result: ")); print(paste(expected_result))
+	print(paste("actual result: ")); print(paste(actual_result[,]))
+	
+	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix should give same simple results")
 	
 	print(paste("Number of strings: ")); print(paste(nreads))
-#	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
+	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
 	print(paste("SPRINT pstringDist time: ")); print(paste(etime_sprint-stime_sprint))
-	
-#TODO find way to check result.
-	
-#checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pstringDist and stringDist with list of strings.")
-#checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
+
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix with list of strings.")
+	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
 }
 
 
@@ -88,21 +94,27 @@ test.stringDistScalingSmall <- function()
 	rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
 	
 	stime_original <- proc.time()["elapsed"]
-	expected_result <- stringDist(rndreads, method="hamming")
+	expected_result <- stringdistmatrix(rndreads, rndreads, method="h")
 	etime_original <- proc.time()["elapsed"]
 	
 	stime_sprint <- proc.time()["elapsed"]
-	result <- pstringDist(rndreads, method="hamming", filename="small.ff")
+	actual_result <- pstringdistmatrix(rndreads, rndreads, method="h", filename="small.ff")
 	etime_sprint <- proc.time()["elapsed"]
-	
-	actual_result <- as.dist(result[,])
 	
 	print(paste("Number of strings: ")); print(paste(nreads))
 	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
 	print(paste("SPRINT pstringDist time: ")); print(paste(etime_sprint-stime_sprint))
 	
-	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pstringDist and stringDist with list of strings.")
-	checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
+	checkTrue(all.equal(expected_result, actual_result[], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix with list of strings.")
+	
+	print(paste("dimnames(expected_result): ")); print(paste(dimnames(expected_result)))
+	print(paste("expected_result: ")); print(paste(expected_result))
+	print(paste("attributes(expected_result): ")); print(paste(attributes(expected_result)))
+	print(paste("dimnames(actual_result[,]): ")); print(paste(dimnames(actual_result[,])))
+	print(paste("dimnames(actual_result): ")); print(paste(dimnames(actual_result)))
+
+	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
 }
 
 
@@ -114,37 +126,38 @@ test.stringDistDimnames <- function()
 	width(x0)
 	x1 <- BStringSet(x0)
 	
-	expected_result <- stringDist(x1, method="hamming")
-	result <- pstringDist(x1, method="hamming")
-	actual_result <- as.dist(result[,])
-	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pstringDist and stringDist with BStringSet.")
-	checkEquals(dimnames(expected_result), dimnames(actual_result), "Test labels on dist")
+	expected_result <- stringdistmatrix(x1, x1, method="h")
+	actual_result <- pstringdistmatrix(x1, x1, method="h")
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix with BStringSet.")
+	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
 }
 
 # Checking with different args
 test.stringDistAllArgs <- function()
-{
-	expected_result <- stringDist(strings, method="hamming")
-	result <- pstringDist(x=strings, method="hamming", filename=filename_)
-	actual_result <- as.dist(result[,])
-	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pstringDist and stringDist with list of strings.")
+{	expected_result <- stringdistmatrix(strings, strings, method="h")
+	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix with list of strings.")
 }
 
 # Checking with different args
 test.stringDistDataArgOnly <- function()
 {
-	expected_result <- stringDist(strings, method="hamming")
-	result  <- pstringDist( filename=filename_, x=strings, method="hamming") #args in different orders
-	actual_result <- as.dist(result[,])
-	checkTrue(all.equal(expected_result, actual_result, check.attributes=FALSE), "pstringDist and stringDist with list of strings.")
+	expected_result <- stringdistmatrix(strings, strings, method="h")
+	actual_result  <- pstringdistmatrix(filename=filename_, a=strings, b=strings, method="h")#args in different orders
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix with list of strings.")
 }
 
 
 test.wrongMethodArg <- function()
 {
-	expected_message = "pstringDist only supports the 'hamming' method. Please choose method=\"hamming\"."
-	checkException(pstringDist(x=strings, method="levenshtein"), "An exception should be raised when pstringDist is passed a method other than hamming")
-	checkTrue(as.logical(grep(expected_message, geterrmessage())), "Expected error message when non-hamming method passed to pstringDist.")
+	expected_message = "pstringdistmatrix only supports the hamming method. Please choose method=\"h\"."
+	checkException(pstringdistmatrix(a=strings, b=strings, method="lv"), 
+				   "An exception should be raised when pstringDist is passed a method other than hamming")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), 
+			  "Expected error message when non-hamming method passed to pstringDist.")
 }
 
 
@@ -154,13 +167,11 @@ test.stringDistPhageWithNames <- function()
 	data(phiX174Phage)
 	strings <- phiX174Phage
 	
-	sdist <- stringDist(strings, method="hamming")
-	actual_result <- pstringDist(strings, filename=filename_)
-	expected_result <- as.matrix(sdist)
+	expected_result <- stringdistmatrix(strings, strings, method="h")
+	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
 	strLength <- length(strings)
-	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), "pstringDist and stringDist should give same simple results")
-    checkEquals(expected_result[], actual_result[], "Test simple matrix")
-	checkEquals(labels(sdist), labels(as.dist(actual_result[,])), "Test labels on dist")
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix should give same simple results")
 }
 
 
@@ -171,13 +182,47 @@ test.stringDistPhi <- function()
 	strings <- srPhiX174[1:4]
 	strLength <- length(strings)
 	
-	sdist <- stringDist(strings, method="hamming")
-	actual_result <- pstringDist(strings, filename=filename_)
-	expected_result <- as.matrix(sdist)
-	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), "pstringDist and stringDist should give same simple results")
-	checkEquals(expected_result[], actual_result[], "Test simple matrix")
+	expected_result <- stringdistmatrix(strings, strings, method="h")
+	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix and stringdistmatrix should give same simple results for a DNAStringSet")
 }
 
+test.differentInputs <- function(){
+	
+	expected_message = "pstringdistmatrix only works when both input sets of strings are the same."
+	checkException(pstringdistmatrix(strings, other.strings, method="h"), 
+				   "An exception should be raised when pstringdistmatrix is passed 2 different sets of strings")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), 
+			  "Expected error message when 2 different sets of strings passed to pstringdistmatrix.")
+	
+# TODO this is the test for when the code does handle 2 diff lists of strings.	
+#	expected_result <- stringdistmatrix(strings, other.strings, method="h")
+#	actual_result <- pstringdistmatrix(strings, other.strings, method="h")
+#	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+#			  "pstringdistmatrix and stringdistmatrix should be able to compare 2 different lists of strings.")
+}
 
+test.AllInputs <- function(){
+	expected_result <- stringdistmatrix(strings, strings, method="h", weight=c(0.5,1,1,1), maxDist=0, ncores=1)
+	actual_result <- pstringdistmatrix(strings, strings, method="h", weight=c(0.5,1,1,1), maxDist=0, ncores=1) 
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix should ignore unnecessary parameters.")
+}
 
+test.maxDistError <- function(){	
+	expected_message = "maxDist is not used by pstringdistmatrix. Please set maxDist=0, or remove the maxDist parameter."
+	checkException(pstringdistmatrix(strings, strings, method="h", maxDist=1), 
+				   "An exception should be raised when pstringDist is passed maxDist>0")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), 
+			  "Expected error message when maxDist>0 passed to pstringdistmatrix.")
+}
+
+test.ErrorIfNCores <- function(){
+	expected_message = "ncores is not used by pstringdistmatrix. Please refer to the SPRINT user guide for how to run in parallel."
+	checkException(pstringdistmatrix(a=strings, b=strings, method="h", ncores=4), 
+				   "An exception should be raised when pstringDist is passed ncores>1")
+	checkTrue(as.logical(grep(expected_message, geterrmessage())), 
+			  "Expected error message when ncores>1 passed to pstringdistmatrix.")
+}
 
