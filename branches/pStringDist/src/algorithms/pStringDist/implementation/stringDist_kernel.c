@@ -58,9 +58,40 @@ int computeStringDist(int worldRank, int worldSize, char* DNAStringSet, int *str
     }
     
   }
+  /*
+  Input Parameters MPI_File_write_all
 
+  fh
+  File handle (handle).
+  buf
+  Initial address of buffer (choice).
+  count
+  Number of elements in buffer (integer).
+  datatype
+  Data type of each buffer element (handle). */
+
+ // MPI_File_write_all(fh, &cor[0], 0, MPI_DOUBLE, &stat); from pcor
+ // MPI_File_write_all(fh, &cor[0], coeff_count, MPI_DOUBLE, &stat);
+
+//  MPI_File_write_all(fh, stringDist, number_of_samples*c, MPI_INT, &stat);
   MPI_File_write_at(fh, (my_start*number_of_samples)+(chunk_size*number_of_samples*count), stringDist, number_of_samples*c, MPI_INT, &stat);
 
+ /*
+  * Input Parameters MPI_File_write_at
+
+  fh
+  File handle (handle).
+  offset
+  File offset (integer).
+  buf
+  Initial address of buffer (choice).
+  count
+  Number of elements in buffer (integer).
+  datatype
+  Data type of each buffer element (handle).*/
+  MPI_File_sync( fh ) ;
+  MPI_Barrier( MPI_COMM_WORLD ) ;
+  MPI_File_sync( fh ) ;
 
   /* Close file handler */
   MPI_File_close(&fh);

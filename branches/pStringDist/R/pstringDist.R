@@ -49,12 +49,6 @@
 #(x, method="hamming", filename="output_file")
 pstringdistmatrix <- function (a, b, method="h", filename=NULL, weight=NULL, maxDist=0, ncores=NULL) {
 	
-	print("a is")
-	print(a)
-	
-	print("b is")
-	print(b)
-	
 # TODO use a and b.
 	if(!(identical(as.character(a),as.character(b)))){
 		stop(..sprintMsg$error["not.supported.diff.strings"])

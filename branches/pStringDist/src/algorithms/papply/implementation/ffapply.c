@@ -163,7 +163,7 @@ void do_ffApply(SEXP ans,
 
       count = length(VECTOR_ELT(ans, 0));
       offset = i*count;
-
+      DEBUG("\n**MPI_File_write_at** : Worker process %3d \n", worldRank);
       MPI_File_write_at(fh, offset, REAL(VECTOR_ELT(ans, 0)), count, MPI_DOUBLE, &stat); 
 
     }
@@ -186,10 +186,16 @@ void do_ffApply(SEXP ans,
       count = length(VECTOR_ELT(ans, 0));
       offset = i*count;
 
+      DEBUG("\n**MPI_File_write_at** : Worker process %3d \n", worldRank);
       MPI_File_write_at(fh, offset, REAL(VECTOR_ELT(ans, 0)), count, MPI_DOUBLE, &stat);
 
     }
   }
+  // TODO this code should probably be added here:
+  /*
+   * MPI_File_sync( fh ) ;
+   * MPI_Barrier( MPI_COMM_WORLD ) ;
+   * MPI_File_sync( fh ) ;*/
   
   /* Close file handler */
   MPI_File_close(&fh);
