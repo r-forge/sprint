@@ -89,9 +89,18 @@ int computeStringDist(int worldRank, int worldSize, char* DNAStringSet, int *str
   Number of elements in buffer (integer).
   datatype
   Data type of each buffer element (handle).*/
-  MPI_File_sync( fh ) ;
-  MPI_Barrier( MPI_COMM_WORLD ) ;
-  MPI_File_sync( fh ) ;
+  MPI_File_sync( fh ) ; 			// Causes all previous writes to be transferred to the storage device
+  MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
+  MPI_File_sync( fh ) ;				// Causes all previous writes to be transferred to the storage device
+/* According to the web site (http://www.mpi-forum.org/docs/mpi-2.2/mpi22-report/node305.htm),
+ * The ``sync-barrier-sync'' construct is required because:
+ * The barrier ensures that the write on process 0 occurs before the read on process 1.
+ * The first sync guarantees that the data written by all processes is transferred to the storage device.
+ * The second sync guarantees that all data which has been transferred to the storage device is visible to all processes.
+ *  (This does not affect process 0 in this example.)
+ *
+ * */
+
 
   /* Close file handler */
   MPI_File_close(&fh);
