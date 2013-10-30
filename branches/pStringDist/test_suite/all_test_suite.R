@@ -6,7 +6,7 @@ library("boot")
 library("ShortRead")
 library("e1071")
 library("multtest")
-library("Biostrings")
+library("stringdist")
 library("BSgenome.Celegans.UCSC.ce2")
 
 # Automatically runs all R files under the unitTests directory. 

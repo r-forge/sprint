@@ -31,6 +31,7 @@ SEXP ffApply(SEXP result, SEXP data, SEXP margin, SEXP function,
              SEXP nrows, SEXP ncols, int worldRank,
              SEXP out_filename, int worldSize) {
 
+	  DEBUG("In ffapply\n");
   SEXP ans;
   
   int my_start, my_end, N, function_nlines;
@@ -54,7 +55,8 @@ SEXP ffApply(SEXP result, SEXP data, SEXP margin, SEXP function,
   } else {
     filename = (char *) R_alloc(FILENAME_LENGTH, sizeof(char));
     file_out = (char *) R_alloc(FILENAME_LENGTH, sizeof(char));
-    
+
+    DEBUG("\n**PROTECTING 3 : Worker process %3d \n", worldRank);
     PROTECT(nrows = allocVector(INTSXP, 1));
     PROTECT(ncols = allocVector(INTSXP, 1));
     PROTECT(margin = allocVector(INTSXP, 1));
@@ -69,6 +71,7 @@ SEXP ffApply(SEXP result, SEXP data, SEXP margin, SEXP function,
 
   if(worldRank != MASTER_PROCESS) {
 
+	    DEBUG("\n**PROTECTING 1 : Worker process %3d \n", worldRank);
     PROTECT(function = allocVector(STRSXP, function_nlines));
   }
 
@@ -99,7 +102,8 @@ SEXP ffApply(SEXP result, SEXP data, SEXP margin, SEXP function,
   /* Bcast function name or definition, cover case when definition is split into
      several lines and stored as a SEXP string vector */
   bcastRFunction(function, function_nlines, worldRank);
-  
+
+  DEBUG("\n**PROTECTING 1 : Worker process %3d \n", worldRank);
   /* Response container, Vector of SEXPs, margin determines vector length */
   PROTECT(ans = allocVector(VECSXP, 1));
 
@@ -107,8 +111,11 @@ SEXP ffApply(SEXP result, SEXP data, SEXP margin, SEXP function,
              INTEGER(nrows)[0], INTEGER(ncols)[0], worldRank, file_out);
 
   if(worldRank != MASTER_PROCESS) {
-    UNPROTECT(4);
+
+	    DEBUG("\n**UNPROTECTING 5 : Worker process %3d \n", worldRank);
+    UNPROTECT(5);
   } else {
+	    DEBUG("\n**UNPROTECTING 1 : Worker process %3d \n", worldRank);
     UNPROTECT(1);
   }
 
@@ -133,6 +140,7 @@ void do_ffApply(SEXP ans,
   SEXP data_chunk, R_fcall, parsedCmd = R_NilValue;  
   double *rchunk;
   int i,k, offset=0, count=0;
+  int no_of_protects = 0;
   
   /* Open the file handler */
   MPI_File_open(comm, out_filename, MPI_MODE_CREATE | MPI_MODE_WRONLY, MPI_INFO_NULL, &fh);
@@ -141,15 +149,21 @@ void do_ffApply(SEXP ans,
   MPI_File_set_view(fh, 0, MPI_DOUBLE, MPI_DOUBLE, "native", MPI_INFO_NULL);
 
   /* Parse the command, returns a function object */
+  DEBUG("\n**PROTECTING 2 : Worker process %3d \n", worldRank);
   PROTECT(parsedCmd = parseExpression(function));
+  no_of_protects++;
 
    /* Create R LANGSXP Vector, R function holder
      length of the vector is 1 + number of arguments */
   PROTECT(R_fcall = lang2(VECTOR_ELT(parsedCmd, 0), R_NilValue));
+  no_of_protects++;
+
 
   if (INTEGER(margin)[0] == 1) {
 
+	  DEBUG("\n**PROTECTING 1 : Worker process %3d \n", worldRank);
     PROTECT(data_chunk = allocVector(REALSXP, ncols));
+    no_of_protects++;
     rchunk = REAL(data_chunk);
 
     for(i=my_start, k=0; i<my_end; i++, k++) {
@@ -165,13 +179,14 @@ void do_ffApply(SEXP ans,
       offset = i*count;
       DEBUG("\n**MPI_File_write_at** : Worker process %3d \n", worldRank);
       MPI_File_write_at(fh, offset, REAL(VECTOR_ELT(ans, 0)), count, MPI_DOUBLE, &stat); 
-
     }
   }
 
   if (INTEGER(margin)[0] == 2) {
 
+	  DEBUG("\n**PROTECTING 1 : Worker process %3d \n", worldRank);
     PROTECT(data_chunk = allocVector(REALSXP, nrows));
+    no_of_protects++;
     rchunk = REAL(data_chunk);
 
     for(i=my_start, k=0; i<my_end; i++, k++) {
@@ -190,12 +205,23 @@ void do_ffApply(SEXP ans,
       MPI_File_write_at(fh, offset, REAL(VECTOR_ELT(ans, 0)), count, MPI_DOUBLE, &stat);
 
     }
+
   }
-  // TODO this code should probably be added here:
-  /*
-   * MPI_File_sync( fh ) ;
-   * MPI_Barrier( MPI_COMM_WORLD ) ;
-   * MPI_File_sync( fh ) ;*/
+
+  DEBUG("\n**count is %3d \n", count);
+  DEBUG("\n**length(data_chunk) is %3d \n", length(data_chunk)) ;
+  //TODO ET
+  /* If count and length(data_chunk) are the same, then a matrix is written to the ff file,
+   * if count is length ==1, then a list is written to the ff file (the current ff read code works for this).
+   * Need to return a list/matix flag to the R code, so that it knows how to open the ff file.*/
+
+  MPI_File_sync( fh ) ; 			// Causes all previous writes to be transferred to the storage device
+  MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
+  MPI_File_sync( fh ) ;				// Causes all previous writes to be transferred to the storage device
+
+  DEBUG("\n**No of things that are protected %d : Worker process %3d \n", no_of_protects, worldRank);
+  DEBUG("\n**UNPROTECTING 3 : Worker process %3d \n", worldRank);
+  UNPROTECT(3);
   
   /* Close file handler */
   MPI_File_close(&fh);

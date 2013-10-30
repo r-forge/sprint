@@ -6,7 +6,7 @@
 	non.ffmatrix = "ff object must be a matrix", 
 	no.filename = "The filename of the ff object cannot be read",
 	non.function = "The fun argument needs to be a function",
-	non.supportedtype = "papply only supports matrix, list of matrices or ff data",
+	non.supportedtype = "papply only supports a matrix or a list of matrices as input.",
 	non.numeric = "PCOR only accepts numeric matrices",
 	no.dims = "Dimensions of x and y matrices do not match",
 	non.dna = "Function only accepts a character vector or an 'XStringSet' object",

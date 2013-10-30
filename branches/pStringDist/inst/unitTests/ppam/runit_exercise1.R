@@ -44,7 +44,7 @@ class(pdistance_matrix)
 
 
 etime <- proc.time()["elapsed"]
-print(paste("Correlation time: ")); print(paste(etime-stime))
+#print(paste("Correlation time: ")); print(paste(etime-stime))
 
 # Force memory clean-up
 gc(reset=TRUE, verbose=FALSE)
@@ -59,7 +59,7 @@ pam_result <- pam(distance_matrix, k=6, diss=TRUE)
 ppam_result <- ppam(pdistance_matrix, k=6)
 
 etime <- proc.time()["elapsed"]
-print(paste("Clustering time: ")); print(paste(etime-stime))
+#print(paste("Clustering time: ")); print(paste(etime-stime))
 
 
 invisible(checkEquals(pam_result$medoids,

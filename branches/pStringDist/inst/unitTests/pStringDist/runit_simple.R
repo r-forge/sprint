@@ -61,25 +61,21 @@ test.stringDistScalingLarge <- function()
 	nreads <- 6
 	rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
 	
-	print(paste("stringDist: "))
 	stime_original <- proc.time()["elapsed"]
 	expected_result <- stringdistmatrix(rndreads, rndreads, method="h")
 	etime_original <- proc.time()["elapsed"]
 	
-	print(paste("pstringDist: "))
 	stime_sprint <- proc.time()["elapsed"]
 	actual_result <- pstringdistmatrix(rndreads, rndreads, method="h", filename="large.ff")
 	etime_sprint <- proc.time()["elapsed"]
-	
-	print(paste("expected result: ")); print(paste(expected_result))
-	print(paste("actual result: ")); print(paste(actual_result[,]))
+
 	
 	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix should give same simple results")
 	
-	print(paste("Number of strings: ")); print(paste(nreads))
-	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
-	print(paste("SPRINT pstringDist time: ")); print(paste(etime_sprint-stime_sprint))
+#	print(paste("Number of strings: ")); print(paste(nreads))
+#	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
+#	print(paste("SPRINT pstringDist time: ")); print(paste(etime_sprint-stime_sprint))
 
 	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix with list of strings.")
@@ -101,19 +97,8 @@ test.stringDistScalingSmall <- function()
 	actual_result <- pstringdistmatrix(rndreads, rndreads, method="h", filename="small.ff")
 	etime_sprint <- proc.time()["elapsed"]
 	
-	print(paste("Number of strings: ")); print(paste(nreads))
-	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
-	print(paste("SPRINT pstringDist time: ")); print(paste(etime_sprint-stime_sprint))
-	
 	checkTrue(all.equal(expected_result, actual_result[], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix with list of strings.")
-	
-	print(paste("dimnames(expected_result): ")); print(paste(dimnames(expected_result)))
-	print(paste("expected_result: ")); print(paste(expected_result))
-	print(paste("attributes(expected_result): ")); print(paste(attributes(expected_result)))
-	print(paste("dimnames(actual_result[,]): ")); print(paste(dimnames(actual_result[,])))
-	print(paste("dimnames(actual_result): ")); print(paste(dimnames(actual_result)))
-
 	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
 }
 
