@@ -14,7 +14,9 @@ library("multtest")
 #  source(file.path("../inst/unitTests/ppam/", nm))
 #}
 
-sink(file = "../all_results", append = TRUE, type = c("output", "message"), split = FALSE)
+logFile <- file("all_results.log")
+sink(file = logFile, append = TRUE, type = c("output"), split = FALSE)
+sink(file = logFile, append = TRUE, type = c("message"), split = FALSE)
 
 allDirs  <- vector()
 for (d in list.files("../inst/unitTests")){
@@ -25,6 +27,14 @@ for (d in list.files("../inst/unitTests")){
 }
 print(allDirs)
 library("sprint")
+
+print("*** System info ***")
+sessionInfo()
+R.version
+Sys.info()
+system("mpiexec -version")
+print("*** End of system info ***")
+
 # test.suite <- defineTestSuite("allUnitTests", dirs = file.path("../inst/unitTests/ppam/"),testFileRegexp = '*.R')
 test.suite <- defineTestSuite("allUnitTests", dirs = allDirs, testFileRegexp = '*.R')
 
@@ -33,6 +43,9 @@ test.suite <- defineTestSuite("allUnitTests", dirs = allDirs, testFileRegexp = '
 
 test.result <- runTestSuite(test.suite)
 printTextProtocol(test.result)
+
+
+print("*** End of tests ***")
 
 pterminate()
 quit()

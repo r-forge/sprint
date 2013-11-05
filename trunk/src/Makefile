@@ -35,6 +35,7 @@ LONG_OS := $(shell uname -a)
 LOCAL_CFLAGS = -pedantic -O3 -fPIC $(_DEBUG) $(_PROF)
 CCFLAGS =  -O3 -fPIC
 CFLAGS = -pedantic -O3 -fPIC 
+CFLAGS_NO_OPT = -pedantic -fPIC $(_DEBUG) $(_PROF)
 # The universal target
 
 .PHONY: all
