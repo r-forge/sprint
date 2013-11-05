@@ -114,10 +114,6 @@ pstringdistmatrix <- function (a, b, method="h", filename=NULL, weight=NULL, max
   sample_width <- width(data[1])
   number_of_samples <- length(data)
 	
-#	if(!exists("dataNames")||is.null(dataNames)){
-#		dataNames <- as.character(c(1:number_of_samples))
-#	}
-	
 	if(!exists("dataNames")||is.null(dataNames)){
 		dimnames_ <- NULL
 	}
