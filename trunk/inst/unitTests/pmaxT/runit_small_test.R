@@ -32,21 +32,6 @@ test.small_test <- function(){
 	res_from_maxT <- mt.maxT(smallgd,classlabel,test="blockf",side="upper")
 	res_from_pmaxT <- pmaxT(smallgd,classlabel,test="blockf",side="upper")
 	
-	
-	print("First row of maxT")
-	print(paste(res_from_maxT[1,]))
-	print("First row of pmaxT")
-	print(paste(res_from_pmaxT[1,]))
-	print("maxT colnames")
-	print(paste(colnames(res_from_maxT)))
-	print("pmaxT colnames")
-	print(paste(colnames(res_from_pmaxT)))
-	print("maxT rownames")
-	print(paste(rownames(res_from_maxT)))
-	print("pmaxT rownames")
-	print(paste(rownames(res_from_pmaxT)))
-	
-	
 	invisible(checkEqualsNumeric(res_from_maxT[,2], res_from_pmaxT[,2]))
 	
 	invisible(checkEqualsNumeric(res_from_maxT[,3], res_from_pmaxT[,3]))

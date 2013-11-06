@@ -6,6 +6,8 @@ library("boot")
 library("ShortRead")
 library("e1071")
 library("multtest")
+library("stringdist")
+library("BSgenome.Celegans.UCSC.ce2")
 
 # Automatically runs all R files under the unitTests directory. 
 # Must make sure all necessary libraries are added to the top of this file when writing new tests.
@@ -14,7 +16,8 @@ library("multtest")
 #  source(file.path("../inst/unitTests/ppam/", nm))
 #}
 
-logFile <- file("all_results.log")
+filename <- paste("all_results",Sys.Date(),Sys.info()["sysname"],".log",sep = "_")
+logFile <- file(filename)
 sink(file = logFile, append = TRUE, type = c("output"), split = FALSE)
 sink(file = logFile, append = TRUE, type = c("message"), split = FALSE)
 

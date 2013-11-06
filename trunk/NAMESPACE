@@ -16,7 +16,7 @@ export(pRP)
 export(pRPadvance)
 export(pRS)
 export(pRSadvance)
-export(phamming.distance)
+export(pstringdistmatrix)
 
 ## generics
 S3method(print, pam)

@@ -1,6 +1,6 @@
 ##########################################################################
 #                                                                        #
-#  SPRINT: Simple Parallel R IN..sprintMsgTerface                                   #
+#  SPRINT: Simple Parallel R INTerface                                   #
 #  Copyright � 2008,2009 The University of Edinburgh                     #
 #                                                                        #
 #  This program is free software: you can redistribute it and/or modify  #
@@ -28,8 +28,11 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
   ncols = nrows = 0
   IS_MATRIX = FALSE
   IS_LIST = FALSE
+	IS_FF = FALSE
 	
 	if(exists("is.ff") && is.ff(data)) {
+		IS_FF = TRUE
+		stop(..sprintMsg$error["non.supportedtype"])
     ## check type of input ff object 
     if(vmode(data) != "double") 
       stop(..sprintMsg$error["non.double"])
@@ -54,7 +57,6 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
     
     MAP_FILE = TRUE
   } else {
-	  
     MAP_FILE = FALSE
     
     if(is.matrix(data)) {
@@ -70,7 +72,6 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
 			stop(..sprintMsg$error["non.supportedtype"])
 		}
 	} else {
-		
 		stop(..sprintMsg$error["non.supportedtype"])
 	}
   }
@@ -92,6 +93,7 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
                       as.integer(ncols),
                       out_filename
                       )
+	
   # If the value is numeric then it means that
   # MPI is not initialized and the function should abort
   # and return FALSE
@@ -99,11 +101,41 @@ papply <- function(data, fun, margin=1, out_filename=NULL)
       warning(paste("MPI is not initialized. Function is aborted.\n"))
       return_val <- FALSE
   }
-
+	
+	if(IS_FF){
+		print(paste("return_val 3"))
+		print(paste(return_val))
+		print(paste(system('ls -l')))
+		
+		caching_ <- "mmeachflush"
+#		filename_ <- out_filename
+		vmode_ <- "double"
+		caching_ <- "mmeachflush"
+		finalizer_<- "close"  #TODO or delete if temp.
+		if(margin==1){
+			length_ <- nrows 
+		}else	#margin == 2
+		{ 
+			length_ <- ncols	
+		}
+		
+#TODO ET The ff file could be a matrix or a list. The code here handles a list. Make it handle a matrix too.
+		
+		return_val = 	ff(
+						   , filename=out_filename
+						   , vmode=vmode_
+						   , caching=caching_
+						   , finalizer=finalizer_
+						   , length=length_
+						   )
+		return (return_val)
+	}
+	
   if(IS_MATRIX && !is.null(return_val) && margin == 1 || margin == 2) {
-    return (return_val[[1]])
+	      return (return_val[[1]])
   } else if (IS_LIST) {
     return (return_val[[1]])
   }    
+
   return (return_val)
 }

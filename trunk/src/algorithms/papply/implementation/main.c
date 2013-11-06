@@ -116,7 +116,8 @@ int apply(int n,...) {
     break;
 
   case R_ff:
-    
+
+	  DEBUG("About to call ffApply\n");
     ffApply(result, data, margin, function, nrows,
             ncols, worldRank, out_filename, worldSize);
     break;

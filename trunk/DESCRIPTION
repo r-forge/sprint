@@ -1,6 +1,6 @@
 Package: sprint
 Title: Simple Parallel R INTerface
-Version: 1.0.5.1
+Version: 1.0.5
 Date: 2013-04-11
 Author: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
 Maintainer: Eilidh Troup <e.troup@epcc.ed.ac.uk>
@@ -19,7 +19,7 @@ Description: SPRINT (Simple Parallel R INTerface) is a parallel
         in SPRINT is called pcor(). Call to the parallel R functions
         are included directly in standard R scripts.
 		SPRINT contains functions for correlation, partitioning around medoids, 
-		apply, permutation tesing, bootstrapping, random forest, rank product and more. 
+		apply, permutation testing, bootstrapping, random forest, rank product and more. 
 License: GPL (>= 3)
 URL: http://www.r-sprint.org
 Repository: CRAN
