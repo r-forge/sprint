@@ -54,7 +54,7 @@ pstringdistmatrix <- function (a, b, method="h", filename=NULL, weight=NULL, max
 		stop(..sprintMsg$error["not.supported.diff.strings"])
 	}
 	
-	data <- a
+	data <- as.character(a)
 	
 	if(!method=="h"){
 		stop(..sprintMsg$error["not.supported.non.hamming"])	}
@@ -85,31 +85,20 @@ pstringdistmatrix <- function (a, b, method="h", filename=NULL, weight=NULL, max
     }
 	
 	
-# Load the "Biostrings" package in case is not already loaded. Warn user in case the package is missing
-    if( !require("Biostrings", quietly=TRUE) ) {
-        warning("Function pstringDist was unable to execute - failed to load package \"Biostrings\". Please check that the package is installed and try again.")
-        return(NA)
-    }
+
 	
 # Load the "ff" package in case is not already loaded. Warn user in case the package is missing
     if( !require("ff", quietly=TRUE) ) {
         warning("Function pstringDist was unable to execute - failed to load package \"ff\". Please check that the package is installed and try again.")
         return(NA)
     }
-
-  objectType <- class(data)
+    
   if(!length(data)) stop(..sprintMsg$error["empty"])
   
-  if (objectType=='character') {  
 	flatData <- paste(data, collapse = '')
-  }
-  else if (objectType!='XStringSet') {
-	  flatData <- IRanges::unlist(data)
+
 	  dataNames <- names(data)
-  }
-  else {
-    stop(..sprintMsg$error["non.dna"])
-  }
+
 
   sample_width <- width(data[1])
   number_of_samples <- length(data)

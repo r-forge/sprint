@@ -23,13 +23,13 @@
 #include "../../../sprint.h"
 #include "../../../functions.h"
 
-extern int hamming(int n,...);
+extern int stringDist(int n,...);
 
 /* **************************************************************** *
  *  Accepts information from R gets response and returns it.        *
  *                                                                  *
  * **************************************************************** */
-int phamming(char **x,
+void pstringDist(char **x,
              char **out_filename,
              int *sample_width,
              int *number_of_samples)
@@ -43,10 +43,15 @@ int phamming(char **x,
   // Check that MPI is initialized
   MPI_Initialized(&response);
   if (response) {
-    DEBUG("\nMPI is init'ed in phamming\n");
+    DEBUG("\nMPI is init'ed in pstringDist\n");
   } else {
-    DEBUG("\nMPI is NOT init'ed in phamming\n");
-    return(-1);
+    DEBUG("\nMPI is NOT init'ed in pstringDist\n");
+
+    // This is called from .C and so can't return a value.
+    // The number_of_samples will be checked in the R code as an indication that the code has worked.
+    // The code could be refactored to use .Call instead of .C to return a value.
+    *number_of_samples = -1;
+    return;
   }
   
   // Get size and rank from communicatorx
@@ -54,14 +59,12 @@ int phamming(char **x,
   MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
   
   // Broadcast command to other processors
-  commandCode = PHAMMING;
+  commandCode = PSTRINGDIST;
   //MPI_BCAST (buffer(address of data to be sent), count (no. of elements in buffer),
   // datatype, root (rank of root process, comm)
   MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
   
-  // Call the hamming function
-  response = hamming(4, *x, *sample_width, *number_of_samples, *out_filename);
-  
-  return response;
-
+  // Call the stringDist function
+  // The 4 is for the number of arguments
+  response = stringDist(4, *x, *sample_width, *number_of_samples, *out_filename);
 }

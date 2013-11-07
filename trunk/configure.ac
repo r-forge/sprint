@@ -77,7 +77,7 @@ AC_RUN_IFELSE(
 ]],
 [[
 
-if (MPI_VERSION == 2) exit(0);
+if (MPI_VERSION > 1) exit(0);
 else exit(1);
 
 ]])],
