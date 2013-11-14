@@ -100,7 +100,7 @@ pstringdistmatrix <- function (a, b, method="h", filename=NULL, weight=NULL, max
 	  dataNames <- names(data)
 
 
-  sample_width <- width(data[1])
+	sample_width <- nchar(data[1]) #NB. Expect each string to be the same length. Should add a check for this.
   number_of_samples <- length(data)
 	
 	if(!exists("dataNames")||is.null(dataNames)){

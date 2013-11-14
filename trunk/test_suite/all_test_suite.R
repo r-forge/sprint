@@ -7,7 +7,6 @@ library("ShortRead")
 library("e1071")
 library("multtest")
 library("stringdist")
-library("BSgenome.Celegans.UCSC.ce2")
 
 # Automatically runs all R files under the unitTests directory. 
 # Must make sure all necessary libraries are added to the top of this file when writing new tests.

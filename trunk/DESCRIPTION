@@ -7,9 +7,9 @@ Maintainer: Eilidh Troup <e.troup@epcc.ed.ac.uk>
 Contact: University of Edinburgh SPRINT Team <sprint@ed.ac.uk>
 Depends: R (>= 2.9.2), rlecuyer, ff (>= 2.1-1)
 Suggests:  randomForest, RankProd, cluster, 
-        IRanges, RUnit, Matrix, SparseM, slam, multtest, BSgenome.Celegans.UCSC.ce2, Biostrings
+        IRanges, RUnit, Matrix, SparseM, slam, multtest, Biostrings
 Imports: boot, ShortRead, e1071
-SystemRequirements: mpich2, Unix or Mac
+SystemRequirements: mpich, Unix or Mac
 Description: SPRINT (Simple Parallel R INTerface) is a parallel
         framework for R. It provides a High Performance Computing (HPC)
         harness which allows R scripts to run on HPC clusters. SPRINT

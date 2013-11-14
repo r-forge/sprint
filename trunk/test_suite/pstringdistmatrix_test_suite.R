@@ -1,11 +1,7 @@
 library("RUnit")
 library("sprint")
-source("http://bioconductor.org/biocLite.R")
-biocLite("Biostrings")
 library("Biostrings")
 library("stringdist")
-biocLite("BSgenome.Celegans.UCSC.ce2")
-library("BSgenome.Celegans.UCSC.ce2")
 library("ff")
 
 

@@ -20,103 +20,24 @@
 
 #================= Sample data =================
 
-#a <- readFastq("../inst/data/smallData.fastq")
-
-
-## Randomly extract 10000 40-mers from C.elegans chrI:
-# Big test, a bit slow to run, put it back for final testing.
-extractRandomReads <- function(subject, nread, readlength)
-{
-	if (!is.integer(readlength))
-	readlength <- as.integer(readlength)
-	start <- sample(length(subject) - readlength + 1L, nread,
-					replace=TRUE)
-	DNAStringSet(subject, start=start, width=readlength)
-}
-
-# Change this to test scaling.
-nreads <- 100
-rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
-
 filename_ <- "pstringDist_result.out"
 strings <- c("lazy", "HaZy", "rAzY")
 other.strings <- c("lazy", "Hazy")
 
-# tests that pstringDist accepts simple strings, not just DNAStringSet objects
-test.stringDistMatrixSimple <- function()
-{
-	expected_result <- stringdistmatrix(strings, strings, method="h")
-	actual_result <- pstringdistmatrix(strings, strings, method="h")
-	
-	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
-			  "pstringdistmatrix and stringdistmatrix with list of strings.")
-	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
-}
-
-# tests pstringDist with a larger data set
-test.stringDistScalingLarge <- function()
-{
-#	DEACTIVATED("Not running large function.")
-	
-	nreads <- 6
-	rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
-	
-	stime_original <- proc.time()["elapsed"]
-	expected_result <- stringdistmatrix(rndreads, rndreads, method="h")
-	etime_original <- proc.time()["elapsed"]
-	
-	stime_sprint <- proc.time()["elapsed"]
-	actual_result <- pstringdistmatrix(rndreads, rndreads, method="h", filename="large.ff")
-	etime_sprint <- proc.time()["elapsed"]
-
-	
-	checkTrue(all.equal(expected_result[], actual_result[], check.attributes=FALSE), 
-			  "pstringdistmatrix and stringdistmatrix should give same simple results")
-	
-#	print(paste("Number of strings: ")); print(paste(nreads))
-#	print(paste("Original stringDist time: ")); print(paste(etime_original-stime_original))
-#	print(paste("SPRINT pstringDist time: ")); print(paste(etime_sprint-stime_sprint))
-
-	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
-			  "pstringdistmatrix and stringdistmatrix with list of strings.")
-	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
-}
-
-
-# tests pstringDist with a small data set
-test.stringDistScalingSmall <- function()
-{
-	nreads <- 10
-	rndreads <- extractRandomReads(Celegans$chrI, nreads, 40)
-	
-	stime_original <- proc.time()["elapsed"]
-	expected_result <- stringdistmatrix(rndreads, rndreads, method="h")
-	etime_original <- proc.time()["elapsed"]
-	
-	stime_sprint <- proc.time()["elapsed"]
-	actual_result <- pstringdistmatrix(rndreads, rndreads, method="h", filename="small.ff")
-	etime_sprint <- proc.time()["elapsed"]
-	
-	checkTrue(all.equal(expected_result, actual_result[], check.attributes=FALSE), 
-			  "pstringdistmatrix and stringdistmatrix with list of strings.")
-	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
-}
-
-
 
 # test XStringSet dimnames check
-test.stringDistDimnames <- function()
-{
-	x0 <- c("GTAT", "TTGA", "AGAG")
-	width(x0)
-	x1 <- BStringSet(x0)
+#test.stringDistDimnames <- function()
+#{
+#	x0 <- c("GTAT", "TTGA", "AGAG")
+#	width(x0)
+#	x1 <- BStringSet(x0)
 	
-	expected_result <- stringdistmatrix(x1, x1, method="h")
-	actual_result <- pstringdistmatrix(x1, x1, method="h")
-	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
-			  "pstringdistmatrix and stringdistmatrix with BStringSet.")
-	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
-}
+#	expected_result <- stringdistmatrix(x1, x1, method="h")
+#	actual_result <- pstringdistmatrix(x1, x1, method="h")
+#	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+#			  "pstringdistmatrix and stringdistmatrix with BStringSet.")
+#	checkEquals(dimnames(expected_result), dimnames(actual_result[,]), "Test labels on dist")
+#}
 
 # Checking with different args
 test.stringDistAllArgs <- function()
@@ -124,6 +45,16 @@ test.stringDistAllArgs <- function()
 	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
 	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix with list of strings.")
+}
+
+# Checking without Biostrings
+test.stringDistWithoutBiostrings <- function()
+{	
+	detach("package:Biostrings")
+	expected_result <- stringdistmatrix(strings, strings, method="h")
+	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
+	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
+			  "pstringdistmatrix works without Biostrings.")
 }
 
 # Checking with different args

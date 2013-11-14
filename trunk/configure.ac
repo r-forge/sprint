@@ -50,13 +50,13 @@ AC_RUN_IFELSE(
 ]],
 [[
 
-if (MPI_VERSION == 2) exit(0);
+if (MPI_VERSION > 1) exit(0);
 else exit(1);
 
 ]])],
             [AC_MSG_RESULT(yes)],
             [AC_MSG_RESULT(no)
-             AC_MSG_FAILURE([The SPRINT package requires full C MPI-2 support. Try a more up to date MPI implementation (MPICH2 or openMPI).])])
+             AC_MSG_FAILURE([The SPRINT package requires full C MPI-2 or MPI-3 support. Try a more up to date MPI implementation (MPICH).])])
 
 dnl * ********************************************************* *
 dnl *  Set the language to C++ and search for the MPI compiler  *
