@@ -47,16 +47,6 @@ test.stringDistAllArgs <- function()
 			  "pstringdistmatrix and stringdistmatrix with list of strings.")
 }
 
-# Checking without Biostrings
-test.stringDistWithoutBiostrings <- function()
-{	
-	detach("package:Biostrings")
-	expected_result <- stringdistmatrix(strings, strings, method="h")
-	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
-	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
-			  "pstringdistmatrix works without Biostrings.")
-}
-
 # Checking with different args
 test.stringDistDataArgOnly <- function()
 {
