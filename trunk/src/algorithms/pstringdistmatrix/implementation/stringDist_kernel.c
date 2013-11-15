@@ -151,8 +151,6 @@ int allocateMaxChunk(int worldRank, int my_start, int my_end, int *stringDist,
   }
   free(stringDist);
 
-  Rprintf("chunk_size: %d\n", chunk_size);
-
   return chunk_size;
 
 }
