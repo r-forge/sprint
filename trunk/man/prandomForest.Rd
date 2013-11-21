@@ -9,6 +9,8 @@ dataset in parallel. The random forest algorithm can be used to classify both
 categorical and continuous variables. This function provides a parallel 
 equivalent to the serial randomForest() function from the randomForest 
 package. 
+Note that the randomForest library must be loaded before calling the prandomForest function. 
+library("randomForest")
 } 
 \usage{
 prandomForest(x, ...)

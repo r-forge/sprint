@@ -9,7 +9,7 @@
 }
 \arguments{
   \item{a}{a: R object (target); will be converted by 'as.character'.}
-  \item{b}{b: R object (target); will be converted by 'as.character'. Must be the same as argument a in this version of the software.}
+  \item{b}{b: R object (source); will be converted by 'as.character'. Must be the same as argument a in this version of the software.}
   \item{method}{Method for distance calculation - only option 'h' for hamming distance is supported.}
   \item{filename}{Results will be stored here as binary data}
   \item{weight}{Not used in the hamming distance measure.}
