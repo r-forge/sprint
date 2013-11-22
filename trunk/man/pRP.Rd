@@ -33,8 +33,10 @@ pRP(data, cl, num.perm, logged = TRUE, na.rm = FALSE, gene.names = NULL,
 }
 \details{
 The SPRINT task parallel implementation of the rank product method is 
-approximately twice as fast in serial as the existing RP() function from the 
-RankProd package and it shows excellent scaling.
+approximately twice as fast in serial as the existing RP() function from the RankProd package and it shows excellent scaling.
+
+N.B. Please see the SPRINT User Guide for how to run the code in parallel 
+using the mpiexec command.
 }
 \seealso{
     \code{\link[RankProd]{RP}}

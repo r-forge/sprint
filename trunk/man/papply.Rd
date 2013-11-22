@@ -29,6 +29,9 @@ the processes involved in the computation.
 
 Note that papply() does not fully implement lapply functionality. It will 
 only accept lists of matrices, and not lists made up of other data types. 
+
+N.B. Please see the SPRINT User Guide for how to run the code in parallel 
+using the mpiexec command.
 }
 \seealso{
     \code{\link{apply}}

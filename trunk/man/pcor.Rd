@@ -7,6 +7,9 @@ correlates each row with every other row or takes two 2D arrays and correlates
 the columns of the first matrix with the columns of the second matrix. The 
 output can either be the matrix of correlation coefficient or the distance 
 matrix.
+
+N.B. Please see the SPRINT User Guide for how to run the code in parallel 
+using the mpiexec command.
 }
 \usage{
 pcor(data_x, data_y = NULL, distance = FALSE, caching_ = "mmeachflush", 

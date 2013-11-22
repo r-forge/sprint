@@ -91,6 +91,9 @@ This version is an early but fully working prototype. However, it is not
 compatible with other SPRINT functions, i.e. you cannot bootstrap other 
 parallel functions from the SPRINT library. It is therefore recommended to use
 it only as a standalone function. 
+
+N.B. Please see the SPRINT User Guide for how to run the code in parallel 
+using the mpiexec command.
 }
 \seealso{
     \code{\link{boot}}

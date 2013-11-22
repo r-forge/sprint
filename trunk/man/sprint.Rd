@@ -11,7 +11,7 @@ the added prefix 'p', i.e. the parallel version of cor() in SPRINT is called
 pcor(). These parallelized functions are written in C and MPI. Call to these 
 functions are included directly in standard R scripts. 
 
-The following functions are implemented in SPRINT 1.0.0:
+The following functions are implemented in SPRINT 1.5.0:
  - papply
  - pboot
  - pcor
@@ -19,6 +19,7 @@ The following functions are implemented in SPRINT 1.0.0:
  - ppam
  - prandomForest
  - pRP 
+ - pstringdistmatrix
  - pterminate
  - ptest
 

@@ -18,6 +18,9 @@
 }
 \details{
   Calculates the hamming distance between each pair of strings. Returns an ff result matrix.
+
+N.B. Please see the SPRINT User Guide for how to run the code in parallel 
+using the mpiexec command.
 }
 \author{
   University of Edinburgh SPRINT Team

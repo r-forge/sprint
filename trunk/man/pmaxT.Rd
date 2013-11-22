@@ -5,6 +5,9 @@
 Function which implements a parallel version of the multtest "mt.maxT" 
 function. It computes the adjusted p-values for step-down multiple testing 
 procedures.
+
+N.B. Please see the SPRINT User Guide for how to run the code in parallel 
+using the mpiexec command.
 }
 \usage{
 pmaxT(X, classlabel, test = "t", side = "abs", fixed.seed.sampling = "y", 

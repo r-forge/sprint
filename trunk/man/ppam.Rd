@@ -27,8 +27,10 @@ ppam(x, k, medoids = NULL, is_dist = inherits(x, "dist"),
 The interface and parameters to parallel function ppam() are similar to the 
 serial function pam() but not identical. ppam() requires a distance matrix as
 input parameters. Although, ppam() does not include the option to calculate 
-the distance matrix, this can easily be done using SPRINT pcor() function with
-the 'distance' parameter set to TRUE. 
+the distance matrix, this can easily be done using SPRINT pcor() function with the 'distance' parameter set to TRUE. 
+
+N.B. Please see the SPRINT User Guide for how to run the code in parallel 
+using the mpiexec command.
 }
 \seealso{
     \code{\link[cluster]{pam}}

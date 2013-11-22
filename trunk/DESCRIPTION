@@ -18,8 +18,9 @@ Description: SPRINT (Simple Parallel R INTerface) is a parallel
         with the added prefix 'p', i.e. the parallel version of cor()
         in SPRINT is called pcor(). Call to the parallel R functions
         are included directly in standard R scripts.
-		SPRINT contains functions for correlation, partitioning around medoids, 
-		apply, permutation testing, bootstrapping, random forest, rank product and more. 
+		SPRINT contains functions for correlation (pcor), partitioning around medoids (ppam), 
+		apply (papply), permutation testing (pmaxT), bootstrapping (pboot), random forest (prandomForest), 
+		rank product (pRP) and hamming distance (pstringdistmatrix). 
 License: GPL (>= 3)
 URL: http://www.r-sprint.org
 Repository: CRAN
