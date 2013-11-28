@@ -53,8 +53,10 @@ else
 
 endif
 else
-ifeq (cray,$(findstring cray,$(LONG_OS)))
-	cc -shared -o $@ $^ 
+#ifeq(0, [ -e /etc/opt/cray/release/clerelease ])
+ifeq (clerelease,$(findstring clerelease,$(wildcard /etc/opt/cray/release/*)))
+
+	cc -shared -o $@ $^
 else
 ifeq (mpicc,$(findstring mpicc,$(MPICC)))
 	$(MPICXX) -shared -o $@ $^
