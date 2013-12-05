@@ -18,9 +18,6 @@
 #                                                                        #
 ##########################################################################
 
-library("RUnit")
-library("boot")
-library("sprint")
 
 mfun <- function(d, ind, mym){
  x = d[ind]

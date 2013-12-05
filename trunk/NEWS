@@ -1,4 +1,20 @@
+VERSION sprint 1.0.5
+
+	o Added pstringdistmatrix(), a function which calculates the hamming distance between strings.
+	
+	o SPRINT can now be installed with the latest version of mpich which is MPI 3 compliant. 
+	
+	o The ppam() and pcor() functions now keep the dimnames of the data.
+	
+	o The dependencies have been updated, so now the call 'install.packages("sprint", dependencies = T)' should work.
+	
+	o The papply() documentation has been updated to show that it does not currently support ff data types.
+	
+	o A bug that caused the install error 'C++ MPI compiler not detected' was fixed
+	
+	
 VERSION sprint 1.0.4
+
 	o Added support for Mac OSX and fixed a bug in ppam.
 
 VERSION sprint 1.0.2

@@ -53,9 +53,8 @@ else
 
 endif
 else
-#ifeq(0, [ -e /etc/opt/cray/release/clerelease ])
+# Testing for existence of magic file that indicates that it's a cray machine.
 ifeq (clerelease,$(findstring clerelease,$(wildcard /etc/opt/cray/release/*)))
-
 	cc -shared -o $@ $^
 else
 ifeq (mpicc,$(findstring mpicc,$(MPICC)))

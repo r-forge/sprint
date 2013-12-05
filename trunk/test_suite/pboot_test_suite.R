@@ -1,5 +1,6 @@
-library("RUnit")
 library("boot")
+library("sprint")
+library("RUnit")
 
 data(city, package='boot')
 data(gravity, package='boot')
