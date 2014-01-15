@@ -11,10 +11,6 @@ library("stringdist")
 # Automatically runs all R files under the unitTests directory. 
 # Must make sure all necessary libraries are added to the top of this file when writing new tests.
 
-#for (nm in list.files("../inst/unitTests/ppam/", pattern = "\\.[Rr]$")){
-#  source(file.path("../inst/unitTests/ppam/", nm))
-#}
-
 filename <- paste("all_results",Sys.Date(),Sys.info()["sysname"],".log",sep = "_")
 logFile <- file(filename)
 sink(file = logFile, append = TRUE, type = c("output"), split = FALSE)
@@ -46,6 +42,7 @@ test.suite <- defineTestSuite("allUnitTests", dirs = allDirs, testFileRegexp = '
 test.result <- runTestSuite(test.suite)
 printTextProtocol(test.result)
 
+printHTMLProtocol(test.result, fileName = "All-unit-test-log.html")
 
 print("*** End of tests ***")
 
