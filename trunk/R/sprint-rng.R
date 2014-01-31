@@ -31,8 +31,6 @@ init.rng <- function(seed)
 
 init.rng.worker <- function(rank, size, seed)
 {
-  require(rlecuyer, quietly=TRUE)
-
   name <- rank + 1
 
   .lec.SetPackageSeed(rep(seed, 6))

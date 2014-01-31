@@ -30,13 +30,6 @@ pcor <- function(
 
 )
   {
-
-    # Load the "ff" package in case is not already loaded. Warn user in case the package is missing
-    if( !require("ff", quietly=TRUE) ) {
-        warning("Function pcor was unable to execute - failed to load package \"ff\". Please check that the package is installed and try again.")
-        return(NA)
-    }
-
     # we only work on doubles
     vmode_ = "double"
 

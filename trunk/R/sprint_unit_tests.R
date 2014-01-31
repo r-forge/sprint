@@ -35,11 +35,6 @@ sprint.test_ppam <- function() {
      return()
    }
 
-   if( !require("ff", quietly=TRUE) ) {
-     warning("Unit tests not run for ppam - failed to load package ff")
-     return()
-   }
-
    # Find path for test scripts
    path <- system.file(package="sprint", "unitTests", "ppam")
 

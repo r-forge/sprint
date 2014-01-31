@@ -84,14 +84,6 @@ pstringdistmatrix <- function (a, b, method="h", filename=NULL, weight=NULL, max
 		filename <- tempfile(pattern =  "ff" , tmpdir = getwd())
     }
 	
-	
-
-	
-# Load the "ff" package in case is not already loaded. Warn user in case the package is missing
-    if( !require("ff", quietly=TRUE) ) {
-        warning("Function pstringDist was unable to execute - failed to load package \"ff\". Please check that the package is installed and try again.")
-        return(NA)
-    }
     
   if(!length(data)) stop(..sprintMsg$error["empty"])
   
