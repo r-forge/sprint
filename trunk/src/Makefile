@@ -80,4 +80,5 @@ endif
 clean:
 	find . -name "*.o" -exec rm -f {} \;
 	rm -f sprint.so
+	rm -f Makevars
 

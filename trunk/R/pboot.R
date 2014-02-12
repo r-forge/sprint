@@ -93,7 +93,7 @@ pboot <- function(data, statistic, R, sim = "ordinary",
       i <- i[, seq_len(n)]
     }
     if (stype %in% c("f", "w")) {
-      f <- boot:::freq.array(i)
+      f <- boot::freq.array(i)
       rm(i)
       if (stype == "w") f <- f/ns
       if (sum(m) == 0L) function(r) statistic(data, f[r,  ], ...)

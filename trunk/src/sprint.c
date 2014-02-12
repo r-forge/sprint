@@ -174,7 +174,7 @@ SEXP worker() {
 
     DEBUG("%i: End logging\n", worldRank);
 
-    R_CleanTempDir();
+    R_CleanUp();
 
     // Return the MPI rank of the process. This value is needed in R
     // to identify the 'worker' MPI processes and handle their shutdown.
