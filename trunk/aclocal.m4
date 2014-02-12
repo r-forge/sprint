@@ -11,4 +11,4 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-m4_include([our_macros/acx_mpi.m4])
+m4_include([tools/m4/acx_mpi.m4])
