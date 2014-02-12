@@ -48,7 +48,7 @@ all: sprint.so
 sprint.so: $(INTERFACE_OBJS) $(SHARED_ALGORITHM_OBJS) $(SHLIB_OBJS) $(IMPLEMENTATION_OBJS)
 ifeq (Darwin,$(OS))
 ifeq (mpicc,$(findstring mpicc,$(MPICC)))
-	$(MPICC)  -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup  -o $@ $^ -LR -Wl,-framework -Wl,CoreFoundation
+	$(MPICC)  -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup  -o $@ $^ -Wl,-framework -Wl,CoreFoundation
 else
 
 endif
