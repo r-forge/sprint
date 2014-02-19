@@ -35,7 +35,7 @@ void pstringDist(char **x,
              int *number_of_samples)
 {
 
-  int response;
+  int response,intCode;
   int worldSize, worldRank;
   
   enum commandCodes commandCode;
@@ -60,9 +60,10 @@ void pstringDist(char **x,
   
   // Broadcast command to other processors
   commandCode = PSTRINGDIST;
+  intCode = (int)commandCode;
   //MPI_BCAST (buffer(address of data to be sent), count (no. of elements in buffer),
   // datatype, root (rank of root process, comm)
-  MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
   
   // Call the stringDist function
   // The 4 is for the number of arguments

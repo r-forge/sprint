@@ -26,7 +26,7 @@ extern int boot(int n, ...);
 SEXP pboot(SEXP list, SEXP fn)
 {
   SEXP result;
-  int i, response, worldSize, worldRank;
+  int i, response, worldSize, worldRank, intCode;
   enum commandCodes commandCode;
   
   // Check that MPI is initialized 
@@ -49,7 +49,8 @@ SEXP pboot(SEXP list, SEXP fn)
 
   // broadcast command to other processors
   commandCode = PBOOT;
-  MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  intCode = (int)commandCode;
+  MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   response = boot(3, list, fn, &result);
 

@@ -37,7 +37,7 @@ SEXP papply(SEXP data,
             SEXP out_filename)
 {
   SEXP result = NULL;
-  int i, response, worldSize, worldRank;
+  int i, response, worldSize, worldRank, intCode;
   enum commandCodes commandCode;
   
   // Check that MPI is initialized 
@@ -97,7 +97,8 @@ SEXP papply(SEXP data,
   
   // broadcast command to other processors
   commandCode = PAPPLY;
-  MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  intCode = (int)commandCode;
+  MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   PROTECT(result = allocVector(VECSXP, 1));
 

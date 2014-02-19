@@ -27,7 +27,7 @@ void pmaxT(double *d, int *pnrow, int *pncol, int*L, double *pna, double *T, dou
            double *adjP, int *pB, int *index, char **options, int *extra, int *generator_flag) {
 
     enum commandCodes commandCode;
-    int response;
+    int response,intCode;
 
     // Check that MPI is initialized
     MPI_Initialized(&response);
@@ -44,7 +44,8 @@ void pmaxT(double *d, int *pnrow, int *pncol, int*L, double *pna, double *T, dou
     
     // Broadcast command to other processors
     commandCode = PMAXT;
-    MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    intCode = (int)commandCode;
+    MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Call the permutation function
     response = permutation(13, d, pnrow, pncol, L, pna, T, P, adjP, pB, index,

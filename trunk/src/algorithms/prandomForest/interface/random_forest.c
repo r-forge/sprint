@@ -28,7 +28,7 @@ SEXP prandomForest(SEXP args)
     SEXP result;
 
     enum commandCodes commandCode;
-    int response;
+    int response,intCode;
     MPI_Comm comm;
     MPI_Initialized(&response);
 
@@ -45,8 +45,9 @@ SEXP prandomForest(SEXP args)
      * MPI_COMM_WORLD. */
 
     commandCode = PRANDOMFOREST;
+    intCode = (int)commandCode;
 
-    MPI_Bcast(&commandCode, 1, MPI_INT, 0, comm);
+    MPI_Bcast(&intCode, 1, MPI_INT, 0, comm);
 
     response = random_forest_driver(0, args, &result);
     return result;

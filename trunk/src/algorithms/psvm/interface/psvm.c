@@ -35,7 +35,7 @@ SEXP psvm(SEXP x,
 {
   
   SEXP result;
-  int response;
+  int response,intCode;
   params* p = (params*)malloc(sizeof(params));
   
   // store x matrix and label vector
@@ -132,8 +132,9 @@ SEXP psvm(SEXP x,
  
   // broadcast command to other processors
   commandCode = PSVM;
+  intCode = (int)commandCode;
   
-  MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
   
   response = svm_call( 3, x_matrix, y_vector, p);
   

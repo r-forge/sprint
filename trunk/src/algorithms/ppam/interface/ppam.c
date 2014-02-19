@@ -46,7 +46,7 @@ void ppam(
   double *obj, int *med, int *ncluv, double* clusinf, double *sylinf, int *nisol)
 {
 
-  int response;
+  int response,intCode;
   int worldSize, worldRank;
 
   enum commandCodes commandCode;
@@ -65,7 +65,8 @@ void ppam(
 
   // Broadcast command to other processors
   commandCode = PPAM;
-  MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  intCode = (int)commandCode;
+  MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   // Call the partitioning around medoids function
   response = pamedoids(19, *_map_file, *n_rows, *n_clusters,

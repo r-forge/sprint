@@ -89,7 +89,7 @@ void R_init_sprint(DllInfo *Dllinfo) {
  *  Called only by the master thread when pterminate() function is called  *
  * *********************************************************************** */
 SEXP sprint_shutdown() {
-    int worldRank;
+    int worldRank,intCode;
     enum commandCodes commandCode;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &worldRank);
@@ -97,8 +97,9 @@ SEXP sprint_shutdown() {
 
         // Send terminate command
         commandCode = TERMINATE;
+        intCode = (int)commandCode;
         DEBUG("%i: Shutting down %i\n", worldRank, commandCode);
-        MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
         // Sprint should now do the finalize
         MPI_Finalize();
@@ -123,6 +124,7 @@ SEXP sprint_shutdown() {
 SEXP worker() {
 
     enum commandCodes commandCode;
+    int intCode; // Need to pass int in MPI_Bcast instead of enum
     int response;
     int worldRank;
     int worldSize;
@@ -139,7 +141,10 @@ SEXP worker() {
 
         // this matches the broadcast in interface/algorithm.c which is executed on rank 0
         // via R. All the rest of the processors should wait here
-        MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+        intCode = (int)commandCode;
+        MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        commandCode = intCode;
 
         DEBUG("%i: Receiving command %i\n", worldRank, commandCode);
         /* Process the command */

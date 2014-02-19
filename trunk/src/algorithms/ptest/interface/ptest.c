@@ -32,7 +32,7 @@ SEXP ptest()
 {
     SEXP result;
     char **func_results;
-    int i, response, worldSize;
+    int i, response, worldSize, intCode;
     enum commandCodes commandCode;
 
     MPI_Initialized(&response);
@@ -54,7 +54,8 @@ SEXP ptest()
 
     // broadcast command to other processors
     commandCode = PTEST;
-    MPI_Bcast(&commandCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    intCode = (int)commandCode;
+    MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     response = test(1, func_results);
 
