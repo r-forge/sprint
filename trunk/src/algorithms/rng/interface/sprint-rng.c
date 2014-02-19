@@ -46,7 +46,7 @@ SEXP sprint_create_seed()
 SEXP init_rng(SEXP seed)
 {
     enum commandCodes command;
-    int response;
+    int response,intCode;
     MPI_Comm comm;
 
     MPI_Initialized(&response);
@@ -61,8 +61,9 @@ SEXP init_rng(SEXP seed)
     }
 
     command = INIT_RNG;
+    intCode = (int)command;
 
-    MPI_Bcast(&command, 1, MPI_INT, 0, comm);
+    MPI_Bcast(&intCode, 1, MPI_INT, 0, comm);
 
     init_rng_worker(1, seed);
 
@@ -72,7 +73,7 @@ SEXP init_rng(SEXP seed)
 SEXP reset_rng()
 {
     enum commandCodes command;
-    int response;
+    int response,intCode;
     MPI_Comm comm;
 
     MPI_Initialized(&response);
@@ -87,8 +88,9 @@ SEXP reset_rng()
     }
 
     command = RESET_RNG;
+    intCode = (int)command;
 
-    MPI_Bcast(&command, 1, MPI_INT, 0, comm);
+    MPI_Bcast(&intCode, 1, MPI_INT, 0, comm);
 
     reset_rng_worker(1);
 

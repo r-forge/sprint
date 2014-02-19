@@ -50,7 +50,7 @@ enum R_dataFormat {
 int apply(int n,...) {
 
   int worldSize;
-  int worldRank; 
+  int worldRank, dataFormatInt;
   va_list ap;
 
   SEXP data, function, margin, result,
@@ -99,7 +99,11 @@ int apply(int n,...) {
       data = NULL;
   }
 
-  MPI_Bcast(&dataFormat, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  dataFormatInt = (int)dataFormat;
+
+  MPI_Bcast(&dataFormatInt, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+  dataFormat = dataFormatInt;
 
   /* papply accept data in three different formats... */
 

@@ -42,8 +42,9 @@ void boot_rank_product_(const double *data1, const int *nclass1_,
     bool logarithmic_data;
     bool rev_sorting;
     bool rank_sum;
-    int response;
+    int response, intCode;
     enum commandCodes command = PBOOTRP;
+    intCode = (int)command;
 
     /* Is MPI running? */
     MPI_Initialized(&response);
@@ -67,7 +68,7 @@ void boot_rank_product_(const double *data1, const int *nclass1_,
 
     nperms = *nperms_;
 
-    MPI_Bcast(&command, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
     *exitcode = boot_rank_product(0, data1, nclass1, data2, nclass2,
                                   experimental_rp,
                                   ngenes, logarithmic_data, rev_sorting,
@@ -96,7 +97,8 @@ void boot_rank_product_multi_(const double *data1, const int *nclass1_,
     bool rev_sorting;
     bool rank_sum;
     int response;
-    enum commandCodes command = PBOOTRPMULTI;
+    enum commandCodes commandCode = PBOOTRPMULTI;
+    int intCode = (int)commandCode;
 
     /* Is MPI running? */
     MPI_Initialized(&response);
@@ -121,7 +123,7 @@ void boot_rank_product_multi_(const double *data1, const int *nclass1_,
 
     nperms = *nperms_;
 
-    MPI_Bcast(&command, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&intCode, 1, MPI_INT, 0, MPI_COMM_WORLD);
     *exitcode = boot_rank_product_multi(0, data1, nclass1, data2, nclass2,
                                         experimental_rp,
                                         ngenes, norigins,
