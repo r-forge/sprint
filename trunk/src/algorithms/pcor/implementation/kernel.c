@@ -272,9 +272,6 @@ int correlationKernel(int rank,
         end_time = MPI_Wtime();
         PROF(rank, "\nPROF_write (workers=%d) : Time taken for global write-file : %g\n",  size-1, end_time - start_time);
 
-        // Close file handler
-        MPI_File_close(&fh);
-
     } else {
 
         // Compute how many workers will share the work load
@@ -462,15 +459,18 @@ int correlationKernel(int rank,
         // Write data to disk
         MPI_File_write_all(fh, &cor[0], coeff_count, MPI_DOUBLE, &stat);
 
-        // Close file handler
-        MPI_File_close(&fh);
-
         if ( coeff_count != 0 )
             MPI_Type_free(&coeff_index_dt);
 
         // Free all allocated memory
         free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
     }
+    MPI_File_sync( fh ) ; 			// Causes all previous writes to be transferred to the storage device
+    MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
+    MPI_File_sync( fh ) ;				// Causes all previous writes to be transferred to the storage device
+
+    // Close file handler
+    MPI_File_close(&fh);
 
     return 0;
 }
