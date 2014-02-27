@@ -45,6 +45,7 @@ test.stringDistAllArgs <- function()
 	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
 	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix with list of strings.")
+	system(paste("rm -f ", filename_))
 }
 
 # Checking with different args
@@ -54,6 +55,7 @@ test.stringDistDataArgOnly <- function()
 	actual_result  <- pstringdistmatrix(filename=filename_, a=strings, b=strings, method="h")#args in different orders
 	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix with list of strings.")
+	system(paste("rm -f ", filename_))
 }
 
 
@@ -78,6 +80,7 @@ test.stringDistPhageWithNames <- function()
 	strLength <- length(strings)
 	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix should give same simple results")
+	system(paste("rm -f ", filename_))
 }
 
 
@@ -92,6 +95,7 @@ test.stringDistPhi <- function()
 	actual_result <- pstringdistmatrix(strings, strings, method="h", filename=filename_)
 	checkTrue(all.equal(expected_result, actual_result[,], check.attributes=FALSE), 
 			  "pstringdistmatrix and stringdistmatrix should give same simple results for a DNAStringSet")
+	system(paste("rm -f ", filename_))
 }
 
 test.differentInputs <- function(){
