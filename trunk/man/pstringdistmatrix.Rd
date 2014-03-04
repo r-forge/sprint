@@ -22,6 +22,10 @@
 N.B. Please see the SPRINT User Guide for how to run the code in parallel 
 using the mpiexec command.
 }
+\seealso{
+    \code{\link[stringdist]{stringdistmatrix}}
+    \code{\link{SPRINT}}
+}
 \author{
   University of Edinburgh SPRINT Team
   \email{sprint@ed.ac.uk}
