@@ -1,3 +1,15 @@
+VERSION sprint 1.0.6
+
+	o This version of SPRINT now works with R 3.0.x.
+	
+	o Fixed an installation warning that caused the message "warning: argument type 'enum commandCodes *' 
+	doesn't match specified 'MPI' type tag that requires 'int *'    [-Wtype-safety]".
+	
+	o Fixed an intermittent bug in pcor that caused the following warning: "Error in ff(dim = 
+	 c(number_of_samples, number_of_samples), dimnames = dimnames_,  :   length exceeds file length".
+	 
+	o The randomForest library is loaded by default when SPRINT is loaded.
+	
 VERSION sprint 1.0.5
 
 	o Added pstringdistmatrix(), a function which calculates the hamming distance between strings.
