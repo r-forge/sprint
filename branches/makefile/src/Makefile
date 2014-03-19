@@ -25,17 +25,13 @@ IMPLEMENTATION_OBJS = algorithms/papply/implementation/apply.o algorithms/papply
 
 SHARED_ALGORITHM_OBJS = algorithms/common/functions.o algorithms/common/mmap.o algorithms/common/serialize.o algorithms/common/utils.o
 
-OS = $(shell uname)
-LONG_OS = $(shell uname -a)
-
 # * **************************************************************** *
 # *  Compiler flags additional to the ones R automatically provides  *
 # * **************************************************************** *
 
-LOCAL_CFLAGS = -pedantic -O3 -fPIC $(_DEBUG) $(_PROF)
-CCFLAGS =  -O3 -fPIC
-CFLAGS = -pedantic -O3 -fPIC 
-CFLAGS_NO_OPT = -pedantic -fPIC $(_DEBUG) $(_PROF)
+OPT_CFLAG =  -O3
+DEV_CFLAGS = -pedantic $(OPT_CFLAG) $(CPICFLAGS) $(_DEBUG) $(_PROF)
+FLAGS =  $(OPT_CFLAG) $(CPICFLAGS) 
 # The universal target
 
 .PHONY: all
@@ -46,27 +42,13 @@ all: sprint.so
 # * **************************************** *
 
 sprint.so: $(INTERFACE_OBJS) $(SHARED_ALGORITHM_OBJS) $(SHLIB_OBJS) $(IMPLEMENTATION_OBJS)
-ifeq (Darwin,$(OS))
-ifeq (mpicc,$(findstring mpicc,$(MPICC)))
-	$(MPICC)  -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup  -o $@ $^ -Wl,-framework -Wl,CoreFoundation
-else
-
-endif
-else
-
-ifdef MPICXX
-	$(MPICXX) -shared -o $@ $^
-else
-	$(CC) -shared -o $@ $^ $(MPILIBS)
-endif
-endif
-
-
+	$(MPICXX) $(SHLIB_LDFLAGS) -o $@ $^ $(MPILIBS)
+	
 %.o: %.cpp $(MAKEFILE)
-	$(MPICXX) $(LOCAL_CFLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
+	$(MPICXX) $(FLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
 
 %.o: %.c $(MAKEFILE)
-	$(MPICC) $(LOCAL_CFLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
+	$(MPICC) $(FLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
 
 # * ****************************** *
 # *  Clean up the build directory  *

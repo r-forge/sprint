@@ -331,7 +331,7 @@ Copyright (C) 2006 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk'
+ac_pwd='/Users/egrant1/Documents/SPRINT/workspace/sprint/branches/makefile'
 srcdir='.'
 # If no file are specified by the user, then we need to provide default
 # value.  By we need to know if files were specified by the user.
@@ -518,6 +518,7 @@ s,@CXX@,|#_!!_#|mpic++,g
 s,@CXXFLAGS@,|#_!!_#|-g -O2,g
 s,@ac_ct_CXX@,|#_!!_#|g++,g
 s,@MPICXX@,|#_!!_#|mpic++,g
+s,@SHLIB_LDFLAGS@,|#_!!_#|-dynamiclib -Wl\,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress,g
 s,@LIBOBJS@,|#_!!_#|,g
 s,@LTLIBOBJS@,|#_!!_#|,g
 :end

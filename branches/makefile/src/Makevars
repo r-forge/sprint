@@ -8,4 +8,8 @@
 MPICC    = mpicc -std=gnu99 
 MPICXX   = mpic++
 MPILIBS  =  
-
+CC		 = mpicc
+CFLAGS	 = -g -O2
+CPPFLAGS = 
+PKG_CPPFLAGS = @PKG_CPPFLAGS@
+SHLIB_LDFLAGS = -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress
