@@ -25,8 +25,8 @@ IMPLEMENTATION_OBJS = algorithms/papply/implementation/apply.o algorithms/papply
 
 SHARED_ALGORITHM_OBJS = algorithms/common/functions.o algorithms/common/mmap.o algorithms/common/serialize.o algorithms/common/utils.o
 
-OS := $(shell uname)
-LONG_OS := $(shell uname -a)
+OS = $(shell uname)
+LONG_OS = $(shell uname -a)
 
 # * **************************************************************** *
 # *  Compiler flags additional to the ones R automatically provides  *
@@ -53,15 +53,11 @@ else
 
 endif
 else
-# Testing for existence of magic file that indicates that it's a cray machine.
-ifeq (clerelease,$(findstring clerelease,$(wildcard /etc/opt/cray/release/*)))
-	cc -shared -o $@ $^
-else
-ifeq (mpicc,$(findstring mpicc,$(MPICC)))
+
+ifdef MPICXX
 	$(MPICXX) -shared -o $@ $^
 else
 	$(CC) -shared -o $@ $^ $(MPILIBS)
-endif
 endif
 endif
 
