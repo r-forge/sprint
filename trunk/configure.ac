@@ -15,6 +15,24 @@ dnl * *************************************************** *
 
 AC_EGREP_HEADER()
 
+dnl * ********************************************************************* *
+dnl * Taken from the Writing R Extensions Guide                             * 
+dnl * (http://cran.r-project.org/doc/manuals/R-exts.html#Configure-example) *
+dnl * ********************************************************************* *
+
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+CC=`"${R_HOME}/bin/R" CMD config CC`
+R_CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+#CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+SHLIB_LDFLAGS=`"${R_HOME}/bin/R" CMD config SHLIB_LDFLAGS`
+
+
+
+
 AC_MSG_CHECKING([for C MPI support])
 
 ACX_MPI([AC_MSG_RESULT([MPI found with success])],
@@ -57,6 +75,26 @@ else exit(1);
             [AC_MSG_RESULT(yes)],
             [AC_MSG_RESULT(no)
              AC_MSG_FAILURE([The SPRINT package requires full C MPI-2 or MPI-3 support. Try a more up to date MPI implementation (MPICH).])])
+
+
+
+AC_MSG_CHECKING([for correct MPI implementation])
+
+AC_RUN_IFELSE(
+            [AC_LANG_PROGRAM(
+[[
+#include <mpi.h>
+]],
+[[
+
+#ifdef OMPI_RELEASE_VERSION
+exit(1);
+#endif
+exit(0);
+]])],
+            [AC_MSG_RESULT(yes)],
+            [AC_MSG_RESULT(no)
+            AC_MSG_FAILURE([The SPRINT package is not compatible with OpenMPI. Please install MPICH instead as described in the SPRINT User Guide ])])
 
 dnl * ********************************************************* *
 dnl *  Set the language to C++ and search for the MPI compiler  *
@@ -134,9 +172,10 @@ dnl *  and we need to add the MPI library path to the  *
 dnl *  MPILIBS variable.			       *
 dnl * ************************************************ *
 
-if [[ "$MPICC" == cc ]]; then
-    MPILIBS="-L$MPICH_DIR/lib -lmpich"
-fi
+dnl * Commenting out as I don't believe this is necessary on a Cray anymore.
+dnl if [[ "$MPICC" == cc ]]; then
+dnl    MPILIBS="-L$MPICH_DIR/lib -lmpich"
+dnl fi
 
 
 dnl * ************************************************ *
@@ -149,6 +188,20 @@ if [[ "$GCC" == yes ]]; then
 fi
 
 
+dnl * ************************************************ *
+dnl *  Replacing these lines from makefile             *
+dnl * ************************************************ *
+dnl ifdef MPICXX
+dnl 	$(MPICXX) $(SHLIB_LDFLAGS) -o $@ $^
+dnl else
+dnl 	$(CC) $(SHLIB_LDFLAGS) -o $@ $^ $(MPILIBS)
+dnl endif
+
+if [[ "$MPICXX" == "" ]]; then
+    MPICXX=$(CC)
+fi
+
+
 dnl * ********************************************** *
 dnl *  Substitute the flags to the Makevars.in file  *
 dnl * ********************************************** *
@@ -156,10 +209,9 @@ dnl * ********************************************** *
 AC_SUBST(MPILIBS)
 AC_SUBST(MPICC)
 AC_SUBST(MPICXX)
-
-dnl * *********************** *
-dnl *  Create Makevarsn file  *
-dnl * *********************** *
+AC_SUBST(R_CFLAGS)
+#AC_SUBST(CPPFLAGS)
+AC_SUBST(SHLIB_LDFLAGS)
 
 AC_OUTPUT(src/Makevars)
 

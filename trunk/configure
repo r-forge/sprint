@@ -630,6 +630,8 @@ CXX
 CXXFLAGS
 ac_ct_CXX
 MPICXX
+R_CFLAGS
+SHLIB_LDFLAGS
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -2981,6 +2983,20 @@ _ACEOF
 rm -f -r conftest*
 
 
+
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+CC=`"${R_HOME}/bin/R" CMD config CC`
+R_CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+#CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+SHLIB_LDFLAGS=`"${R_HOME}/bin/R" CMD config SHLIB_LDFLAGS`
+
+
+
+
 { echo "$as_me:$LINENO: checking for C MPI support" >&5
 echo $ECHO_N "checking for C MPI support... $ECHO_C" >&6; }
 
@@ -4094,6 +4110,82 @@ fi
 
 
 
+
+{ echo "$as_me:$LINENO: checking for correct MPI implementation" >&5
+echo $ECHO_N "checking for correct MPI implementation... $ECHO_C" >&6; }
+
+if test "$cross_compiling" = yes; then
+  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+See \`config.log' for more details." >&5
+echo "$as_me: error: cannot run test program while cross compiling
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+#include <mpi.h>
+
+int
+main ()
+{
+
+
+#ifdef OMPI_RELEASE_VERSION
+exit(1);
+#endif
+exit(0);
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
+  { (case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_try") 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  { echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6; }
+else
+  echo "$as_me: program exited with status $ac_status" >&5
+echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+( exit $ac_status )
+{ echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+            { { echo "$as_me:$LINENO: error: The SPRINT package is not compatible with OpenMPI. Please install MPICH instead as described in the SPRINT User Guide
+See \`config.log' for more details." >&5
+echo "$as_me: error: The SPRINT package is not compatible with OpenMPI. Please install MPICH instead as described in the SPRINT User Guide
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+fi
+
+
+
+
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -4901,9 +4993,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-if [ "$MPICC" == cc ]; then
-    MPILIBS="-L$MPICH_DIR/lib -lmpich"
-fi
 
 
 
@@ -4913,9 +5002,17 @@ fi
 
 
 
+if [ "$MPICXX" == "" ]; then
+    MPICXX=$(CC)
+fi
 
 
 
+
+
+
+
+#AC_SUBST(CPPFLAGS)
 
 
 ac_config_files="$ac_config_files src/Makevars"
@@ -5601,11 +5698,13 @@ CXX!$CXX$ac_delim
 CXXFLAGS!$CXXFLAGS$ac_delim
 ac_ct_CXX!$ac_ct_CXX$ac_delim
 MPICXX!$MPICXX$ac_delim
+R_CFLAGS!$R_CFLAGS$ac_delim
+SHLIB_LDFLAGS!$SHLIB_LDFLAGS$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 55; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 57; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
