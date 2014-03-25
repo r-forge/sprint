@@ -10,6 +10,9 @@ VERSION sprint 1.0.6
 	 
 	o The randomForest library is loaded by default when SPRINT is loaded.
 	
+	o The Makefile was changed to remove gmake and gcc dependencies.
+	
+	
 VERSION sprint 1.0.5
 
 	o Added pstringdistmatrix(), a function which calculates the hamming distance between strings.
