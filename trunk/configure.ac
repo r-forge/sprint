@@ -78,23 +78,23 @@ else exit(1);
 
 
 
-AC_MSG_CHECKING([for correct MPI implementation])
-
-AC_RUN_IFELSE(
-            [AC_LANG_PROGRAM(
-[[
-#include <mpi.h>
-]],
-[[
-
-#ifdef OMPI_RELEASE_VERSION
-exit(1);
-#endif
-exit(0);
-]])],
-            [AC_MSG_RESULT(yes)],
-            [AC_MSG_RESULT(no)
-            AC_MSG_FAILURE([The SPRINT package is not compatible with OpenMPI. Please install MPICH instead as described in the SPRINT User Guide ])])
+dnl AC_MSG_CHECKING([for correct MPI implementation])
+dnl
+dnl AC_RUN_IFELSE(
+dnl             [AC_LANG_PROGRAM(
+dnl [[
+dnl #include <mpi.h>
+dnl ]],
+dnl [[
+dnl 
+dnl #ifdef OMPI_RELEASE_VERSION
+dnl exit(1);
+dnl #endif
+dnl exit(0);
+dnl ]])],
+dnl             [AC_MSG_RESULT(yes)],
+dnl             [AC_MSG_RESULT(no)
+dnl             AC_MSG_FAILURE([The SPRINT package is not compatible with OpenMPI. Please install MPICH instead as described in the SPRINT User Guide ])])
 
 dnl * ********************************************************* *
 dnl *  Set the language to C++ and search for the MPI compiler  *
