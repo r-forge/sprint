@@ -37,7 +37,7 @@ double* map_file(char* filename, int* filesize) {
   
   fd = open (filename, O_RDONLY);
   if (fd == -1) {
-    error ("open");
+	  error ("Could not open %s", filename);
     return NULL;
   }
   
