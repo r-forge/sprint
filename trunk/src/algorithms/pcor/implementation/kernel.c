@@ -465,13 +465,14 @@ int correlationKernel(int rank,
         // Free all allocated memory
         free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
     }
+
     MPI_File_sync( fh ) ; 			// Causes all previous writes to be transferred to the storage device
     MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
-    MPI_File_sync( fh ) ;				// Causes all previous writes to be transferred to the storage device
 
     // Close file handler
     MPI_File_close(&fh);
 
+    MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
     return 0;
 }
 

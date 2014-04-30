@@ -217,7 +217,6 @@ void do_ffApply(SEXP ans,
 
   MPI_File_sync( fh ) ; 			// Causes all previous writes to be transferred to the storage device
   MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
-  MPI_File_sync( fh ) ;				// Causes all previous writes to be transferred to the storage device
 
   DEBUG("\n**No of things that are protected %d : Worker process %3d \n", no_of_protects, worldRank);
   DEBUG("\n**UNPROTECTING 3 : Worker process %3d \n", worldRank);
@@ -226,6 +225,7 @@ void do_ffApply(SEXP ans,
   /* Close file handler */
   MPI_File_close(&fh);
 
+  MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
   return;
 }
 
