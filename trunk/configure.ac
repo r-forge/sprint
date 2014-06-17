@@ -186,7 +186,13 @@ dnl * ************************************************ *
 if [[ "$GCC" == yes ]]; then
     MPICC="$MPICC -std=gnu99 "
 fi
+dnl determine if we are running in solaris
+AC_CONFIG_AUX_DIR([tools])
+AC_CANONICAL_HOST
 
+if [[ $host == *-*-solaris* ]]; then
+  MPICC="$MPICC -xc99 "
+fi
 
 dnl * ************************************************ *
 dnl *  Replacing these lines from makefile             *

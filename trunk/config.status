@@ -518,6 +518,7 @@ s,@CXX@,|#_!!_#|mpic++,g
 s,@CXXFLAGS@,|#_!!_#|-g -O2,g
 s,@ac_ct_CXX@,|#_!!_#|g++,g
 s,@MPICXX@,|#_!!_#|mpic++,g
+s,@R_CFLAGS@,|#_!!_#|-mtune=core2 -g -O2,g
 s,@SHLIB_LDFLAGS@,|#_!!_#|-dynamiclib -Wl\,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress,g
 s,@LIBOBJS@,|#_!!_#|,g
 s,@LTLIBOBJS@,|#_!!_#|,g

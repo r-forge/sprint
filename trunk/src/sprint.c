@@ -49,9 +49,6 @@ void R_init_sprint(DllInfo *Dllinfo) {
     char *fake_argv[1];
     char *fake_argv0 = "R";
     int response;
-#ifdef OPEN_MPI
-    void *dlhandle;
-#endif
 
     MPI_Initialized(&flag);
     if (flag) {
@@ -59,15 +56,6 @@ void R_init_sprint(DllInfo *Dllinfo) {
         return;
     }
     else {
-
-#ifdef OPEN_MPI
-        dlhandle = dlopen("libmpi.so", RTLD_GLOBAL | RTLD_LAZY);
-        if ( NULL == dlhandle ) {
-            ERR("Failed to open libmpi.so library. %s\n", dlerror());
-            return;
-        }
-#endif
-
         fake_argv[0] = (char *)&fake_argv0;
         MPI_Init_thread(&fake_argc, (char ***)(void*)&fake_argv , MPI_THREAD_SERIALIZED, &response);
         DEBUG("%i: Starting up\n", worldRank);
