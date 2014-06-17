@@ -49,7 +49,7 @@ sprint.so: $(INTERFACE_OBJS) $(SHARED_ALGORITHM_OBJS) $(SHLIB_OBJS) $(IMPLEMENTA
 	$(MPICXX) $(FLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
 
 %.o: %.c $(MAKEFILE)
-	$(MPICC) $(FLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
+	$(CC) $(FLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
 
 # * ****************************** *
 # *  Clean up the build directory  *

@@ -182,17 +182,17 @@ dnl * ************************************************ *
 dnl *  If it's the GCC CNU compiler used then add the  *
 dnl *  "gnu99" C lang standar flag.                    *
 dnl * ************************************************ *
-
-if [[ "$GCC" == yes ]]; then
-    MPICC="$MPICC -std=gnu99 "
-fi
+AC_PROG_CC_C99
+dnl if [[ "$GCC" == yes ]]; then
+dnl    MPICC="$MPICC -std=gnu99 "
+dnl fi
 dnl determine if we are running in solaris
-AC_CONFIG_AUX_DIR([tools])
-AC_CANONICAL_HOST
+dnl AC_CONFIG_AUX_DIR([tools])
+dnl AC_CANONICAL_HOST
 
-if [[ $host == *-*-solaris* ]]; then
-  MPICC="$MPICC -xc99 "
-fi
+dnl if [[ $host == *-*-solaris* ]]; then
+dnl   MPICC="$MPICC -xc99 "
+dnl fi
 
 dnl * ************************************************ *
 dnl *  Replacing these lines from makefile             *
@@ -213,6 +213,7 @@ dnl *  Substitute the flags to the Makevars.in file  *
 dnl * ********************************************** *
 
 AC_SUBST(MPILIBS)
+AC_SUBST(CC)
 AC_SUBST(MPICC)
 AC_SUBST(MPICXX)
 AC_SUBST(R_CFLAGS)

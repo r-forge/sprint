@@ -502,7 +502,7 @@ s,@LIBS@,|#_!!_#|,g
 s,@build_alias@,|#_!!_#|,g
 s,@host_alias@,|#_!!_#|,g
 s,@target_alias@,|#_!!_#|,g
-s,@CC@,|#_!!_#|mpicc,g
+s,@CC@,|#_!!_#|mpicc -std=gnu99,g
 s,@CFLAGS@,|#_!!_#|-g -O2,g
 s,@LDFLAGS@,|#_!!_#|,g
 s,@CPPFLAGS@,|#_!!_#|,g
@@ -512,7 +512,7 @@ s,@OBJEXT@,|#_!!_#|o,g
 s,@CPP@,|#_!!_#|cc -E,g
 s,@GREP@,|#_!!_#|/usr/bin/grep,g
 s,@EGREP@,|#_!!_#|/usr/bin/grep -E,g
-s,@MPICC@,|#_!!_#|mpicc -std=gnu99 ,g
+s,@MPICC@,|#_!!_#|mpicc,g
 s,@MPILIBS@,|#_!!_#| ,g
 s,@CXX@,|#_!!_#|mpic++,g
 s,@CXXFLAGS@,|#_!!_#|-g -O2,g
