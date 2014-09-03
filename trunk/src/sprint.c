@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright ? 2008,2009 The University of Edinburgh                     *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -44,11 +44,22 @@ void R_init_sprint(DllInfo *Dllinfo) {
 
     int worldSize, worldRank;
     int flag;
-
+    char *dlhandle;
     static int fake_argc = 1;
     char *fake_argv[1];
     char *fake_argv0 = "R";
     int response;
+    
+  /* #work around for openMPI on some Linux versions. If this fails to work there will be dll errors.*/
+#ifdef OPEN_MPI
+  #if defined(__unix__) 
+        dlhandle = dlopen("libmpi.so", RTLD_GLOBAL | RTLD_LAZY);
+        if ( NULL == dlhandle ) {
+            ERR("Failed to open libmpi.so library. %s\n", dlerror());
+            return;
+        }
+  #endif
+#endif
 
     MPI_Initialized(&flag);
     if (flag) {
