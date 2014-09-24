@@ -53,7 +53,7 @@ pcor <- function(
     
     if (is.matrix(data_x) && is.numeric(data_x)) {
       height = dim(data_x)[2]
-      length_ <- height * height
+ #     length_ <- height * height
     }
     else
       stop(..sprintMsg$error["non.numeric"])
@@ -77,7 +77,10 @@ pcor <- function(
     }
 
     # Call C interface
+    print(paste("about to call pcor"))
     return_val <- .Call("pcor", data_x, data_y, filename_, distance)
+    print(paste("return_val %d",return_val))
+    print(paste("back from pcor"))
 	
 	colnames1 <- colnames(data_x)
 	if(is.null(data_y))
@@ -91,15 +94,16 @@ pcor <- function(
     # -2    -->     Only the master process exists, no workers
     if ( return_val == 0 ) {
       # Open result binary file and return as ff object
-      result = ff(
-        dim=c(height,height),
-		dimnames=list(colnames1,colnames2),
-        , filename=filename_
-        , vmode=vmode_
-        , caching=caching_
-        , finalizer=finalizer_
-        , length=length_
-        )
+      result <- FALSE
+#       result = ff(
+#         dim=c(height,height),
+# 		dimnames=list(colnames1,colnames2),
+#         , filename=filename_
+#         , vmode=vmode_
+#         , caching=caching_
+#         , finalizer=finalizer_
+#         , length=length_
+#         )
     } else {
 
         if ( return_val == -1 )

@@ -1,6 +1,6 @@
 # Ensure the following line is uncommented for debug logging
-#_DEBUG = -D_DEBUG
-#_PROF = -D_PROF
+_DEBUG = -D_DEBUG
+_PROF = -D_PROF
 
 # Pull in the system specifics which the configuration script cooked up
 
@@ -46,10 +46,10 @@ sprint.so: $(INTERFACE_OBJS) $(SHARED_ALGORITHM_OBJS) $(SHLIB_OBJS) $(IMPLEMENTA
 	$(MPICXX) $(SHLIB_LDFLAGS) -o $@ $^ $(MPILIBS)
 	
 %.o: %.cpp $(MAKEFILE)
-	$(MPICXX) $(FLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
+	$(MPICXX) $(DEV_CFLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
 
 %.o: %.c $(MAKEFILE)
-	$(CC) $(FLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
+	$(CC) $(DEV_CFLAGS) -I$(R_INCLUDE_DIR) -c -o $@ $< 
 
 # * ****************************** *
 # *  Clean up the build directory  *

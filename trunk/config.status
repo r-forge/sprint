@@ -331,7 +331,7 @@ Copyright (C) 2006 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/Users/egrant1/Documents/SPRINT/workspace/sprint/trunk'
+ac_pwd='/Users/eilidhtroup/Documents/SPRINT/sprint/trunk'
 srcdir='.'
 # If no file are specified by the user, then we need to provide default
 # value.  By we need to know if files were specified by the user.
@@ -502,14 +502,14 @@ s,@LIBS@,|#_!!_#|,g
 s,@build_alias@,|#_!!_#|,g
 s,@host_alias@,|#_!!_#|,g
 s,@target_alias@,|#_!!_#|,g
-s,@CC@,|#_!!_#|mpicc -std=gnu99,g
+s,@CC@,|#_!!_#|mpicc,g
 s,@CFLAGS@,|#_!!_#|-g -O2,g
 s,@LDFLAGS@,|#_!!_#|,g
 s,@CPPFLAGS@,|#_!!_#|,g
-s,@ac_ct_CC@,|#_!!_#|,g
+s,@ac_ct_CC@,|#_!!_#|gcc,g
 s,@EXEEXT@,|#_!!_#|,g
 s,@OBJEXT@,|#_!!_#|o,g
-s,@CPP@,|#_!!_#|cc -E,g
+s,@CPP@,|#_!!_#|gcc -E,g
 s,@GREP@,|#_!!_#|/usr/bin/grep,g
 s,@EGREP@,|#_!!_#|/usr/bin/grep -E,g
 s,@MPICC@,|#_!!_#|mpicc,g
@@ -518,7 +518,7 @@ s,@CXX@,|#_!!_#|mpic++,g
 s,@CXXFLAGS@,|#_!!_#|-g -O2,g
 s,@ac_ct_CXX@,|#_!!_#|g++,g
 s,@MPICXX@,|#_!!_#|mpic++,g
-s,@R_CFLAGS@,|#_!!_#|-mtune=core2 -g -O2,g
+s,@R_CFLAGS@,|#_!!_#|-Wall -mtune=core2 -g -O2,g
 s,@SHLIB_LDFLAGS@,|#_!!_#|-dynamiclib -Wl\,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress,g
 s,@LIBOBJS@,|#_!!_#|,g
 s,@LTLIBOBJS@,|#_!!_#|,g

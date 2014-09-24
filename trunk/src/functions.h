@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright ? 2008,2009 The University of Edinburgh                     *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -27,7 +27,8 @@
  * in sprint/functions.c
  **/
 
-enum commandCodes {TERMINATE = 0, PSVM, PCOR, PMAXT, PPAM, PAPPLY, PRANDOMFOREST, PBOOT, PSTRINGDIST, PTEST, INIT_RNG, RESET_RNG, PBOOTRP, PBOOTRPMULTI, LAST};
+//enum commandCodes {TERMINATE = 0, PSVM, PCOR, PMAXT, PPAM, PAPPLY, PRANDOMFOREST, PBOOT, PSTRINGDIST, PTEST, INIT_RNG, RESET_RNG, PBOOTRP, PBOOTRPMULTI, LAST};
+enum commandCodes {TERMINATE = 0, PCOR, PMAXT, PPAM, PAPPLY, PRANDOMFOREST, PBOOT, PSTRINGDIST, PTEST, INIT_RNG, RESET_RNG, PBOOTRP, PBOOTRPMULTI, LAST};
 
 /**
  * Stereotype for interface functions. You almost certainly don't need to

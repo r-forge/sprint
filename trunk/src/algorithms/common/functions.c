@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright ? 2008,2009 The University of Edinburgh                     *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -33,7 +33,7 @@
  */
 
 extern int test(int n,...);
-extern int svm_call(int n,...);
+//extern int svm_call(int n,...);
 extern int correlation(int n,...);
 extern int permutation(int n,...);
 extern int pamedoids(int n,...);
@@ -63,7 +63,7 @@ int voidCommand(int n,...)
  **/
 
 commandFunction commandLUT[] = {voidCommand,
-				svm_call,
+//				svm_call,
                                 correlation,
                                 permutation,
                                 pamedoids,

@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright ? 2008,2009 The University of Edinburgh                     *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -115,10 +115,14 @@ SEXP pcor(SEXP data_x, SEXP data_y, SEXP out_file, SEXP distance)
                              width, height, file_out, 0);
     }
 
+        DEBUG("\n response  =  %d \n", response);
     PROTECT(result = NEW_INTEGER(1));
     INTEGER(result)[0] = response;
     UNPROTECT(1);
 
+        DEBUG("\n result  =  %d \n", result);
+        DEBUG("\n return result from pcor.c\n");
+  
     return result;
 }
 

@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright ? 2008,2009 The University of Edinburgh                     *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -158,6 +158,7 @@ int correlation(int n,...) {
         free(dataMatrixY);
         free(out_filename);
     }
+    DEBUG("about to return result on %i\n", worldRank);
     
     return result;
 }

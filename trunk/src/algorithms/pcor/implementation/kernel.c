@@ -1,7 +1,7 @@
 /**************************************************************************
  *                                                                        *
  *  SPRINT: Simple Parallel R INTerface                                   *
- *  Copyright © 2008,2009 The University of Edinburgh                     *
+ *  Copyright ? 2008,2009 The University of Edinburgh                     *
  *                                                                        *
  *  This program is free software: you can redistribute it and/or modify  *
  *  it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,7 @@
 #include <math.h>
 #include "kernel.h"
 #include "../../../sprint.h"
+#include <limits.h>
 
 // Percent of extra memory to be allocated for the correlation coefficients vector.
 // This extra memory is added to the approximate memory needed by a fair division of
@@ -170,8 +171,9 @@ int correlationKernel(int rank,
     int local_check = 0, global_check = 0;
     int i = 0, j, taskNo;
     int err, count = 0;
-    unsigned int fair_chunk = 0, coeff_count = 0;
-    unsigned int cor_cur_size = 0, init_and_cleanup_loop_iter=0;
+    unsigned long long fair_chunk = 0, coeff_count = 0;
+    unsigned int init_and_cleanup_loop_iter=0;
+    unsigned long long cor_cur_size = 0;
     
     double start_time, end_time;
 
@@ -292,16 +294,21 @@ int correlationKernel(int rank,
 
             // Plus 1 to round it up or just add some extra space, both are fine
             fair_chunk = (rows / (size-1)) + 1;
+            DEBUG("fair_chunk %d \n", fair_chunk);
 
             // We can use "j" as temporary variable.
             // Plus 1 to avoid getting 0 from the multiplication.
             j = (fair_chunk * MEM_PERC) + 1;
 
             cor_cur_size = (fair_chunk + j) * rows;
+            DEBUG("cor_cur_size %lld \n", cor_cur_size);
         }
 
         // Allocate memory
-        cor = (double *)malloc(sizeof(double) * cor_cur_size);
+        DEBUG("cor_cur_size %lld \n", cor_cur_size);
+        long long double_size = sizeof(double);
+        DEBUG("malloc size %lld \n", (double_size * cor_cur_size));
+        cor = (double *)malloc(double_size * cor_cur_size);
 
         blocklens = (int *)malloc(sizeof(int) * rows);
         indices = (int *)malloc(sizeof(int) * rows);
@@ -457,23 +464,58 @@ int correlationKernel(int rank,
         }
 
         // Write data to disk
+        // TODO coeff_count cannot be greater than max int (for use in the MPI_File_write_all call). 
+        // A better fix should be possible, for now throw error.
+        
+        DEBUG("\ncoeff_count is %lld\n", coeff_count);
+        DEBUG("\INT_MAX is %d\n", INT_MAX);
+        if(coeff_count>INT_MAX)
+        {
+            ERR("**ERROR** : Could not run as the chunks of data are too large. Try running again with more MPI processes.\n");
+
+            // Free allocated memory
+            free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
+
+            // Let the master process know its aborting in order to terminate
+            // the rest of the working workers
+            // We have to receive a work assignment first and then terminate
+            // otherwise the master will deadlock trying to give work to this worker
+            err = MPI_Recv(&taskNo, 1, MPI_INT, 0, 0, comm, &stat);
+            taskNo = -1;
+            err = MPI_Send(&taskNo, 1, MPI_INT, 0, 0, comm);
+
+            // This worker failed
+            local_check = 1;
+            MPI_Allreduce(&local_check, &global_check, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
+            return -1;
+        }
+
+        
+        
+        DEBUG("\nWriting %d to disk\n", coeff_count);
+
         MPI_File_write_all(fh, &cor[0], coeff_count, MPI_DOUBLE, &stat);
 
-        if ( coeff_count != 0 )
+        if (coeff_count != 0 )
             MPI_Type_free(&coeff_index_dt);
 
         // Free all allocated memory
         free_all(cor, blocklens, indices, mean_value_vectorX, Sxx_vector, mean_value_vectorY, Syy_vector);
     }
 
-    MPI_File_sync( fh ) ; 			// Causes all previous writes to be transferred to the storage device
-    MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
+         DEBUG("\nAbout to write to disk %d\n", rank);
+    MPI_File_sync( fh ) ;   		// Causes all previous writes to be transferred to the storage device
+         DEBUG("\nWritten to disk %d\n",rank);
+  //  MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
+         DEBUG("\nAfter barrier \n", rank);
 
     // Close file handler
     MPI_File_close(&fh);
-
-    MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
-    return 0;
+  DEBUG("\nAfter file closed /n");
+   // MPI_Barrier( MPI_COMM_WORLD ) ; 	// Blocks until all processes in the communicator have reached this routine.
+      DEBUG("\nAbout to return from kernel /n");
+      return 0;
 }
 
 /* *************************************** *

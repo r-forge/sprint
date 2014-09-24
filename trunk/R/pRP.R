@@ -133,9 +133,14 @@
                 AveFC=fold.change)
 
     if ( plot ) {
-      plotRP(ret, cutoff=NULL)
+      if( !require("RankProd", quietly=TRUE) ) {
+        warning("Cannot plot the rank product result - failed to load package \"RankProd\". 
+                Please check that the package is installed and try again or run function with \'plot=FALSE\'.")
+        return(NA)
+        plotRP(ret, cutoff=NULL)
+       }
     }
-
+    
     reset.rng()
     return(ret)
   }
@@ -265,7 +270,12 @@
                 all.FC=fc)
 
     if ( plot ) {
-      plotRP(ret, cutoff=NULL)
+      if( !require("RankProd", quietly=TRUE) ) {
+        warning("Cannot plot the rank product result - failed to load package \"RankProd\". 
+                Please check that the package is installed and try again or run function with \'plot=FALSE\'.")
+        return(NA)
+        plotRP(ret, cutoff=NULL)
+      }
     }
 
     reset.rng()

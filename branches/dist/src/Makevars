@@ -8,7 +8,6 @@
 MPICC    = mpicc
 MPICXX   = mpic++
 MPILIBS  =  
-CC		 = mpicc -std=gnu99
-R_CFLAGS	 = -mtune=core2 -g -O2
-CFLAGS	 = -g -O2
+CC		 = mpicc
+R_CFLAGS	 = -Wall -mtune=core2 -g -O2
 SHLIB_LDFLAGS = -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress

@@ -24,9 +24,13 @@ pcor(data_x, data_y = NULL, distance = FALSE, caching_ = "mmeachflush",
                     back-end caching scheme}
     \item{filename_}{string, name of the result file}
 }
+\value{
+An ff_matrix object. The results of a correlation computation can be very large and so SPRINT returns a file-backed ff_matrix object instead of a standard R matrix object.
+}
 \seealso{
    \code{\link{cor}}
    \code{\link{SPRINT}}
+   \code{\link{ff}}
 }
 \author{
 University of Edinburgh SPRINT Team
