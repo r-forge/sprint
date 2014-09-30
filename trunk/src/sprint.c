@@ -68,7 +68,8 @@ void R_init_sprint(DllInfo *Dllinfo) {
     }
     else {
         fake_argv[0] = (char *)&fake_argv0;
-        MPI_Init_thread(&fake_argc, (char ***)(void*)&fake_argv , MPI_THREAD_SERIALIZED, &response);
+        MPI_Init_thread(&fake_argc, (char ***)(void*)&fake_argv , MPI_THREAD_SERIALIZED, &response); 
+        //MPI_Init(&fake_argc, (char ***)(void*)&fake_argv);
         DEBUG("%i: Starting up\n", worldRank);
         mpi_init_flag = 1;
 
