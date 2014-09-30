@@ -1,3 +1,11 @@
+VERSION sprint 1.0.7
+
+  o SPRINT now works with Linux (Fedora, Debian) running OpenMPI in addition to running on MPICH on Linux and OpenMPI and MPICH on Mac OS X as in release 1.0.6.
+	
+	o A bug that could cause a seg fault error has been fixed in pcor().
+	
+	o The psvm() method has been removed until it can be changed to meet CRAN guidelines.
+	 
 VERSION sprint 1.0.6
 
 	o This version of SPRINT now works with R 3.0.x.
@@ -98,6 +106,6 @@ SPRINT Team
 email: sprint@ed.ac.uk
 http://www.r-sprint.org
 
-Copyright © 2012 The University of Edinburgh.
+Copyright ? 2012 The University of Edinburgh.
 ==============================================================================
    
